@@ -3,166 +3,179 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>StudySpot - Owner Registration</title>
 
 <style>
 *{box-sizing:border-box}
 
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f7ff;
-  color:#222;
+margin:0;
+font-family:Arial,sans-serif;
+background:#f4f7ff;
+color:#222;
 }
 
 .header{
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  color:white;
-  text-align:center;
-  padding:25px 15px;
+background:linear-gradient(135deg,#2563eb,#7c3aed);
+color:white;
+text-align:center;
+padding:25px 15px;
 }
 
 .header h1{
-  margin:0;
-  font-size:28px;
+margin:0;
+font-size:28px;
 }
 
-.header p{margin:8px 0 0}
+.header p{
+margin:8px 0 0;
+}
 
 .container{
-  max-width:700px;
-  margin:20px auto;
-  padding:0 15px;
+max-width:700px;
+margin:20px auto;
+padding:0 15px;
 }
 
 .card{
-  background:white;
-  padding:20px;
-  border-radius:16px;
-  box-shadow:0 4px 18px rgba(0,0,0,.08);
+background:white;
+padding:20px;
+border-radius:16px;
+box-shadow:0 4px 18px rgba(0,0,0,.08);
 }
 
-h2{color:#2563eb;margin-top:0}
+h2{
+color:#2563eb;
+margin-top:0;
+}
 
 h3{
-  margin-top:28px;
-  padding-bottom:8px;
-  border-bottom:2px solid #e5e7eb;
-  color:#374151;
+margin-top:28px;
+padding-bottom:8px;
+border-bottom:2px solid #e5e7eb;
+color:#374151;
 }
 
 label{
-  display:block;
-  margin-top:15px;
-  margin-bottom:6px;
-  font-weight:bold;
+display:block;
+margin-top:15px;
+margin-bottom:6px;
+font-weight:bold;
 }
 
 input,select,textarea{
-  width:100%;
-  padding:12px;
-  border:1px solid #cbd5e1;
-  border-radius:9px;
-  font-size:15px;
-  background:white;
+width:100%;
+padding:12px;
+border:1px solid #cbd5e1;
+border-radius:9px;
+font-size:15px;
+background:white;
 }
 
 textarea{
-  min-height:90px;
-  resize:vertical;
+min-height:90px;
+resize:vertical;
 }
 
 input:disabled,select:disabled{
-  background:#f1f5f9;
+background:#f1f5f9;
 }
 
 .help{
-  font-size:13px;
-  color:#64748b;
-  margin-top:5px;
+font-size:13px;
+color:#64748b;
+margin-top:5px;
 }
 
 .info{
-  background:#eff6ff;
-  color:#1e40af;
-  padding:12px;
-  border-radius:9px;
-  margin-top:10px;
-  font-size:14px;
+background:#eff6ff;
+color:#1e40af;
+padding:12px;
+border-radius:9px;
+margin-top:10px;
+font-size:14px;
 }
 
 .facilities{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:10px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:10px;
 }
 
 .facility{
-  border:1px solid #e2e8f0;
-  border-radius:9px;
-  padding:10px;
-  background:#f8fafc;
+border:1px solid #e2e8f0;
+border-radius:9px;
+padding:10px;
+background:#f8fafc;
 }
 
 .facility label{
-  margin:0;
-  font-weight:normal;
-  display:flex;
-  align-items:center;
-  gap:8px;
+margin:0;
+font-weight:normal;
+display:flex;
+align-items:center;
+gap:8px;
 }
 
 .facility input{
-  width:auto;
-  margin:0;
+width:auto;
+margin:0;
 }
 
 .photo-preview{
-  width:100%;
-  max-height:280px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-top:10px;
-  display:none;
+width:100%;
+max-height:280px;
+object-fit:cover;
+border-radius:10px;
+margin-top:10px;
+display:none;
 }
 
 button{
-  width:100%;
-  padding:14px;
-  border:0;
-  border-radius:9px;
-  font-size:16px;
-  font-weight:bold;
-  margin-top:15px;
-}
-
-.location{
-  background:#16a34a;
-  color:white;
+width:100%;
+padding:14px;
+border:0;
+border-radius:9px;
+font-size:16px;
+font-weight:bold;
+margin-top:15px;
 }
 
 .register{
-  background:#2563eb;
-  color:white;
+background:#2563eb;
+color:white;
+}
+
+.location{
+background:#16a34a;
+color:white;
+}
+
+.manage{
+background:#7c3aed;
+color:white;
 }
 
 .back{
-  background:#e5e7eb;
-  color:#222;
+background:#e5e7eb;
+color:#222;
 }
 
 .success{
-  display:none;
-  margin-top:15px;
-  padding:14px;
-  border-radius:9px;
-  background:#dcfce7;
-  color:#166534;
+display:none;
+margin-top:15px;
+padding:14px;
+border-radius:9px;
+background:#dcfce7;
+color:#166534;
 }
 
 @media(max-width:500px){
-  .facilities{grid-template-columns:1fr}
+.facilities{
+grid-template-columns:1fr;
+}
 }
 </style>
 </head>
@@ -175,32 +188,53 @@ button{
 </div>
 
 <div class="container">
+
 <div class="card">
 
 <h2>🏫 Library Owner Registration</h2>
 
+
 <h3>👤 Owner Details</h3>
 
 <label>Owner Name *</label>
-<input id="ownerName" type="text" placeholder="Enter owner name">
+<input
+id="ownerName"
+type="text"
+placeholder="Enter owner name"
+>
 
 <label>Mobile Number *</label>
-<input id="mobile" type="tel" placeholder="Enter mobile number">
+<input
+id="mobile"
+type="tel"
+placeholder="Enter mobile number"
+>
 
 <label>Create Password *</label>
-<input id="password" type="password" placeholder="Create password">
+<input
+id="password"
+type="password"
+placeholder="Create password"
+>
 
 
 <h3>🏫 Library Details</h3>
 
 <label>Library Name *</label>
-<input id="libraryName" type="text" placeholder="Enter library name">
+<input
+id="libraryName"
+type="text"
+placeholder="Enter library name"
+>
 
 
 <label>State / Union Territory *</label>
 
 <select id="state">
-<option value="">Select State / UT</option>
+
+<option value="">
+Select State / UT
+</option>
 
 <option>Andhra Pradesh</option>
 <option>Arunachal Pradesh</option>
@@ -239,17 +273,22 @@ button{
 <option>Ladakh</option>
 <option>Lakshadweep</option>
 <option>Puducherry</option>
+
 </select>
 
 
 <label>District *</label>
 
 <select id="district" disabled>
-<option value="">Pehle State / UT select karein</option>
+
+<option value="">
+Pehle State / UT select karein
+</option>
+
 </select>
 
 <div class="help">
-📍 Sirf selected State/UT ke districts hi select kiye ja sakte hain.
+📍 District sirf selected State/UT ki list me se select kiya ja sakta hai.
 </div>
 
 
@@ -274,25 +313,55 @@ placeholder="House/Shop No., Road, Area, Landmark..."
 <h3>💰 Pricing & Seats</h3>
 
 <label>Monthly Price (₹) *</label>
-<input id="price" type="number" min="0" placeholder="Example: 500">
+<input
+id="price"
+type="number"
+min="0"
+placeholder="Example: 500"
+>
 
 <label>Total Seats *</label>
-<input id="seats" type="number" min="1" placeholder="Example: 100">
+<input
+id="seats"
+type="number"
+min="1"
+placeholder="Example: 100"
+>
 
 <label>Male Seats</label>
-<input id="maleSeats" type="number" min="0" placeholder="Example: 50">
+<input
+id="maleSeats"
+type="number"
+min="0"
+placeholder="Example: 50"
+>
 
 <label>Female Seats</label>
-<input id="femaleSeats" type="number" min="0" placeholder="Example: 50">
+<input
+id="femaleSeats"
+type="number"
+min="0"
+placeholder="Example: 50"
+>
 
 <label>Security Deposit (₹)</label>
-<input id="deposit" type="number" min="0" placeholder="Example: 500">
+<input
+id="deposit"
+type="number"
+min="0"
+placeholder="Example: 500"
+>
 
 <label>Admission / Registration Fee (₹)</label>
-<input id="registrationFee" type="number" min="0" placeholder="Example: 100">
+<input
+id="registrationFee"
+type="number"
+min="0"
+placeholder="Example: 100"
+>
 
 
-<h3>⏰ Timing</h3>
+<h3>⏰ Library Timing</h3>
 
 <label>Opening Time</label>
 <input id="opening" type="time">
@@ -301,7 +370,11 @@ placeholder="House/Shop No., Road, Area, Landmark..."
 <input id="closing" type="time">
 
 <label>Open Days</label>
-<input id="openDays" type="text" placeholder="Example: Monday - Sunday">
+<input
+id="openDays"
+type="text"
+placeholder="Example: Monday - Sunday"
+>
 
 <label>24×7 Available?</label>
 
@@ -316,26 +389,85 @@ placeholder="House/Shop No., Road, Area, Landmark..."
 
 <div class="facilities">
 
-<div class="facility"><label><input type="checkbox" value="Wi-Fi"> 📶 Wi-Fi</label></div>
-<div class="facility"><label><input type="checkbox" value="AC"> ❄️ AC</label></div>
-<div class="facility"><label><input type="checkbox" value="Cooler"> 🌀 Cooler</label></div>
-<div class="facility"><label><input type="checkbox" value="Fan"> 💨 Fan</label></div>
-<div class="facility"><label><input type="checkbox" value="CCTV"> 📹 CCTV</label></div>
-<div class="facility"><label><input type="checkbox" value="Power Backup"> ⚡ Power Backup</label></div>
-<div class="facility"><label><input type="checkbox" value="Drinking Water"> 💧 Drinking Water</label></div>
-<div class="facility"><label><input type="checkbox" value="RO Water"> 🚰 RO Water</label></div>
-<div class="facility"><label><input type="checkbox" value="Washroom"> 🚻 Washroom</label></div>
-<div class="facility"><label><input type="checkbox" value="Parking"> 🅿️ Parking</label></div>
-<div class="facility"><label><input type="checkbox" value="Charging Point"> 🔌 Charging Point</label></div>
-<div class="facility"><label><input type="checkbox" value="Silent Zone"> 🤫 Silent Zone</label></div>
-<div class="facility"><label><input type="checkbox" value="Personal Locker"> 🔐 Personal Locker</label></div>
-<div class="facility"><label><input type="checkbox" value="Comfortable Seats"> 🪑 Comfortable Seats</label></div>
-<div class="facility"><label><input type="checkbox" value="Good Lighting"> 💡 Good Lighting</label></div>
-<div class="facility"><label><input type="checkbox" value="Newspaper"> 📰 Newspaper</label></div>
-<div class="facility"><label><input type="checkbox" value="Refreshment"> ☕ Refreshment</label></div>
-<div class="facility"><label><input type="checkbox" value="Lift"> 🛗 Lift</label></div>
-<div class="facility"><label><input type="checkbox" value="Disabled Friendly"> ♿ Disabled Friendly</label></div>
-<div class="facility"><label><input type="checkbox" value="Reading Material"> 📚 Reading Material</label></div>
+<div class="facility">
+<label><input type="checkbox" value="Wi-Fi"> 📶 Wi-Fi</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="AC"> ❄️ AC</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Cooler"> 🌀 Cooler</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Fan"> 💨 Fan</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="CCTV"> 📹 CCTV</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Power Backup"> ⚡ Power Backup</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Drinking Water"> 💧 Drinking Water</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="RO Water"> 🚰 RO Water</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Washroom"> 🚻 Washroom</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Parking"> 🅿️ Parking</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Charging Point"> 🔌 Charging Point</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Silent Zone"> 🤫 Silent Zone</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Personal Locker"> 🔐 Personal Locker</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Comfortable Seats"> 🪑 Comfortable Seats</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Good Lighting"> 💡 Good Lighting</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Newspaper"> 📰 Newspaper</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Refreshment"> ☕ Refreshment</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Lift"> 🛗 Lift</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Disabled Friendly"> ♿ Disabled Friendly</label>
+</div>
+
+<div class="facility">
+<label><input type="checkbox" value="Reading Material"> 📚 Reading Material</label>
+</div>
 
 </div>
 
@@ -352,9 +484,16 @@ placeholder="Jo facility upar nahi hai, yahan likhein..."
 
 <label>Main Library Photo</label>
 
-<input id="photo" type="file" accept="image/*">
+<input
+id="photo"
+type="file"
+accept="image/*"
+>
 
-<img id="photoPreview" class="photo-preview">
+<img
+id="photoPreview"
+class="photo-preview"
+>
 
 
 <h3>📋 Other Information</h3>
@@ -365,7 +504,6 @@ placeholder="Jo facility upar nahi hai, yahan likhein..."
 id="extra"
 placeholder="Library ke baare me extra information..."
 ></textarea>
-
 
 <label>Library Rules</label>
 
@@ -381,14 +519,20 @@ placeholder="Example: Silence maintain karein, ID card compulsory..."
 Library ki exact location lene ke liye neeche button dabayein.
 </div>
 
-<button class="location" onclick="getLocation()">
+<button
+class="location"
+onclick="getLocation()"
+>
 📍 Get Library Location
 </button>
 
 <div id="locationResult"></div>
 
 
-<button class="register" onclick="registerLibrary()">
+<button
+class="register"
+onclick="registerLibrary()"
+>
 ✅ Register My Library
 </button>
 
@@ -397,7 +541,20 @@ Library ki exact location lene ke liye neeche button dabayein.
 </div>
 
 
-<button class="back" onclick="window.location.href='index.html'">
+<!-- STATE/DISTRICT PAGE -->
+
+<button
+class="manage"
+onclick="window.location.href='state-district.html'"
+>
+🇮🇳 State & District Management
+</button>
+
+
+<button
+class="back"
+onclick="window.location.href='index.html'"
+>
 ⬅️ Back to StudySpot
 </button>
 
@@ -407,13 +564,9 @@ Library ki exact location lene ke liye neeche button dabayein.
 
 <script>
 
-/*
-==========================================
-STATE → DISTRICTS
-Current public dataset sourced from
-Government of India district directory.
-==========================================
-*/
+/* ==========================================
+   DISTRICT DATA
+   ========================================== */
 
 const DISTRICT_URL =
 "https://raw.githubusercontent.com/KTBsomen/Indian-state-district-json/main/india-states-districts-latest.json";
@@ -428,11 +581,10 @@ document.getElementById("district");
 const cityInput =
 document.getElementById("city");
 
-
 let districtData = [];
 
 
-/* Load district data */
+/* Load data */
 
 fetch(DISTRICT_URL)
 
@@ -448,7 +600,9 @@ return response.json();
 
 .then(function(data){
 
-districtData = data;
+districtData = Array.isArray(data)
+? data
+: [];
 
 })
 
@@ -459,7 +613,7 @@ console.error(error);
 });
 
 
-/* State selected */
+/* State change */
 
 stateSelect.addEventListener(
 "change",
@@ -468,14 +622,10 @@ function(){
 const selectedState =
 this.value;
 
-
-/* Reset district */
-
 districtSelect.innerHTML =
-'<option value="">Loading districts...</option>';
+'<option value="">District load ho rahe hain...</option>';
 
-districtSelect.disabled =
-true;
+districtSelect.disabled = true;
 
 cityInput.value = "";
 cityInput.disabled = true;
@@ -491,13 +641,11 @@ return;
 }
 
 
-/*
-Find selected state.
-Case-insensitive matching.
-*/
+/* Find state */
 
 const stateData =
-districtData.find(function(item){
+districtData.find(
+function(item){
 
 return String(item.state)
 .trim()
@@ -531,9 +679,7 @@ district;
 option.textContent =
 district;
 
-districtSelect.appendChild(
-option
-);
+districtSelect.appendChild(option);
 
 });
 
@@ -552,7 +698,7 @@ districtSelect.innerHTML =
 });
 
 
-/* District selected */
+/* District change */
 
 districtSelect.addEventListener(
 "change",
@@ -560,27 +706,21 @@ function(){
 
 if(this.value){
 
-cityInput.disabled =
-false;
-
-cityInput.placeholder =
-"Apni City / Town ka naam likhein";
+cityInput.disabled = false;
 
 }
 else{
 
-cityInput.disabled =
-true;
+cityInput.disabled = true;
 
-cityInput.value =
-"";
+cityInput.value = "";
 
 }
 
 });
 
 
-/* Photo preview */
+/* Photo */
 
 document
 .getElementById("photo")
@@ -631,7 +771,6 @@ document.getElementById(
 "locationResult"
 );
 
-
 if(!navigator.geolocation){
 
 result.innerHTML =
@@ -640,7 +779,6 @@ result.innerHTML =
 return;
 
 }
-
 
 result.innerHTML =
 "📍 Location mil rahi hai...";
@@ -656,12 +794,12 @@ position.coords.latitude;
 libraryLongitude =
 position.coords.longitude;
 
-
 result.innerHTML =
 "✅ Library location saved!<br>" +
 "Latitude: " +
 libraryLatitude +
-"<br>Longitude: " +
+"<br>" +
+"Longitude: " +
 libraryLongitude;
 
 },
@@ -765,23 +903,21 @@ return;
 }
 
 
-const facilities =
-getFacilities();
-
-
 console.log({
-ownerName:ownerName,
-mobile:mobile,
-libraryName:libraryName,
-state:state,
-district:district,
-city:city,
-address:address,
-price:price,
-seats:seats,
-facilities:facilities,
+
+ownerName,
+mobile,
+libraryName,
+state,
+district,
+city,
+address,
+price,
+seats,
+facilities:getFacilities(),
 latitude:libraryLatitude,
 longitude:libraryLongitude
+
 });
 
 
