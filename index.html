@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudySpot</title>
+    <title>StudySpot - Find Your Study Space</title>
 
     <style>
         * {
@@ -13,79 +13,121 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #222;
+            background: #f4f7fb;
+            color: #1f2937;
         }
 
         header {
-            background: #2563eb;
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
             color: white;
+            padding: 35px 20px;
             text-align: center;
-            padding: 35px 15px;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 36px;
+        .logo {
+            font-size: 38px;
+            font-weight: bold;
         }
 
-        header p {
-            margin: 10px 0 0;
-            font-size: 16px;
+        .tagline {
+            font-size: 17px;
+            margin-top: 10px;
         }
 
         .container {
-            max-width: 700px;
-            margin: 25px auto;
-            padding: 0 15px;
+            max-width: 750px;
+            margin: auto;
+            padding: 20px 15px;
         }
 
         .search-box {
             background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 22px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-top: -5px;
+        }
+
+        .search-box h2 {
+            margin-top: 0;
+            text-align: center;
         }
 
         input {
             width: 100%;
-            padding: 14px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
             font-size: 16px;
             margin-bottom: 12px;
         }
 
         button {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .nearby {
             background: #2563eb;
             color: white;
-            font-size: 16px;
         }
 
-        .library {
+        .anywhere {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .section-title {
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .library-card {
             background: white;
-            margin-top: 20px;
             padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-radius: 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
         }
 
-        .library h2 {
-            margin-top: 0;
+        .library-name {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .info {
+            margin: 8px 0;
+            font-size: 15px;
         }
 
         .tag {
             display: inline-block;
+            padding: 7px 11px;
+            margin: 4px 3px 0 0;
+            border-radius: 20px;
             background: #e8efff;
             color: #2563eb;
-            padding: 6px 10px;
-            border-radius: 20px;
-            margin: 3px;
             font-size: 13px;
+        }
+
+        .details {
+            margin-top: 15px;
+            background: #111827;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 15px;
+            color: #6b7280;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -93,32 +135,84 @@
 <body>
 
 <header>
-    <h1>📚 StudySpot</h1>
-    <p>Find the perfect study library near you</p>
+    <div class="logo">📚 StudySpot</div>
+    <div class="tagline">Find the perfect study library near you</div>
 </header>
 
 <div class="container">
 
     <div class="search-box">
-        <input type="text" placeholder="Search library or location...">
 
-        <button>
+        <h2>🔎 Find Your Study Space</h2>
+
+        <input
+            type="text"
+            placeholder="Search library or location..."
+        >
+
+        <button class="nearby">
             📍 Find Libraries Near Me
         </button>
+
+        <button class="anywhere">
+            🌍 Search Anywhere
+        </button>
+
     </div>
 
-    <div class="library">
-        <h2>📖 Example Study Library</h2>
+    <h2 class="section-title">📚 Libraries Near You</h2>
 
-        <p>📍 Jaunpur</p>
-        <p>💰 ₹500 / Month</p>
+    <div class="library-card">
 
-        <span class="tag">Wi-Fi</span>
-        <span class="tag">AC</span>
-        <span class="tag">Power Backup</span>
+        <div class="library-name">
+            📖 Example Study Library
+        </div>
+
+        <div class="info">📍 Jaunpur</div>
+        <div class="info">💰 ₹500 / Month</div>
+        <div class="info">📏 Distance: 1.2 km</div>
+
+        <div>
+            <span class="tag">Wi-Fi</span>
+            <span class="tag">AC</span>
+            <span class="tag">Power Backup</span>
+            <span class="tag">Silent Zone</span>
+        </div>
+
+        <button class="details">
+            View Library Details
+        </button>
+
+    </div>
+
+    <div class="library-card">
+
+        <div class="library-name">
+            📚 Smart Study Point
+        </div>
+
+        <div class="info">📍 Jaunpur</div>
+        <div class="info">💰 ₹700 / Month</div>
+        <div class="info">📏 Distance: 2.4 km</div>
+
+        <div>
+            <span class="tag">AC</span>
+            <span class="tag">Wi-Fi</span>
+            <span class="tag">CCTV</span>
+            <span class="tag">24×7</span>
+        </div>
+
+        <button class="details">
+            View Library Details
+        </button>
+
     </div>
 
 </div>
+
+<footer>
+    © 2026 StudySpot • Find. Choose. Study.
+</footer>
 
 </body>
 </html>
