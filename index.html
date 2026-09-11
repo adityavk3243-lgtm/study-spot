@@ -363,7 +363,10 @@ function showLibraryDetails(index) {
         library.facilities.join(" • ") +
         "</p>" +
       "<p>📏 Distance will be shown after location search.</p>" +
-"<p>🗺️ Directions will be added soon.</p>";
+"<button onclick=\"window.open('https://www.google.com/maps/dir/?api=1&destination=" +
+library.latitude + "," + library.longitude +
+"', '_blank')\">" +
+"🗺️ Get Directions</button>";
 }
     
 function findNearby() {
