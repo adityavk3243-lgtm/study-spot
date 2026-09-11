@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>StudySpot - Library Owner</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #1f2937;
+}
+
+header {
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 600px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 7px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.note {
+    background: #eff6ff;
+    color: #1e40af;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.success {
+    display: none;
+    margin-top: 15px;
+    padding: 14px;
+    background: #ecfdf5;
+    color: #065f46;
+    border-radius: 10px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #6b7280;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">📚 StudySpot</div>
+    <div>Library Owner Registration</div>
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>🏫 Register Your Library</h2>
+
+        <div class="note">
+            Fill in your library details below.
+        </div>
+
+        <label>Owner Name</label>
+        <input
+            id="ownerName"
+            type="text"
+            placeholder="Enter owner name"
+        >
+
+        <label>Mobile Number</label>
+        <input
+            id="mobile"
+            type="tel"
+            placeholder="Enter mobile number"
+        >
+
+        <label>Library Name</label>
+        <input
+            id="libraryName"
+            type="text"
+            placeholder="Enter library name"
+        >
+
+        <label>City</label>
+        <input
+            id="city"
+            type="text"
+            placeholder="Enter city"
+        >
+
+        <label>Library Address</label>
+        <textarea
+            id="address"
+            placeholder="Enter complete library address"
+        ></textarea>
+
+        <label>Monthly Price</label>
+        <input
+            id="price"
+            type="number"
+            placeholder="Example: 500"
+        >
+
+        <label>Facilities</label>
+        <textarea
+            id="facilities"
+            placeholder="Example: Wi-Fi, AC, CCTV, Power Backup"
+        ></textarea>
+
+        <button onclick="registerLibrary()">
+            📝 Submit Registration
+        </button>
+
+        <div id="success" class="success"></div>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 StudySpot
+</footer>
+
+<script>
+
+function registerLibrary() {
+
+    const ownerName =
+        document.getElementById("ownerName").value.trim();
+
+    const mobile =
+        document.getElementById("mobile").value.trim();
+
+    const libraryName =
+        document.getElementById("libraryName").value.trim();
+
+    const city =
+        document.getElementById("city").value.trim();
+
+    const address =
+        document.getElementById("address").value.trim();
+
+    const price =
+        document.getElementById("price").value.trim();
+
+    const facilities =
+        document.getElementById("facilities").value.trim();
+
+    const success =
+        document.getElementById("success");
+
+    if (
+        ownerName === "" ||
+        mobile === "" ||
+        libraryName === "" ||
+        city === "" ||
+        address === "" ||
+        price === ""
+    ) {
+
+        success.style.display = "block";
+
+        success.style.background = "#fef2f2";
+        success.style.color = "#991b1b";
+
+        success.innerHTML =
+            "❌ Please fill all required fields.";
+
+        return;
+    }
+
+    success.style.display = "block";
+
+    success.style.background = "#ecfdf5";
+    success.style.color = "#065f46";
+
+    success.innerHTML =
+        "✅ Registration form submitted successfully!<br><br>" +
+        "Library: <b>" + libraryName + "</b><br>" +
+        "Owner: " + ownerName + "<br>" +
+        "City: " + city;
+
+}
+
+</script>
+
+</body>
+</html>
