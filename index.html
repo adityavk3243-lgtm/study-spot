@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySpot</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        header {
+            background: #2563eb;
+            color: white;
+            text-align: center;
+            padding: 35px 15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        header p {
+            margin: 10px 0 0;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+        }
+
+        .library {
+            background: white;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .library h2 {
+            margin-top: 0;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #e8efff;
+            color: #2563eb;
+            padding: 6px 10px;
+            border-radius: 20px;
+            margin: 3px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>📚 StudySpot</h1>
+    <p>Find the perfect study library near you</p>
+</header>
+
+<div class="container">
+
+    <div class="search-box">
+        <input type="text" placeholder="Search library or location...">
+
+        <button>
+            📍 Find Libraries Near Me
+        </button>
+    </div>
+
+    <div class="library">
+        <h2>📖 Example Study Library</h2>
+
+        <p>📍 Jaunpur</p>
+        <p>💰 ₹500 / Month</p>
+
+        <span class="tag">Wi-Fi</span>
+        <span class="tag">AC</span>
+        <span class="tag">Power Backup</span>
+    </div>
+
+</div>
+
+</body>
+</html>
