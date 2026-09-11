@@ -479,14 +479,14 @@ function findNearby() {
             }
 
         },
+function(error) {
 
-        function(error) {
+    locationBox.innerHTML =
+        "❌ Location Error<br><br>" +
+        "Code: " + error.code +
+        "<br>Reason: " + error.message;
 
-            locationBox.innerHTML =
-                "❌ We could not get your location.<br>" +
-                "Please allow location access and try again.";
-
-        },
+},
 
         {
             enableHighAccuracy: false,
