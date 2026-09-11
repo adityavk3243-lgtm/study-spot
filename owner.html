@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>StudySpot - Library Owner</title>
+<title>StudySpot - Register Library</title>
 
 <style>
 * {
@@ -30,22 +30,33 @@ header {
     font-weight: bold;
 }
 
-.container {
-    max-width: 600px;
-    margin: 25px auto;
-    padding: 0 15px;
+.subtitle {
+    margin-top: 8px;
+    font-size: 15px;
 }
 
-.card {
+.container {
+    max-width: 750px;
+    margin: auto;
+    padding: 20px 15px;
+}
+
+.form-box {
     background: white;
     padding: 22px;
-    border-radius: 18px;
+    border-radius: 20px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.08);
 }
 
 h2 {
     text-align: center;
-    margin-top: 0;
+}
+
+.section {
+    margin-top: 28px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eef2ff;
+    color: #2563eb;
 }
 
 label {
@@ -59,7 +70,7 @@ input,
 textarea,
 select {
     width: 100%;
-    padding: 13px;
+    padding: 14px;
     border: 1px solid #d1d5db;
     border-radius: 10px;
     font-size: 16px;
@@ -70,39 +81,67 @@ textarea {
     resize: vertical;
 }
 
-button {
-    width: 100%;
-    padding: 14px;
-    border: none;
+input[type="file"] {
+    padding: 12px;
+    background: #f8fafc;
+}
+
+.checkbox-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.checkbox {
+    background: #f1f5ff;
+    padding: 12px;
     border-radius: 10px;
+}
+
+.checkbox input {
+    width: auto;
+    margin-right: 7px;
+}
+
+.submit {
+    width: 100%;
+    margin-top: 30px;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
     background: #2563eb;
     color: white;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
-    margin-top: 20px;
 }
 
 .note {
+    margin-top: 15px;
+    padding: 14px;
     background: #eff6ff;
     color: #1e40af;
-    padding: 12px;
     border-radius: 10px;
-    margin-bottom: 15px;
     font-size: 14px;
 }
 
-.success {
-    display: none;
-    margin-top: 15px;
-    padding: 14px;
-    background: #ecfdf5;
-    color: #065f46;
+#photoPreview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+#photoPreview img {
+    width: 100px;
+    height: 80px;
+    object-fit: cover;
     border-radius: 10px;
 }
 
 footer {
     text-align: center;
-    padding: 25px;
+    padding: 30px;
     color: #6b7280;
 }
 </style>
@@ -112,138 +151,253 @@ footer {
 
 <header>
     <div class="logo">📚 StudySpot</div>
-    <div>Library Owner Registration</div>
+    <div class="subtitle">Register Your Library</div>
 </header>
 
 <div class="container">
 
-    <div class="card">
+<div class="form-box">
 
-        <h2>🏫 Register Your Library</h2>
+<h2>🏠 Register Your Library</h2>
 
-        <div class="note">
-            Fill in your library details below.
-        </div>
+<div class="note">
+Fill in your library details carefully. You can provide extra information too.
+</div>
 
-        <label>Owner Name</label>
-        <input
-            id="ownerName"
-            type="text"
-            placeholder="Enter owner name"
-        >
 
-        <label>Mobile Number</label>
-        <input
-            id="mobile"
-            type="tel"
-            placeholder="Enter mobile number"
-        >
+<h3 class="section">👤 Owner Details</h3>
 
-        <label>Library Name</label>
-        <input
-            id="libraryName"
-            type="text"
-            placeholder="Enter library name"
-        >
+<label>Owner Name</label>
+<input type="text" placeholder="Enter owner name">
 
-        <label>City</label>
-        <input
-            id="city"
-            type="text"
-            placeholder="Enter city"
-        >
+<label>Mobile Number</label>
+<input type="tel" placeholder="Enter mobile number">
 
-        <label>Library Address</label>
-        <textarea
-            id="address"
-            placeholder="Enter complete library address"
-        ></textarea>
+<label>WhatsApp Number</label>
+<input type="tel" placeholder="Enter WhatsApp number">
 
-        <label>Monthly Price</label>
-        <input
-            id="price"
-            type="number"
-            placeholder="Example: 500"
-        >
+<label>Email</label>
+<input type="email" placeholder="Enter email address">
 
-        <label>Facilities</label>
-        <textarea
-            id="facilities"
-            placeholder="Example: Wi-Fi, AC, CCTV, Power Backup"
-        ></textarea>
+<label>Password</label>
+<input type="password" placeholder="Create password">
 
-        <button onclick="registerLibrary()">
-            📝 Submit Registration
-        </button>
+<label>Confirm Password</label>
+<input type="password" placeholder="Confirm password">
 
-        <div id="success" class="success"></div>
 
-    </div>
+<h3 class="section">📚 Library Details</h3>
+
+<label>Library Name</label>
+<input type="text" placeholder="Enter library name">
+
+<label>State</label>
+<select>
+    <option value="">Select State</option>
+    <option>Uttar Pradesh</option>
+    <option>Bihar</option>
+    <option>Delhi</option>
+    <option>Madhya Pradesh</option>
+    <option>Rajasthan</option>
+    <option>Haryana</option>
+    <option>Other</option>
+</select>
+
+<label>District</label>
+<input type="text" placeholder="Enter district">
+
+<label>City</label>
+<input type="text" placeholder="Enter city">
+
+<label>Complete Library Address</label>
+<textarea placeholder="Enter complete library address"></textarea>
+
+<label>Pincode</label>
+<input type="number" placeholder="Enter pincode">
+
+<label>Nearby Landmark</label>
+<input type="text" placeholder="Example: Near Railway Station">
+
+
+<h3 class="section">💰 Pricing & Timing</h3>
+
+<label>Monthly Price</label>
+<input type="number" placeholder="Example: 500">
+
+<label>Daily Price</label>
+<input type="number" placeholder="Example: 50">
+
+<label>Opening Time</label>
+<input type="time">
+
+<label>Closing Time</label>
+<input type="time">
+
+
+<h3 class="section">🪑 Library Capacity</h3>
+
+<label>Total Seats</label>
+<input type="number" placeholder="Example: 100">
+
+<label>Currently Available Seats</label>
+<input type="number" placeholder="Example: 25">
+
+<label>Library Type</label>
+<select>
+    <option value="">Select</option>
+    <option>For Everyone</option>
+    <option>Only Boys</option>
+    <option>Only Girls</option>
+</select>
+
+
+<h3 class="section">✨ Facilities</h3>
+
+<div class="checkbox-area">
+
+<label class="checkbox">
+<input type="checkbox"> Wi-Fi
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> AC
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> CCTV
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> Power Backup
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> Parking
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> Drinking Water
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> Washroom
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> Charging Point
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> Newspaper
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> Separate Cabin
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> 24×7
+</label>
+
+<label class="checkbox">
+<input type="checkbox"> Silent Zone
+</label>
+
+</div>
+
+
+<h3 class="section">📸 Library Photos</h3>
+
+<label>Upload Library Photos</label>
+
+<input
+    type="file"
+    id="photos"
+    accept="image/*"
+    multiple
+    onchange="previewPhotos()"
+>
+
+<div id="photoPreview"></div>
+
+<div class="note">
+You can select multiple photos of the library, such as front view, study area, seats and facilities.
+</div>
+
+
+<h3 class="section">📝 More Information</h3>
+
+<label>Library Description</label>
+<textarea placeholder="Tell students about your library"></textarea>
+
+<label>Library Rules</label>
+<textarea placeholder="Example: Maintain silence, carry ID card, etc."></textarea>
+
+<label>Special Offer / Discount</label>
+<input type="text" placeholder="Example: First month 20% discount">
+
+<label>Other Information</label>
+<textarea placeholder="Write anything else about your library..."></textarea>
+
+
+<h3 class="section">📍 Location</h3>
+
+<label>Google Maps Location / Link</label>
+<input
+    type="text"
+    placeholder="Paste Google Maps link here"
+>
+
+<button class="submit" onclick="registerLibrary()">
+    🚀 Register My Library
+</button>
+
+<div class="note">
+🔒 Your information will later be connected to a secure database. Passwords will not be stored as plain text.
+</div>
+
+</div>
 
 </div>
 
 <footer>
-    © 2026 StudySpot
+© 2026 StudySpot • Find. Choose. Study.
 </footer>
+
 
 <script>
 
+function previewPhotos() {
+
+    const files = document.getElementById("photos").files;
+    const preview = document.getElementById("photoPreview");
+
+    preview.innerHTML = "";
+
+    for (let i = 0; i < files.length; i++) {
+
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+
+            const img = document.createElement("img");
+
+            img.src = event.target.result;
+
+            preview.appendChild(img);
+        };
+
+        reader.readAsDataURL(files[i]);
+    }
+}
+
+
 function registerLibrary() {
 
-    const ownerName =
-        document.getElementById("ownerName").value.trim();
-
-    const mobile =
-        document.getElementById("mobile").value.trim();
-
-    const libraryName =
-        document.getElementById("libraryName").value.trim();
-
-    const city =
-        document.getElementById("city").value.trim();
-
-    const address =
-        document.getElementById("address").value.trim();
-
-    const price =
-        document.getElementById("price").value.trim();
-
-    const facilities =
-        document.getElementById("facilities").value.trim();
-
-    const success =
-        document.getElementById("success");
-
-    if (
-        ownerName === "" ||
-        mobile === "" ||
-        libraryName === "" ||
-        city === "" ||
-        address === "" ||
-        price === ""
-    ) {
-
-        success.style.display = "block";
-
-        success.style.background = "#fef2f2";
-        success.style.color = "#991b1b";
-
-        success.innerHTML =
-            "❌ Please fill all required fields.";
-
-        return;
-    }
-
-    success.style.display = "block";
-
-    success.style.background = "#ecfdf5";
-    success.style.color = "#065f46";
-
-    success.innerHTML =
-        "✅ Registration form submitted successfully!<br><br>" +
-        "Library: <b>" + libraryName + "</b><br>" +
-        "Owner: " + ownerName + "<br>" +
-        "City: " + city;
+    alert(
+        "✅ Library form completed!\n\n" +
+        "Database connection will be added in the next step."
+    );
 
 }
 
