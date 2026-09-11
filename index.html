@@ -335,19 +335,35 @@ function showLibraryDetails(index) {
 
     const library = libraries[index];
 
-    const message =
-        document.getElementById("resultMessage");
+    const button =
+        document.querySelectorAll(".details")[index];
 
-    message.style.display = "block";
+    const card =
+        button.closest(".library-card");
 
-    message.innerHTML =
-        "📚 <b>" + library.name + "</b><br><br>" +
-        "📍 Location: " + library.city + "<br>" +
-        "💰 Price: ₹" + library.price + " / Month<br><br>" +
-        "✨ <b>Facilities:</b><br>" +
+    let details =
+        card.querySelector(".library-details");
+
+    if (!details) {
+
+        details =
+            document.createElement("div");
+
+        details.className = "library-details";
+
+        card.appendChild(details);
+    }
+
+    details.innerHTML =
+        "<hr>" +
+        "<h3>📚 " + library.name + "</h3>" +
+        "<p>📍 Location: " + library.city + "</p>" +
+        "<p>💰 Price: ₹" + library.price + " / Month</p>" +
+        "<p>✨ <b>Facilities:</b><br>" +
         library.facilities.join(" • ") +
-        "<br><br>" +
-        "🗺️ Location details will be added soon.";
+        "</p>" +
+        "<p>📏 Distance will be shown after location search.</p>" +
+        "<p>🗺️ Directions will be added soon.</p>";
 }
     
 function findNearby() {
