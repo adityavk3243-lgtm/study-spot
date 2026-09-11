@@ -337,10 +337,11 @@ function findNearby() {
     const locationBox =
         document.getElementById("locationBox");
 
-    locationBox.style.display = "block";
+    const message =
+        document.getElementById("resultMessage");
 
-    locationBox.innerHTML =
-        "📍 Getting your location...";
+    locationBox.style.display = "block";
+    locationBox.innerHTML = "📍 Getting your location...";
 
     if (!navigator.geolocation) {
 
@@ -354,30 +355,94 @@ function findNearby() {
 
         function(position) {
 
-            const latitude =
-                position.coords.latitude.toFixed(5);
-
-            const longitude =
-                position.coords.longitude.toFixed(5);
+            const userLat = position.coords.latitude;
+            const userLon = position.coords.longitude;
 
             locationBox.innerHTML =
                 "✅ Location found!<br><br>" +
-                "Latitude: " + latitude +
-                "<br>Longitude: " + longitude +
-                "<br><br>" +
-                "🔎 Searching within " +
-                selectedRadius +
-                " km...";
+                "Latitude: " + userLat.toFixed(5) +
+                "<br>Longitude: " + userLon.toFixed(5) +
+                "<br><br>🔎 Checking libraries...";
 
-            const message =
-                document.getElementById("resultMessage");
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+
+                const R = 6371;
+
+                const dLat =
+                    (lat2 - lat1) * Math.PI / 180;
+
+                const dLon =
+                    (lon2 - lon1) * Math.PI / 180;
+
+                const a =
+                    Math.sin(dLat / 2) *
+                    Math.sin(dLat / 2) +
+                    Math.cos(lat1 * Math.PI / 180) *
+                    Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon / 2) *
+                    Math.sin(dLon / 2);
+
+                const c =
+                    2 * Math.atan2(
+                        Math.sqrt(a),
+                        Math.sqrt(1 - a)
+                    );
+
+                return R * c;
+            }
+
+            const nearbyLibraries = libraries.filter(library => {
+
+                const distance = calculateDistance(
+                    userLat,
+                    userLon,
+                    library.latitude,
+                    library.longitude
+                );
+
+                library.distance = distance;
+
+                return distance <= selectedRadius;
+
+            });
 
             message.style.display = "block";
 
-            message.innerHTML =
-                "📚 Showing libraries within " +
-                selectedRadius +
-                " km of your location.";
+            if (nearbyLibraries.length === 0) {
+
+                message.innerHTML =
+                    "😕 " +
+                    "No libraries found within " +
+                    selectedRadius +
+                    " km.";
+
+            } else {
+
+                let html =
+                    "📚 <b>Libraries within " +
+                    selectedRadius +
+                    " km:</b><br><br>";
+
+                nearbyLibraries.forEach(library => {
+
+                    html +=
+                        "📖 <b>" +
+                        library.name +
+                        "</b><br>" +
+                        "📍 " +
+                        library.city +
+                        "<br>" +
+                        "📏 " +
+                        library.distance.toFixed(2) +
+                        " km away<br>" +
+                        "💰 ₹" +
+                        library.price +
+                        " / Month<br><br>";
+
+                });
+
+                message.innerHTML = html;
+            }
 
         },
 
@@ -390,13 +455,14 @@ function findNearby() {
         },
 
         {
-            enableHighAccuracy: true,
+            enableHighAccuracy: false,
             timeout: 15000,
-            maximumAge: 0
+            maximumAge: 300000
         }
 
     );
 }
+
 
 
 function searchAnywhere() {
