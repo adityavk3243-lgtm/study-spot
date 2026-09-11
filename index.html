@@ -250,9 +250,9 @@ footer {
         <span class="tag">Power Backup</span>
         <span class="tag">Silent Zone</span>
 
-        <button class="details">
-            View Library Details
-        </button>
+ <button class="details" onclick="showLibraryDetails(0)">
+    View Library Details
+ </button>
 
     </div>
 
@@ -271,8 +271,8 @@ footer {
         <span class="tag">CCTV</span>
         <span class="tag">24×7</span>
 
-        <button class="details">
-            View Library Details
+        <button class="details" onclick="showLibraryDetails(1)">
+    View Library Details
         </button>
 
     </div>
@@ -331,7 +331,25 @@ function selectRadius(radius) {
         " km will be searched.";
 }
 
+function showLibraryDetails(index) {
 
+    const library = libraries[index];
+
+    const message =
+        document.getElementById("resultMessage");
+
+    message.style.display = "block";
+
+    message.innerHTML =
+        "📚 <b>" + library.name + "</b><br><br>" +
+        "📍 Location: " + library.city + "<br>" +
+        "💰 Price: ₹" + library.price + " / Month<br><br>" +
+        "✨ <b>Facilities:</b><br>" +
+        library.facilities.join(" • ") +
+        "<br><br>" +
+        "🗺️ Location details will be added soon.";
+}
+    
 function findNearby() {
 
     const locationBox =
