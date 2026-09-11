@@ -31,7 +31,7 @@ header {
 }
 
 .tagline {
-    font-size: 17px;
+    font-size: 16px;
     margin-top: 10px;
 }
 
@@ -64,7 +64,7 @@ input {
 
 button {
     width: 100%;
-    padding: 15px;
+    padding: 14px;
     border: none;
     border-radius: 12px;
     font-size: 16px;
@@ -77,9 +77,33 @@ button {
     color: white;
 }
 
-.anywhere {
+.radius-title {
+    margin-top: 18px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.radius-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.radius-button {
+    flex: 1;
     background: #eef2ff;
     color: #3730a3;
+    border: 2px solid transparent;
+}
+
+.radius-button.active {
+    background: #2563eb;
+    color: white;
+}
+
+.anywhere {
+    background: #111827;
+    color: white;
+    margin-top: 15px;
 }
 
 .location-box {
@@ -90,6 +114,15 @@ button {
     margin-top: 15px;
     border-radius: 12px;
     font-size: 14px;
+}
+
+.result-message {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    color: #1e40af;
+    border-radius: 12px;
+    display: none;
 }
 
 .section-title {
@@ -105,7 +138,7 @@ button {
 }
 
 .library-name {
-    font-size: 22px;
+    font-size: 21px;
     font-weight: bold;
     margin-bottom: 12px;
 }
@@ -125,9 +158,9 @@ button {
 }
 
 .details {
-    margin-top: 15px;
     background: #111827;
     color: white;
+    margin-top: 15px;
 }
 
 footer {
@@ -151,13 +184,44 @@ footer {
 
         <h2>🔎 Find Your Study Space</h2>
 
-        <input id="searchInput"
-               type="text"
-               placeholder="Search library or location...">
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Search library or location..."
+        >
 
         <button class="nearby" onclick="findNearby()">
             📍 Find Libraries Near Me
         </button>
+
+        <div class="radius-title">
+            Search distance:
+        </div>
+
+        <div class="radius-buttons">
+
+            <button
+                class="radius-button active"
+                id="radius5"
+                onclick="selectRadius(5)">
+                5 km
+            </button>
+
+            <button
+                class="radius-button"
+                id="radius10"
+                onclick="selectRadius(10)">
+                10 km
+            </button>
+
+            <button
+                class="radius-button"
+                id="radius15"
+                onclick="selectRadius(15)">
+                15 km
+            </button>
+
+        </div>
 
         <button class="anywhere" onclick="searchAnywhere()">
             🌍 Search Anywhere
@@ -165,49 +229,51 @@ footer {
 
         <div id="locationBox" class="location-box"></div>
 
+        <div id="resultMessage" class="result-message"></div>
+
     </div>
 
-    <h2 class="section-title">📚 Libraries Near You</h2>
+    <h2 class="section-title">📚 Libraries</h2>
 
-    <div id="libraries">
+    <div class="library-card">
 
-        <div class="library-card">
-            <div class="library-name">
-                📖 Example Study Library
-            </div>
-
-            <div class="info">📍 Jaunpur</div>
-            <div class="info">💰 ₹500 / Month</div>
-            <div class="info">📏 Distance: 1.2 km</div>
-
-            <span class="tag">Wi-Fi</span>
-            <span class="tag">AC</span>
-            <span class="tag">Power Backup</span>
-            <span class="tag">Silent Zone</span>
-
-            <button class="details">
-                View Library Details
-            </button>
+        <div class="library-name">
+            📖 Example Study Library
         </div>
 
-        <div class="library-card">
-            <div class="library-name">
-                📚 Smart Study Point
-            </div>
+        <div class="info">📍 Jaunpur</div>
+        <div class="info">💰 ₹500 / Month</div>
+        <div class="info">📏 1.2 km away</div>
 
-            <div class="info">📍 Jaunpur</div>
-            <div class="info">💰 ₹700 / Month</div>
-            <div class="info">📏 Distance: 2.4 km</div>
+        <span class="tag">Wi-Fi</span>
+        <span class="tag">AC</span>
+        <span class="tag">Power Backup</span>
+        <span class="tag">Silent Zone</span>
 
-            <span class="tag">AC</span>
-            <span class="tag">Wi-Fi</span>
-            <span class="tag">CCTV</span>
-            <span class="tag">24×7</span>
+        <button class="details">
+            View Library Details
+        </button>
 
-            <button class="details">
-                View Library Details
-            </button>
+    </div>
+
+    <div class="library-card">
+
+        <div class="library-name">
+            📚 Smart Study Point
         </div>
+
+        <div class="info">📍 Jaunpur</div>
+        <div class="info">💰 ₹700 / Month</div>
+        <div class="info">📏 2.4 km away</div>
+
+        <span class="tag">AC</span>
+        <span class="tag">Wi-Fi</span>
+        <span class="tag">CCTV</span>
+        <span class="tag">24×7</span>
+
+        <button class="details">
+            View Library Details
+        </button>
 
     </div>
 
@@ -219,42 +285,94 @@ footer {
 
 <script>
 
+let selectedRadius = 5;
+
+function selectRadius(radius) {
+
+    selectedRadius = radius;
+
+    document
+        .querySelectorAll(".radius-button")
+        .forEach(button => {
+            button.classList.remove("active");
+        });
+
+    document
+        .getElementById("radius" + radius)
+        .classList.add("active");
+
+    const message = document.getElementById("resultMessage");
+
+    message.style.display = "block";
+
+    message.innerHTML =
+        "📍 Libraries within " +
+        radius +
+        " km will be searched.";
+}
+
+
 function findNearby() {
 
-    const locationBox = document.getElementById("locationBox");
-
-    if (!navigator.geolocation) {
-        locationBox.style.display = "block";
-        locationBox.innerHTML =
-            "❌ Your browser does not support location.";
-        return;
-    }
+    const locationBox =
+        document.getElementById("locationBox");
 
     locationBox.style.display = "block";
+
     locationBox.innerHTML =
         "📍 Getting your location...";
+
+    if (!navigator.geolocation) {
+
+        locationBox.innerHTML =
+            "❌ Location is not supported by this browser.";
+
+        return;
+    }
 
     navigator.geolocation.getCurrentPosition(
 
         function(position) {
 
-            const latitude = position.coords.latitude.toFixed(5);
-            const longitude = position.coords.longitude.toFixed(5);
+            const latitude =
+                position.coords.latitude.toFixed(5);
+
+            const longitude =
+                position.coords.longitude.toFixed(5);
 
             locationBox.innerHTML =
                 "✅ Location found!<br><br>" +
                 "Latitude: " + latitude +
                 "<br>Longitude: " + longitude +
-                "<br><br>🔎 Searching for nearby libraries...";
+                "<br><br>" +
+                "🔎 Searching within " +
+                selectedRadius +
+                " km...";
+
+            const message =
+                document.getElementById("resultMessage");
+
+            message.style.display = "block";
+
+            message.innerHTML =
+                "📚 Showing libraries within " +
+                selectedRadius +
+                " km of your location.";
 
         },
 
         function(error) {
 
             locationBox.innerHTML =
-                "❌ Location permission was not allowed.<br>" +
+                "❌ We could not get your location.<br>" +
                 "Please allow location access and try again.";
 
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
         }
 
     );
@@ -263,20 +381,25 @@ function findNearby() {
 
 function searchAnywhere() {
 
-    const search = document
-        .getElementById("searchInput")
-        .value
-        .trim();
+    const search =
+        document.getElementById("searchInput").value.trim();
+
+    const message =
+        document.getElementById("resultMessage");
+
+    message.style.display = "block";
 
     if (search === "") {
 
-        alert("Please enter a city, area or library name.");
+        message.innerHTML =
+            "🔎 Please enter a city, area or library name.";
 
     } else {
 
-        alert(
-            "Searching StudySpot for: " + search
-        );
+        message.innerHTML =
+            "🌍 Searching StudySpot for: <b>" +
+            search +
+            "</b>";
 
     }
 }
