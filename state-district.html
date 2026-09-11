@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>StudySpot - State & District</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7ff;
+  color:#222;
+}
+
+.header{
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  color:white;
+  text-align:center;
+  padding:25px 15px;
+}
+
+.header h1{
+  margin:0;
+}
+
+.container{
+  max-width:700px;
+  margin:20px auto;
+  padding:0 15px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+label{
+  display:block;
+  margin:15px 0 6px;
+  font-weight:bold;
+}
+
+select,
+input{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
+  border-radius:9px;
+  font-size:16px;
+  background:white;
+}
+
+.info{
+  margin-top:15px;
+  padding:12px;
+  background:#eff6ff;
+  color:#1e40af;
+  border-radius:9px;
+}
+
+.district-box{
+  margin-top:20px;
+  padding:15px;
+  background:#f8fafc;
+  border-radius:10px;
+}
+
+.district{
+  padding:10px;
+  margin:6px 0;
+  background:white;
+  border:1px solid #e2e8f0;
+  border-radius:8px;
+}
+
+.count{
+  font-weight:bold;
+  color:#2563eb;
+  margin-top:15px;
+}
+
+.back{
+  width:100%;
+  padding:13px;
+  margin-top:20px;
+  border:0;
+  border-radius:9px;
+  background:#e5e7eb;
+  font-size:16px;
+  font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>📚 StudySpot</h1>
+
+<p>State & District Management</p>
+
+</div>
+
+
+<div class="container">
+
+<div class="card">
+
+<h2>🇮🇳 State / UT & District</h2>
+
+<label>Select State / Union Territory</label>
+
+<select id="state">
+
+<option value="">
+Select State / UT
+</option>
+
+<option>Andhra Pradesh</option>
+<option>Arunachal Pradesh</option>
+<option>Assam</option>
+<option>Bihar</option>
+<option>Chhattisgarh</option>
+<option>Goa</option>
+<option>Gujarat</option>
+<option>Haryana</option>
+<option>Himachal Pradesh</option>
+<option>Jharkhand</option>
+<option>Karnataka</option>
+<option>Kerala</option>
+<option>Madhya Pradesh</option>
+<option>Maharashtra</option>
+<option>Manipur</option>
+<option>Meghalaya</option>
+<option>Mizoram</option>
+<option>Nagaland</option>
+<option>Odisha</option>
+<option>Punjab</option>
+<option>Rajasthan</option>
+<option>Sikkim</option>
+<option>Tamil Nadu</option>
+<option>Telangana</option>
+<option>Tripura</option>
+<option>Uttar Pradesh</option>
+<option>Uttarakhand</option>
+<option>West Bengal</option>
+
+<option>Andaman and Nicobar Islands</option>
+<option>Chandigarh</option>
+<option>Dadra and Nagar Haveli and Daman and Diu</option>
+<option>Delhi</option>
+<option>Jammu and Kashmir</option>
+<option>Ladakh</option>
+<option>Lakshadweep</option>
+<option>Puducherry</option>
+
+</select>
+
+
+<label>Search District</label>
+
+<input
+type="text"
+id="search"
+placeholder="District search karein..."
+>
+
+
+<div class="count" id="count">
+District select karne ke baad list dikhegi.
+</div>
+
+
+<div
+class="district-box"
+id="districtBox"
+>
+
+</div>
+
+
+<div class="info">
+
+💡 Ye page future me StudySpot ke
+State aur District data ko manage karne ke
+kaam aayega.
+
+</div>
+
+
+<button
+class="back"
+onclick="window.location.href='index.html'"
+>
+
+⬅️ Back to StudySpot
+
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/*
+====================================
+STATE → DISTRICT DATA
+====================================
+*/
+
+const DISTRICT_URL =
+"https://raw.githubusercontent.com/KTBsomen/Indian-state-district-json/main/india-states-districts-latest.json";
+
+
+let districtData = [];
+
+
+/*
+Load district data
+*/
+
+fetch(DISTRICT_URL)
+
+.then(function(response){
+
+if(!response.ok){
+
+throw new Error(
+"District data load nahi hua"
+);
+
+}
+
+return response.json();
+
+})
+
+.then(function(data){
+
+districtData = data;
+
+})
+
+.catch(function(error){
+
+console.error(error);
+
+document.getElementById(
+"count"
+).textContent =
+"❌ District data load nahi ho paya.";
+
+});
+
+
+/*
+====================================
+STATE CHANGE
+====================================
+*/
+
+document
+.getElementById("state")
+.addEventListener(
+"change",
+showDistricts
+);
+
+
+/*
+====================================
+SEARCH CHANGE
+====================================
+*/
+
+document
+.getElementById("search")
+.addEventListener(
+"input",
+showDistricts
+);
+
+
+/*
+====================================
+SHOW DISTRICTS
+====================================
+*/
+
+function showDistricts(){
+
+const selectedState =
+document.getElementById(
+"state"
+).value;
+
+const search =
+document.getElementById(
+"search"
+).value
+.trim()
+.toLowerCase();
+
+
+const box =
+document.getElementById(
+"districtBox"
+);
+
+
+const count =
+document.getElementById(
+"count"
+);
+
+
+box.innerHTML = "";
+
+
+if(!selectedState){
+
+count.textContent =
+"District select karne ke baad list dikhegi.";
+
+return;
+
+}
+
+
+const stateData =
+districtData.find(
+function(item){
+
+return String(item.state)
+.trim()
+.toLowerCase()
+===
+selectedState
+.trim()
+.toLowerCase();
+
+});
+
+
+if(
+!stateData ||
+!Array.isArray(stateData.districts)
+){
+
+count.textContent =
+"❌ Is State ka district data nahi mila.";
+
+return;
+
+}
+
+
+const districts =
+stateData.districts.filter(
+function(district){
+
+return district
+.toLowerCase()
+.includes(search);
+
+});
+
+
+count.textContent =
+"Total District: " +
+districts.length;
+
+
+districts.forEach(
+function(district){
+
+const div =
+document.createElement("div");
+
+div.className =
+"district";
+
+div.textContent =
+"📍 " + district;
+
+box.appendChild(div);
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
