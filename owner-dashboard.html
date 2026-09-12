@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owner Dashboard - StudySpot</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      text-align: center;
+      padding: 32px 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .header p {
+      margin: 10px 0 0;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 30px auto;
+      padding: 0 18px;
+    }
+
+    .welcome {
+      background: white;
+      padding: 24px;
+      border-radius: 18px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    .welcome h2 {
+      margin-top: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #2563eb;
+    }
+
+    .card p {
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .action-button {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .action-button:hover {
+      background: #1d4ed8;
+    }
+
+    .logout {
+      background: #dc2626;
+    }
+
+    .logout:hover {
+      background: #b91c1c;
+    }
+
+    .back {
+      background: #64748b;
+    }
+
+    .back:hover {
+      background: #475569;
+    }
+
+    .notice {
+      margin-top: 22px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #fef3c7;
+      color: #92400e;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <h1>📚 StudySpot</h1>
+    <p>Library Owner Dashboard</p>
+  </div>
+
+  <div class="container">
+
+    <div class="welcome">
+      <h2>Welcome, Library Owner!</h2>
+      <p>Manage your library information and account from this dashboard.</p>
+    </div>
+
+    <div class="grid">
+
+      <div class="card">
+        <h3>🏫 My Library</h3>
+        <p>View your registered library information.</p>
+        <a class="action-button" href="owner.html">
+          View Library
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>✏️ Edit Library Details</h3>
+        <p>Update your library name, address, facilities and other details.</p>
+        <a class="action-button" href="owner.html">
+          Edit Details
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>📷 Manage Photos</h3>
+        <p>Add or update photos of your library.</p>
+        <a class="action-button" href="owner.html">
+          Manage Photos
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>💰 Price & Facilities</h3>
+        <p>Update library fees and available facilities.</p>
+        <a class="action-button" href="owner.html">
+          Update Information
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>👤 Account Settings</h3>
+        <p>Manage your account information and password settings.</p>
+        <a class="action-button" href="owner-login.html">
+          Account Settings
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>🚪 Logout</h3>
+        <p>Return to the owner login page.</p>
+        <a class="action-button logout" href="owner-login.html">
+          Logout
+        </a>
+      </div>
+
+    </div>
+
+    <div class="notice">
+      <strong>Important:</strong> This is currently a dashboard design.
+      Real account data, secure login and permanent library updates will be
+      connected after the database is added.
+    </div>
+
+    <a class="action-button back" href="index.html">
+      ⬅️ Back to StudySpot
+    </a>
+
+  </div>
+
+</body>
+</html>
