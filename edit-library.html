@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Library Details - StudySpot</title>
+  <title>Edit Library - StudySpot</title>
 
   <style>
     * {
@@ -29,14 +30,15 @@
     }
 
     .container {
-      max-width: 650px;
+      max-width: 700px;
       margin: 25px auto;
-      padding: 20px;
+      padding: 15px;
     }
 
-    .box {
+    .section {
       background: white;
-      padding: 22px;
+      padding: 20px;
+      margin-bottom: 20px;
       border-radius: 15px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     }
@@ -44,11 +46,12 @@
     h2 {
       color: #2563eb;
       margin-top: 0;
+      font-size: 22px;
     }
 
     label {
       display: block;
-      margin-top: 15px;
+      margin-top: 14px;
       margin-bottom: 6px;
       font-weight: bold;
     }
@@ -68,10 +71,20 @@
       resize: vertical;
     }
 
-    .save-button {
+    input[type="checkbox"] {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    .facility {
+      margin-top: 12px;
+      font-weight: normal;
+    }
+
+    .update-button {
       width: 100%;
-      margin-top: 22px;
-      padding: 14px;
+      margin-top: 20px;
+      padding: 13px;
       border: none;
       border-radius: 8px;
       background: #2563eb;
@@ -81,23 +94,51 @@
       cursor: pointer;
     }
 
-    .back-button {
-      display: block;
-      text-align: center;
-      margin-top: 15px;
-      color: #2563eb;
-      text-decoration: none;
-      font-weight: bold;
+    .update-button:hover {
+      background: #1d4ed8;
     }
 
     .message {
       display: none;
-      margin-top: 15px;
+      margin-top: 12px;
       padding: 12px;
       border-radius: 8px;
       background: #dcfce7;
       color: #166534;
       text-align: center;
+    }
+
+    .photo-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .photo-preview img {
+      width: 95px;
+      height: 95px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .location-box {
+      padding: 12px;
+      background: #eff6ff;
+      border-radius: 8px;
+      margin-top: 12px;
+      color: #1e40af;
+      word-break: break-word;
+    }
+
+    .back-button {
+      display: block;
+      text-align: center;
+      margin: 20px 0;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -105,99 +146,230 @@
 <body>
   <header>
     <h1>📚 StudySpot</h1>
-    <p>Edit Library Details</p>
+    <p>Edit Library Information</p>
   </header>
 
   <div class="container">
-    <div class="box">
-      <h2>Library Information</h2>
 
-      <form id="libraryForm">
-        <label for="libraryName">Library Name</label>
-        <input
-          type="text"
-          id="libraryName"
-          placeholder="Enter library name"
-          required
-        >
+    <!-- Library Details -->
+    <div class="section">
+      <h2>1. Library Details</h2>
 
-        <label for="ownerName">Owner Name</label>
-        <input
-          type="text"
-          id="ownerName"
-          placeholder="Enter owner name"
-          required
-        >
+      <label for="libraryName">Library Name</label>
+      <input type="text" id="libraryName" placeholder="Enter library name">
 
-        <label for="mobileNumber">Mobile Number</label>
-        <input
-          type="tel"
-          id="mobileNumber"
-          placeholder="Enter mobile number"
-          required
-        >
+      <label for="ownerName">Owner Name</label>
+      <input type="text" id="ownerName" placeholder="Enter owner name">
 
-        <label for="address">Complete Address</label>
-        <textarea
-          id="address"
-          placeholder="Enter complete library address"
-          required
-        ></textarea>
+      <label for="mobileNumber">Mobile Number</label>
+      <input type="tel" id="mobileNumber" placeholder="Enter mobile number">
 
-        <label for="city">City</label>
-        <input
-          type="text"
-          id="city"
-          placeholder="Enter city"
-          required
-        >
+      <label for="address">Complete Address</label>
+      <textarea id="address" placeholder="Enter complete library address"></textarea>
 
-        <label for="monthlyFee">Monthly Fee</label>
-        <input
-          type="number"
-          id="monthlyFee"
-          placeholder="Enter monthly fee in rupees"
-          required
-        >
+      <label for="city">City</label>
+      <input type="text" id="city" placeholder="Enter city">
 
-        <label for="facilities">Facilities</label>
-        <textarea
-          id="facilities"
-          placeholder="Example: Wi-Fi, AC, CCTV, Power Backup, Silent Zone"
-        ></textarea>
+      <button class="update-button" type="button" onclick="updateDetails()">
+        Update Library Details
+      </button>
 
-        <label for="openingTime">Opening Time</label>
-        <input type="time" id="openingTime">
-
-        <label for="closingTime">Closing Time</label>
-        <input type="time" id="closingTime">
-
-        <button type="submit" class="save-button">
-          Save Updated Details
-        </button>
-
-        <div class="message" id="message">
-          Library details updated successfully in this demo.
-        </div>
-      </form>
-
-      <a class="back-button" href="owner-dashboard.html">
-        ← Back to Dashboard
-      </a>
+      <div class="message" id="detailsMessage"></div>
     </div>
+
+    <!-- Price and Facilities -->
+    <div class="section">
+      <h2>2. Price and Facilities</h2>
+
+      <label for="monthlyFee">Monthly Fee</label>
+      <input type="number" id="monthlyFee" placeholder="Enter monthly fee in rupees">
+
+      <label class="facility">
+        <input type="checkbox" id="wifi"> Wi-Fi
+      </label>
+
+      <label class="facility">
+        <input type="checkbox" id="ac"> Air Conditioning
+      </label>
+
+      <label class="facility">
+        <input type="checkbox" id="cctv"> CCTV
+      </label>
+
+      <label class="facility">
+        <input type="checkbox" id="powerBackup"> Power Backup
+      </label>
+
+      <label class="facility">
+        <input type="checkbox" id="silentZone"> Silent Zone
+      </label>
+
+      <label for="otherFacilities">Other Facilities</label>
+      <textarea id="otherFacilities" placeholder="Enter other facilities"></textarea>
+
+      <button class="update-button" type="button" onclick="updateFacilities()">
+        Update Price and Facilities
+      </button>
+
+      <div class="message" id="facilitiesMessage"></div>
+    </div>
+
+    <!-- Library Photos -->
+    <div class="section">
+      <h2>3. Library Photos</h2>
+
+      <label for="libraryPhotos">Select Library Photos</label>
+      <input type="file" id="libraryPhotos" accept="image/*" multiple>
+
+      <div class="photo-preview" id="photoPreview"></div>
+
+      <button class="update-button" type="button" onclick="updatePhotos()">
+        Update Library Photos
+      </button>
+
+      <div class="message" id="photosMessage"></div>
+    </div>
+
+    <!-- Opening Hours -->
+    <div class="section">
+      <h2>4. Opening Hours</h2>
+
+      <label for="openingTime">Opening Time</label>
+      <input type="time" id="openingTime">
+
+      <label for="closingTime">Closing Time</label>
+      <input type="time" id="closingTime">
+
+      <button class="update-button" type="button" onclick="updateHours()">
+        Update Opening Hours
+      </button>
+
+      <div class="message" id="hoursMessage"></div>
+    </div>
+
+    <!-- Library Location -->
+    <div class="section">
+      <h2>5. Library Location</h2>
+
+      <p>Use this button to update the exact location of your library.</p>
+
+      <button class="update-button" type="button" onclick="updateLocation()">
+        📍 Update Library Location
+      </button>
+
+      <div class="location-box" id="locationResult">
+        Location has not been updated yet.
+      </div>
+
+      <div class="message" id="locationMessage"></div>
+    </div>
+
+    <a class="back-button" href="owner-dashboard.html">
+      ← Back to Owner Dashboard
+    </a>
   </div>
 
   <script>
-    const libraryForm = document.getElementById("libraryForm");
-    const message = document.getElementById("message");
+    function showMessage(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.style.display = "block";
+    }
 
-    libraryForm.addEventListener("submit", function(event) {
-      event.preventDefault();
+    function updateDetails() {
+      showMessage(
+        "detailsMessage",
+        "Library details updated successfully in this demo."
+      );
+    }
 
-      message.style.display = "block";
-      message.textContent =
-        "Library details updated successfully in this demo.";
-    });
+    function updateFacilities() {
+      showMessage(
+        "facilitiesMessage",
+        "Price and facilities updated successfully in this demo."
+      );
+    }
+
+    function updatePhotos() {
+      const photoInput = document.getElementById("libraryPhotos");
+
+      if (photoInput.files.length === 0) {
+        showMessage("photosMessage", "Please select at least one photo first.");
+        return;
+      }
+
+      showMessage(
+        "photosMessage",
+        "Library photos updated successfully in this demo."
+      );
+    }
+
+    function updateHours() {
+      showMessage(
+        "hoursMessage",
+        "Opening hours updated successfully in this demo."
+      );
+    }
+
+    function updateLocation() {
+      const locationResult = document.getElementById("locationResult");
+
+      if (!navigator.geolocation) {
+        locationResult.textContent =
+          "Location service is not supported by this browser.";
+        return;
+      }
+
+      locationResult.textContent = "Getting your library location...";
+
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          locationResult.textContent =
+            "Latitude: " + latitude +
+            " | Longitude: " + longitude;
+
+          showMessage(
+            "locationMessage",
+            "Library location updated successfully in this demo."
+          );
+        },
+        function(error) {
+          locationResult.textContent =
+            "Unable to get location. Please allow location permission and try again.";
+        },
+        {
+          enableHighAccuracy: false,
+          timeout: 20000,
+          maximumAge: 300000
+        }
+      );
+    }
+
+    document.getElementById("libraryPhotos").addEventListener(
+      "change",
+      function(event) {
+        const preview = document.getElementById("photoPreview");
+        preview.innerHTML = "";
+
+        const files = Array.from(event.target.files).slice(0, 15);
+
+        files.forEach(function(file) {
+          const reader = new FileReader();
+
+          reader.onload = function(e) {
+            const image = document.createElement("img");
+            image.src = e.target.result;
+            image.alt = "Library photo preview";
+            preview.appendChild(image);
+          };
+
+          reader.readAsDataURL(file);
+        });
+      }
+    );
   </script>
 </body>
 </html>
