@@ -124,13 +124,25 @@ width:auto;
 margin:0;
 }
 
-.photo-preview{
-width:100%;
-max-height:280px;
-object-fit:cover;
-border-radius:10px;
-margin-top:10px;
-display:none;
+.photo-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:15px;
+}
+
+.photo-grid img{
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid #dbeafe;
+}
+
+@media(max-width:500px){
+  .photo-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
 button{
@@ -480,20 +492,22 @@ placeholder="Jo facility upar nahi hai, yahan likhein..."
 ></textarea>
 
 
-<h3>📷 Library Photo</h3>
+<h3>📷 Library Photos</h3>
 
-<label>Main Library Photo</label>
+<label>Select Library Photos</label>
 
 <input
-id="photo"
-type="file"
-accept="image/*"
+  id="photo"
+  type="file"
+  accept="image/*"
+  multiple
 >
 
-<img
-id="photoPreview"
-class="photo-preview"
->
+<div class="help">
+  You can select up to 15 photos of your library.
+</div>
+
+<div id="photoPreviewContainer" class="photo-grid"></div>
 
 
 <h3>📋 Other Information</h3>
@@ -502,54 +516,52 @@ class="photo-preview"
 
 <textarea
 id="extra"
-placeholder="Library ke baare me extra information..."
+placeholder="Tell us more about your library..."
 ></textarea>
 
 <label>Library Rules</label>
 
 <textarea
 id="rules"
-placeholder="Example: Silence maintain karein, ID card compulsory..."
+ placeholder="Example: Maintain silence, carry a valid ID card..."
 ></textarea>
-
 
 <h3>📍 Library Location</h3>
 
 <div class="info">
-Please click the button below to get the exact location of your library.
+  Click the button below to get the exact location of your library.
 </div>
 
 <button
-class="location"
-onclick="getLocation()"
+  type="button"
+  class="location"
+  id="locationButton"
 >
-📍 Get Library Location
+  📍 Get Library Location
 </button>
 
-<div id="locationResult"></div>
-
+<div id="locationResult" class="info"></div>
 
 <button
-class="register"
-onclick="registerLibrary()"
+  type="button"
+  class="register"
+  id="registerButton"
 >
-✅ Register My Library
+  ✅ Register My Library
 </button>
 
 <div id="success" class="success">
-✅ Registration form successfully submitted!
+  ✅ Your library registration form has been submitted successfully.
 </div>
 
-
-
-
-
 <button
-class="back"
-onclick="window.location.href='index.html'"
+  type="button"
+  class="back"
+  onclick="window.location.href='index.html'"
 >
-⬅️ Back to StudySpot
+  ⬅️ Back to StudySpot
 </button>
+
 
 </div>
 </div>
@@ -629,6 +641,110 @@ districtSelect.addEventListener("change", function () {
     }
 
 });
+
+const photoInput = document.getElementById("photo");
+const photoPreviewContainer = document.getElementById("photoPreviewContainer");
+
+photoInput.addEventListener("change", function () {
+  photoPreviewContainer.innerHTML = "";
+
+  const selectedPhotos = Array.from(photoInput.files).slice(0, 15);
+
+  if (photoInput.files.length > 15) {
+    alert("You can select a maximum of 15 photos.");
+  }
+
+  selectedPhotos.forEach(function (photo) {
+    if (!photo.type.startsWith("image/")) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      const image = document.createElement("img");
+      image.src = event.target.result;
+      image.alt = "Library Photo";
+      photoPreviewContainer.appendChild(image);
+    };
+
+    reader.readAsDataURL(photo);
+  });
+});
+
+
+const locationButton = document.getElementById("locationButton");
+const locationResult = document.getElementById("locationResult");
+
+locationButton.addEventListener("click", function () {
+  if (!navigator.geolocation) {
+    locationResult.textContent =
+      "Location services are not supported by this browser.";
+    return;
+  }
+
+  locationResult.textContent = "Getting your library location...";
+
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      locationResult.innerHTML =
+        "Location captured successfully.<br>" +
+        "Latitude: " + latitude + "<br>" +
+        "Longitude: " + longitude;
+
+      locationButton.textContent = "✅ Location Captured";
+    },
+    function () {
+      locationResult.textContent =
+        "Unable to get location. Please allow location permission and try again.";
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 0
+    }
+  );
+});
+
+
+const registerButton = document.getElementById("registerButton");
+const successMessage = document.getElementById("success");
+
+registerButton.addEventListener("click", function () {
+  const requiredFields = [
+    "ownerName",
+    "mobile",
+    "password",
+    "libraryName",
+    "state",
+    "district",
+    "city",
+    "address",
+    "price",
+    "seats"
+  ];
+
+  for (const fieldId of requiredFields) {
+    const field = document.getElementById(fieldId);
+
+    if (!field || !field.value.trim()) {
+      alert("Please complete all required fields before registering.");
+      field.focus();
+      return;
+    }
+  }
+
+  successMessage.style.display = "block";
+  successMessage.textContent =
+    "✅ Your library registration form has been submitted successfully.";
+
+  registerButton.textContent = "✅ Registration Submitted";
+  registerButton.disabled = true;
+});
+ 
 </script>
 
 </body>
