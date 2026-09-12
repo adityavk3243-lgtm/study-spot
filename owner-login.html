@@ -152,6 +152,10 @@
           required
         >
 
+<div style="text-align: right; margin-top: 10px;">
+  <a href="#" id="forgotPassword">Forgot Password?</a>
+</div>
+        
         <button type="submit" class="login-button">
           Login
         </button>
@@ -181,6 +185,17 @@
       message.textContent =
         "Login page is ready. Secure account login will be connected after the database is added.";
     });
+
+document.getElementById("forgotPassword").addEventListener("click", function(event) {
+  event.preventDefault();
+
+  const message = document.getElementById("message");
+
+  message.style.display = "block";
+  message.textContent =
+    "Password recovery will be available after secure account verification is connected.";
+});
+    
   </script>
 
 </body>
