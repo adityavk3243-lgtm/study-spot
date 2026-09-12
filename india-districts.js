@@ -1,5 +1,4 @@
-// StudySpot - Central District Data
-// State select karne par us State/UT ke districts load honge.
+// StudySpot - District Data Loader
 
 const DISTRICT_DATA_URL =
   "https://raw.githubusercontent.com/iaseth/data-for-india/master/data/readable/districts.json";
@@ -11,16 +10,35 @@ async function loadDistrictData() {
     const response = await fetch(DISTRICT_DATA_URL);
 
     if (!response.ok) {
-      throw new Error("District data load nahi hua");
+      throw new Error("District data could not be loaded");
     }
 
-    const data = await response.json();
+    const rawData = await response.json();
+
+    let districtList = [];
+
+    if (Array.isArray(rawData)) {
+      districtList = rawData;
+    } else if (Array.isArray(rawData.districts)) {
+      districtList = rawData.districts;
+    } else if (Array.isArray(rawData.data)) {
+      districtList = rawData.data;
+    }
 
     INDIA_DISTRICTS = {};
 
-    data.districts.forEach(item => {
-      const state = item.state;
-      const district = item.district;
+    districtList.forEach(function (item) {
+      const state =
+        item.state ||
+        item.state_name ||
+        item.State ||
+        item["State Name"];
+
+      const district =
+        item.district ||
+        item.district_name ||
+        item.District ||
+        item["District Name"];
 
       if (!state || !district) return;
 
@@ -33,20 +51,15 @@ async function loadDistrictData() {
       }
     });
 
-    // Har State ke districts alphabetical order mein
-    Object.keys(INDIA_DISTRICTS).forEach(state => {
-      INDIA_DISTRICTS[state].sort((a, b) =>
-        a.localeCompare(b)
-      );
+    Object.keys(INDIA_DISTRICTS).forEach(function (state) {
+      INDIA_DISTRICTS[state].sort();
     });
 
-    console.log("StudySpot district data loaded successfully.");
-    console.log("States/UTs:", Object.keys(INDIA_DISTRICTS).length);
+    console.log("District data loaded successfully:", INDIA_DISTRICTS);
 
     return INDIA_DISTRICTS;
-
   } catch (error) {
-    console.error("District data error:", error);
+    console.error("District data loading error:", error);
     return {};
   }
 }
