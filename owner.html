@@ -744,7 +744,76 @@ registerButton.addEventListener("click", function () {
   registerButton.textContent = "✅ Registration Submitted";
   registerButton.disabled = true;
 });
- 
+
+// Library photo preview
+const photoInput = document.getElementById("photo");
+const photoPreviewContainer = document.getElementById("photoPreviewContainer");
+
+if (photoInput && photoPreviewContainer) {
+  photoInput.addEventListener("change", function () {
+    photoPreviewContainer.innerHTML = "";
+
+    const selectedPhotos = Array.from(photoInput.files).slice(0, 15);
+
+    selectedPhotos.forEach(function (file) {
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        const image = document.createElement("img");
+        image.src = event.target.result;
+        image.alt = "Library photo preview";
+        image.style.width = "110px";
+        image.style.height = "90px";
+        image.style.objectFit = "cover";
+        image.style.borderRadius = "10px";
+        image.style.border = "1px solid #ddd";
+
+        photoPreviewContainer.appendChild(image);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  });
+}
+
+
+// Get library location
+function getLocation() {
+  if (!navigator.geolocation) {
+    alert("Location services are not supported on this device.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      window.studySpotLibraryLocation = {
+        latitude: latitude,
+        longitude: longitude
+      };
+
+      alert(
+        "Library location captured successfully.\n\n" +
+        "Latitude: " + latitude + "\n" +
+        "Longitude: " + longitude
+      );
+    },
+    function (error) {
+      alert(
+        "Unable to get library location.\n\n" +
+        "Please allow location permission and try again."
+      );
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 0
+    }
+  );
+}
+  
 </script>
 
 </body>
