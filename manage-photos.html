@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Photos - StudySpot</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1e293b;
+    }
+
+    header {
+      background: linear-gradient(135deg, #4f46e5, #2563eb);
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 25px auto;
+      padding: 15px;
+    }
+
+    .box {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      color: #2563eb;
+      margin-top: 0;
+    }
+
+    p {
+      line-height: 1.5;
+      color: #64748b;
+    }
+
+    .photo-button {
+      display: block;
+      width: 100%;
+      margin-top: 15px;
+      padding: 14px;
+      border: none;
+      border-radius: 9px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .camera-button {
+      background: #0f766e;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .preview img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .update-button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 9px;
+      background: #16a34a;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #dcfce7;
+      color: #166534;
+      text-align: center;
+    }
+
+    .back-button {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>📚 StudySpot</h1>
+    <p style="color: white;">Manage Library Photos</p>
+  </header>
+
+  <div class="container">
+    <div class="box">
+      <h2>Library Photos</h2>
+
+      <p>
+        Select photos from your phone gallery or take a new photo using your camera.
+        You can select up to 15 photos.
+      </p>
+
+      <label class="photo-button" for="galleryInput">
+        🖼️ Choose Photos from Gallery
+      </label>
+
+      <input
+        type="file"
+        id="galleryInput"
+        accept="image/*"
+        multiple
+      >
+
+      <label class="photo-button camera-button" for="cameraInput">
+        📷 Take Photo with Camera
+      </label>
+
+      <input
+        type="file"
+        id="cameraInput"
+        accept="image/*"
+        capture="environment"
+      >
+
+      <div class="preview" id="preview"></div>
+
+      <button class="update-button" type="button" id="updateButton">
+        Update Library Photos
+      </button>
+
+      <div class="message" id="message"></div>
+
+      <a class="back-button" href="owner-dashboard.html">
+        ← Back to Owner Dashboard
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const galleryInput = document.getElementById("galleryInput");
+    const cameraInput = document.getElementById("cameraInput");
+    const preview = document.getElementById("preview");
+    const updateButton = document.getElementById("updateButton");
+    const message = document.getElementById("message");
+
+    let selectedFiles = [];
+
+    function addPhotos(files) {
+      const newFiles = Array.from(files);
+
+      selectedFiles = selectedFiles.concat(newFiles).slice(0, 15);
+
+      preview.innerHTML = "";
+
+      selectedFiles.forEach(function(file) {
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+          const image = document.createElement("img");
+          image.src = event.target.result;
+          image.alt = "Library photo preview";
+          preview.appendChild(image);
+        };
+
+        reader.readAsDataURL(file);
+      });
+
+      if (selectedFiles.length === 15) {
+        message.style.display = "block";
+        message.textContent = "Maximum 15 photos can be selected.";
+      }
+    }
+
+    galleryInput.addEventListener("change", function() {
+      addPhotos(galleryInput.files);
+    });
+
+    cameraInput.addEventListener("change", function() {
+      addPhotos(cameraInput.files);
+    });
+
+    updateButton.addEventListener("click", function() {
+      if (selectedFiles.length === 0) {
+        message.style.display = "block";
+        message.style.background = "#fee2e2";
+        message.style.color = "#991b1b";
+        message.textContent = "Please select or capture at least one photo.";
+        return;
+      }
+
+      message.style.display = "block";
+      message.style.background = "#dcfce7";
+      message.style.color = "#166534";
+      message.textContent =
+        "Library photos updated successfully in this demo.";
+    });
+  </script>
+</body>
+</html>
