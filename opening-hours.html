@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opening Hours - StudySpot</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      text-align: center;
+      padding: 28px 16px;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .header p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 600px;
+      margin: 24px auto;
+    }
+
+    .section {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .section h2 {
+      margin-top: 0;
+      color: #2563eb;
+      font-size: 21px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input[type="time"] {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0;
+      font-size: 15px;
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .update-button {
+      width: 100%;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .update-button:hover {
+      background: #1d4ed8;
+    }
+
+    .back-button {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      background: #e2e8f0;
+      color: #1e293b;
+      padding: 13px;
+      border-radius: 8px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .message {
+      display: none;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 14px;
+    }
+
+    .disabled {
+      opacity: 0.5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <h1>Opening Hours</h1>
+    <p>Update your library opening and closing time</p>
+  </div>
+
+  <div class="container">
+
+    <div class="section">
+      <h2>Library Timings</h2>
+
+      <div class="field">
+        <label for="openingTime">Opening Time</label>
+        <input type="time" id="openingTime">
+      </div>
+
+      <div class="field">
+        <label for="closingTime">Closing Time</label>
+        <input type="time" id="closingTime">
+      </div>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="open24Hours">
+        Open 24 Hours
+      </label>
+
+      <button class="update-button" id="updateButton">
+        Update Opening Hours
+      </button>
+
+      <div class="message" id="message">
+        Opening hours updated successfully in this demo.
+      </div>
+    </div>
+
+    <a class="back-button" href="owner-dashboard.html">
+      Back to Dashboard
+    </a>
+
+  </div>
+
+  <script>
+    const openingTime = document.getElementById("openingTime");
+    const closingTime = document.getElementById("closingTime");
+    const open24Hours = document.getElementById("open24Hours");
+    const updateButton = document.getElementById("updateButton");
+    const message = document.getElementById("message");
+
+    function updateTimeFields() {
+      const is24Hours = open24Hours.checked;
+
+      openingTime.disabled = is24Hours;
+      closingTime.disabled = is24Hours;
+
+      openingTime.classList.toggle("disabled", is24Hours);
+      closingTime.classList.toggle("disabled", is24Hours);
+    }
+
+    open24Hours.addEventListener("change", updateTimeFields);
+
+    updateButton.addEventListener("click", function () {
+      message.style.display = "block";
+      message.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    });
+  </script>
+
+</body>
+</html>
