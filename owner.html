@@ -1,4 +1,4 @@
-se<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -799,5 +799,56 @@ function getLocation() {
   
 </script>
 
+<script>
+  const registerButton = document.getElementById("registerButton");
+
+  registerButton.addEventListener("click", async function () {
+    const ownerName = document.getElementById("ownerName").value.trim();
+    const mobile = document.getElementById("mobile").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!ownerName || !mobile || !email || !password) {
+      alert("Please complete all required owner details.");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Password must contain at least 6 characters.");
+      return;
+    }
+
+    registerButton.disabled = true;
+    registerButton.textContent = "Creating Account...";
+
+    const { data, error } = await supabaseClient.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          owner_name: ownerName,
+          mobile: mobile
+        }
+      }
+    });
+
+    if (error) {
+      alert(error.message);
+      registerButton.disabled = false;
+      registerButton.textContent = "✅ Register My Library";
+      return;
+    }
+
+    alert(
+      "Account created successfully. Please check your email and verify your account before logging in."
+    );
+
+    registerButton.disabled = false;
+    registerButton.textContent = "✅ Register My Library";
+  });
+</script>
+
+
+  
 </body>
 </html>
