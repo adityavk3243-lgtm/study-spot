@@ -537,6 +537,23 @@ function searchAnywhere() {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
+
+    <script>
+  async function loadLibraries() {
+    const { data, error } = await supabaseClient
+      .from("libraries")
+      .select("*");
+
+    if (error) {
+      console.error("Library loading error:", error);
+      return;
+    }
+
+    console.log("Libraries loaded:", data);
+  }
+
+  loadLibraries();
+</script>
     
 </body>
 </html>
