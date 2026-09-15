@@ -767,13 +767,21 @@ function getLocation() {
 </script>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
   const registerButton = document.getElementById("registerButton");
 
+  if (!registerButton) {
+    alert("Registration button not found.");
+    return;
+  }
+
+  registerButton.disabled = false;
+
   registerButton.addEventListener("click", async function () {
-    const ownerName = document.getElementById("ownerName").value.trim();
-    const mobile = document.getElementById("mobile").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+    const ownerName = document.getElementById("ownerName")?.value.trim();
+    const mobile = document.getElementById("mobile")?.value.trim();
+    const email = document.getElementById("email")?.value.trim();
+    const password = document.getElementById("password")?.value;
 
     if (!ownerName || !mobile || !email || !password) {
       alert("Please complete all required owner details.");
@@ -786,40 +794,37 @@ function getLocation() {
     }
 
     registerButton.disabled = true;
-registerButton.textContent = "Creating Account...";
+    registerButton.textContent = "Creating Account...";
 
-try {
-  const { data, error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password,
-    options: {
-      data: {
-        owner_name: ownerName,
-        mobile: mobile
+    try {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            owner_name: ownerName,
+            mobile: mobile
+          }
+        }
+      });
+
+      if (error) {
+        throw error;
       }
+
+      alert(
+        "Account created successfully. Please check your email for confirmation."
+      );
+
+    } catch (error) {
+      alert("Registration error: " + error.message);
+
+    } finally {
+      registerButton.disabled = false;
+      registerButton.textContent = "✅ Register My Library";
     }
   });
-
-  if (error) {
-    alert("Registration error: " + error.message);
-    registerButton.disabled = false;
-    registerButton.textContent = "✅ Register My Library";
-    return;
-  }
-
-  alert(
-    "Account created successfully. Please check your email for confirmation."
-  );
-
-  registerButton.disabled = false;
-  registerButton.textContent = "✅ Register My Library";
-
-} catch (err) {
-  alert("System error: " + err.message);
-  registerButton.disabled = false;
-  registerButton.textContent = "✅ Register My Library";
-}
-    
+});
 </script>
 
 
