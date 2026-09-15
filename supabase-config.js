@@ -1,8 +1,8 @@
-const SUPABASE_URL = "https://nhypimulsokajbdozxwx.supabase.co;
+const SUPABASE_URL = "अपना वही Supabase project URL यहाँ रखें";
 
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_N02LU-du4BnPxSWnWb388w_pJQzpf6b"
+const SUPABASE_PUBLISHABLE_KEY = "अपनी वही publishable key यहाँ रखें";
 
-const supabaseClient = window.supabase.createClient(
+window.supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
