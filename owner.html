@@ -720,40 +720,7 @@ locationButton.addEventListener("click", function () {
 });
 
 
-const registerButton = document.getElementById("registerButton");
-const successMessage = document.getElementById("success");
 
-registerButton.addEventListener("click", function () {
-  const requiredFields = [
-    "ownerName",
-    "mobile",
-    "password",
-    "libraryName",
-    "state",
-    "district",
-    "city",
-    "address",
-    "price",
-    "seats"
-  ];
-
-  for (const fieldId of requiredFields) {
-    const field = document.getElementById(fieldId);
-
-    if (!field || !field.value.trim()) {
-      alert("Please complete all required fields before registering.");
-      field.focus();
-      return;
-    }
-  }
-
-  successMessage.style.display = "block";
-  successMessage.textContent =
-    "✅ Your library registration form has been submitted successfully.";
-
-  registerButton.textContent = "✅ Registration Submitted";
-  registerButton.disabled = true;
-});
 
 
 
