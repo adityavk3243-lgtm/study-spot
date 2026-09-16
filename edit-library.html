@@ -375,5 +375,75 @@
       }
     );
   </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+  const client = window.supabaseClient;
+
+  if (!client) {
+    alert("Supabase connection not found.");
+    return;
+  }
+
+  const {
+    data: { user },
+    error: userError
+  } = await client.auth.getUser();
+
+  if (userError || !user) {
+    alert("Please log in first to view your library details.");
+    return;
+  }
+
+  const { data: library, error: libraryError } = await client
+    .from("libraries")
+    .select("*")
+    .eq("owner_id", user.id)
+    .maybeSingle();
+
+  if (libraryError) {
+    alert("Unable to load library details: " + libraryError.message);
+    return;
+  }
+
+  if (!library) {
+    alert("No registered library found for this account.");
+    return;
+  }
+
+  document.getElementById("libraryName").value = library.library_name || "";
+  document.getElementById("ownerName").value = library.owner_name || "";
+  document.getElementById("mobileNumber").value = library.mobile || "";
+  document.getElementById("address").value = library.address || "";
+  document.getElementById("city").value = library.city || "";
+
+  document.getElementById("monthlyFee").value = library.monthly_fee || "";
+
+  document.getElementById("wifi").checked =
+    (library.facilities || []).includes("Wi-Fi");
+
+  document.getElementById("ac").checked =
+    (library.facilities || []).includes("Air Conditioning");
+
+  document.getElementById("cctv").checked =
+    (library.facilities || []).includes("CCTV");
+
+  document.getElementById("powerBackup").checked =
+    (library.facilities || []).includes("Power Backup");
+
+  document.getElementById("silentZone").checked =
+    (library.facilities || []).includes("Silent Zone");
+
+  document.getElementById("otherFacilities").value =
+    library.other_facilities || "";
+
+  document.getElementById("openingTime").value =
+    library.opening_time || "";
+
+  document.getElementById("closingTime").value =
+    library.closing_time || "";
+});
+</script>
+
 </body>
 </html>
