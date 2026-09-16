@@ -187,7 +187,34 @@
     </div>
   </div>
 
-  
+  <script>
+document.getElementById("loginForm").addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  const email = document.getElementById("mobile").value.trim();
+  const password = document.getElementById("password").value;
+  const message = document.getElementById("message");
+
+  message.textContent = "Logging in...";
+  message.style.color = "#2563eb";
+
+  const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    message.textContent = "Login failed: " + error.message;
+    message.style.color = "red";
+    return;
+  }
+
+  message.textContent = "Login successful. Redirecting...";
+  message.style.color = "green";
+
+  window.location.href = "owner-dashboard.html";
+});
+</script>
 
 </body>
 </html>
