@@ -771,20 +771,63 @@ document.addEventListener("DOMContentLoaded", function () {
   const registerButton = document.getElementById("registerButton");
 
   if (!registerButton) {
-    alert("Registration button not found.");
     return;
   }
-
-  registerButton.disabled = false;
 
   registerButton.addEventListener("click", async function () {
     const ownerName = document.getElementById("ownerName")?.value.trim();
     const mobile = document.getElementById("mobile")?.value.trim();
     const email = document.getElementById("email")?.value.trim();
-    const password = document.getElementById("password")?.value;
+    const password = document.getElementById("password")?.value.trim();
 
-    if (!ownerName || !mobile || !email || !password) {
-      alert("Please complete all required owner details.");
+    const libraryName = document.getElementById("libraryName")?.value.trim();
+    const state = document.getElementById("state")?.value;
+    const district = document.getElementById("district")?.value;
+    const city = document.getElementById("city")?.value.trim();
+    const address = document.getElementById("address")?.value.trim();
+
+    const price = document.getElementById("price")?.value;
+    const seats = document.getElementById("seats")?.value;
+    const opening = document.getElementById("opening")?.value;
+    const closing = document.getElementById("closing")?.value;
+    const open247 = document.getElementById("open247")?.value;
+
+    const maleSeats = document.getElementById("maleSeats")?.value;
+    const femaleSeats = document.getElementById("femaleSeats")?.value;
+    const deposit = document.getElementById("deposit")?.value;
+    const registrationFee = document.getElementById("registrationFee")?.value;
+
+    const otherFacilities =
+      document.getElementById("otherFacilities")?.value.trim() || "";
+
+    const extra =
+      document.getElementById("extra")?.value.trim() || "";
+
+    const rules =
+      document.getElementById("rules")?.value.trim() || "";
+
+    const facilities = Array.from(
+      document.querySelectorAll(
+        '.facility input[type="checkbox"]:checked'
+      )
+    ).map(function (checkbox) {
+      return checkbox.value;
+    });
+
+    if (
+      !ownerName ||
+      !mobile ||
+      !email ||
+      !password ||
+      !libraryName ||
+      !state ||
+      !district ||
+      !city ||
+      !address ||
+      !price ||
+      !seats
+    ) {
+      alert("Please complete all required details.");
       return;
     }
 
@@ -797,24 +840,52 @@ document.addEventListener("DOMContentLoaded", function () {
     registerButton.textContent = "Creating Account...";
 
     try {
-      const { data, error } = await window.supabaseClient.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            owner_name: ownerName,
-            mobile: mobile
+      const { data: authData, error: authError } =
+        await window.supabaseClient.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              owner_name: ownerName,
+              mobile: mobile
+            }
           }
-        }
-      });
+        });
 
-      if (error) {
-        throw error;
+      if (authError) {
+        throw authError;
+      }
+
+      const ownerId = authData.user.id;
+
+      const { error: libraryError } =
+        await window.supabaseClient
+          .from("libraries")
+          .insert({
+            owner_id: ownerId,
+            library_name: libraryName,
+            state: state,
+            district: district,
+            city: city,
+            address: address,
+            monthly_fee: Number(price),
+            seat_availability: Number(seats),
+            opening_time: opening || null,
+            closing_time: closing || null,
+            open_24_hours: open247 === "Yes",
+            facilities: facilities,
+            rules: rules
+          });
+
+      if (libraryError) {
+        throw libraryError;
       }
 
       alert(
-        "Account created successfully. Please check your email for confirmation."
+        "Registration completed successfully. Your library details have been saved."
       );
+
+      window.location.href = "owner-login.html";
 
     } catch (error) {
       alert("Registration error: " + error.message);
