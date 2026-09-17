@@ -155,19 +155,76 @@
 
   </div>
 
-  <script>
-    const updateButton = document.getElementById("updateButton");
-    const message = document.getElementById("message");
+ 
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+  const client = window.supabaseClient;
 
-    updateButton.addEventListener("click", function () {
-      message.style.display = "block";
+  const rulesInput = document.getElementById("libraryRules");
+  const updateButton = document.querySelector(".update-button");
+  const message = document.getElementById("message");
 
-      message.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-    });
-  </script>
+  if (!client) {
+    message.textContent = "Supabase connection not found.";
+    message.style.display = "block";
+    return;
+  }
 
+  const { data: userData, error: userError } =
+    await client.auth.getUser();
+
+  if (userError || !userData.user) {
+    message.textContent = "Please log in first.";
+    message.style.display = "block";
+    return;
+  }
+
+  const user = userData.user;
+
+  const { data: library, error: libraryError } = await client
+    .from("libraries")
+    .select("id, rules")
+    .eq("owner_id", user.id)
+    .maybeSingle();
+
+  if (libraryError) {
+    message.textContent =
+      "Unable to load library rules: " + libraryError.message;
+    message.style.display = "block";
+    return;
+  }
+
+  if (!library) {
+    message.textContent = "No registered library found.";
+    message.style.display = "block";
+    return;
+  }
+
+  rulesInput.value = library.rules || "";
+
+  updateButton.addEventListener("click", async function () {
+    updateButton.disabled = true;
+    updateButton.textContent = "Updating...";
+
+    const { error } = await client
+      .from("libraries")
+      .update({
+        rules: rulesInput.value.trim()
+      })
+      .eq("id", library.id)
+      .eq("owner_id", user.id);
+
+    if (error) {
+      message.textContent = "Update failed: " + error.message;
+    } else {
+      message.textContent = "Library rules updated successfully.";
+    }
+
+    message.style.display = "block";
+    updateButton.disabled = false;
+    updateButton.textContent = "Update Library Rules";
+  });
+});
+</script>
 </body>
 </html>
