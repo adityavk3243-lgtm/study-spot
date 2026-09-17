@@ -273,7 +273,316 @@
     </a>
   </div>
 
-  
+  <script>
+document.addEventListener("DOMContentLoaded", async function () {
+  const client = window.supabaseClient;
+
+  if (!client) {
+    alert("Supabase connection not found.");
+    return;
+  }
+
+  function showMessage(elementId, message) {
+    const element = document.getElementById(elementId);
+
+    if (element) {
+      element.textContent = message;
+      element.style.display = "block";
+    }
+  }
+
+  const { data: userData, error: userError } =
+    await client.auth.getUser();
+
+  if (userError || !userData.user) {
+    alert("Please log in first to edit your library.");
+    return;
+  }
+
+  const user = userData.user;
+
+  const { data: library, error: libraryError } = await client
+    .from("libraries")
+    .select("*")
+    .eq("owner_id", user.id)
+    .maybeSingle();
+
+  if (libraryError) {
+    alert("Unable to load library details: " + libraryError.message);
+    return;
+  }
+
+  if (!library) {
+    alert("No registered library found for this account.");
+    return;
+  }
+
+  const libraryName = document.getElementById("libraryName");
+  const address = document.getElementById("address");
+  const city = document.getElementById("city");
+  const monthlyFee = document.getElementById("monthlyFee");
+  const openingTime = document.getElementById("openingTime");
+  const closingTime = document.getElementById("closingTime");
+
+  if (libraryName) {
+    libraryName.value = library.library_name || "";
+  }
+
+  if (address) {
+    address.value = library.address || "";
+  }
+
+  if (city) {
+    city.value = library.city || "";
+  }
+
+  if (monthlyFee) {
+    monthlyFee.value = library.monthly_fee || "";
+  }
+
+  if (openingTime) {
+    openingTime.value = library.opening_time || "";
+  }
+
+  if (closingTime) {
+    closingTime.value = library.closing_time || "";
+  }
+
+  const facilities = library.facilities || [];
+
+  if (document.getElementById("wifi")) {
+    document.getElementById("wifi").checked =
+      facilities.includes("Wi-Fi");
+  }
+
+  if (document.getElementById("ac")) {
+    document.getElementById("ac").checked =
+      facilities.includes("Air Conditioning");
+  }
+
+  if (document.getElementById("cctv")) {
+    document.getElementById("cctv").checked =
+      facilities.includes("CCTV");
+  }
+
+  if (document.getElementById("powerBackup")) {
+    document.getElementById("powerBackup").checked =
+      facilities.includes("Power Backup");
+  }
+
+  if (document.getElementById("silentZone")) {
+    document.getElementById("silentZone").checked =
+      facilities.includes("Silent Zone");
+  }
+
+  const detailsButton = Array.from(
+    document.querySelectorAll(".update-button")
+  ).find(button =>
+    button.textContent.includes("Update Library Details")
+  );
+
+  if (detailsButton) {
+    detailsButton.addEventListener("click", async function () {
+      const { error } = await client
+        .from("libraries")
+        .update({
+          library_name: libraryName?.value.trim() || "",
+          address: address?.value.trim() || "",
+          city: city?.value.trim() || ""
+        })
+        .eq("id", library.id)
+        .eq("owner_id", user.id);
+
+      if (error) {
+        showMessage("detailsMessage", "Update failed: " + error.message);
+      } else {
+        showMessage(
+          "detailsMessage",
+          "Library details updated successfully."
+        );
+      }
+    });
+  }
+
+  const facilitiesButton = Array.from(
+    document.querySelectorAll(".update-button")
+  ).find(button =>
+    button.textContent.includes("Update Price and Facilities")
+  );
+
+  if (facilitiesButton) {
+    facilitiesButton.addEventListener("click", async function () {
+      const selectedFacilities = [];
+
+      if (document.getElementById("wifi")?.checked) {
+        selectedFacilities.push("Wi-Fi");
+      }
+
+      if (document.getElementById("ac")?.checked) {
+        selectedFacilities.push("Air Conditioning");
+      }
+
+      if (document.getElementById("cctv")?.checked) {
+        selectedFacilities.push("CCTV");
+      }
+
+      if (document.getElementById("powerBackup")?.checked) {
+        selectedFacilities.push("Power Backup");
+      }
+
+      if (document.getElementById("silentZone")?.checked) {
+        selectedFacilities.push("Silent Zone");
+      }
+
+      const { error } = await client
+        .from("libraries")
+        .update({
+          monthly_fee: monthlyFee?.value || null,
+          facilities: selectedFacilities
+        })
+        .eq("id", library.id)
+        .eq("owner_id", user.id);
+
+      if (error) {
+        showMessage(
+          "facilitiesMessage",
+          "Update failed: " + error.message
+        );
+      } else {
+        showMessage(
+          "facilitiesMessage",
+          "Price and facilities updated successfully."
+        );
+      }
+    });
+  }
+
+  const hoursButton = Array.from(
+    document.querySelectorAll(".update-button")
+  ).find(button =>
+    button.textContent.includes("Update Opening Hours")
+  );
+
+  if (hoursButton) {
+    hoursButton.addEventListener("click", async function () {
+      const { error } = await client
+        .from("libraries")
+        .update({
+          opening_time: openingTime?.value || null,
+          closing_time: closingTime?.value || null
+        })
+        .eq("id", library.id)
+        .eq("owner_id", user.id);
+
+      if (error) {
+        showMessage("hoursMessage", "Update failed: " + error.message);
+      } else {
+        showMessage(
+          "hoursMessage",
+          "Opening hours updated successfully."
+        );
+      }
+    });
+  }
+
+  const locationButton = Array.from(
+    document.querySelectorAll(".update-button")
+  ).find(button =>
+    button.textContent.includes("Update Library Location")
+  );
+
+  if (locationButton) {
+    locationButton.addEventListener("click", function () {
+      const locationResult = document.getElementById("locationResult");
+
+      if (!navigator.geolocation) {
+        locationResult.textContent =
+          "Location service is not supported by this browser.";
+        return;
+      }
+
+      locationResult.textContent = "Getting your library location...";
+
+      navigator.geolocation.getCurrentPosition(
+        async function (position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          locationResult.textContent =
+            "Latitude: " +
+            latitude +
+            " | Longitude: " +
+            longitude;
+
+          const { error } = await client
+            .from("libraries")
+            .update({
+              latitude: latitude,
+              longitude: longitude
+            })
+            .eq("id", library.id)
+            .eq("owner_id", user.id);
+
+          if (error) {
+            showMessage(
+              "locationMessage",
+              "Location update failed: " + error.message
+            );
+          } else {
+            showMessage(
+              "locationMessage",
+              "Library location updated successfully."
+            );
+          }
+        },
+        function () {
+          locationResult.textContent =
+            "Unable to get location. Please allow location permission and try again.";
+        },
+        {
+          enableHighAccuracy: false,
+          timeout: 20000,
+          maximumAge: 300000
+        }
+      );
+    });
+  }
+
+  const photoInput = document.getElementById("libraryPhotos");
+
+  if (photoInput) {
+    photoInput.addEventListener("change", function (event) {
+      const preview = document.getElementById("photoPreview");
+
+      if (!preview) return;
+
+      preview.innerHTML = "";
+
+      const files = Array.from(event.target.files).slice(0, 15);
+
+      files.forEach(function (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+          const image = document.createElement("img");
+
+          image.src = event.target.result;
+          image.alt = "Library photo preview";
+          image.style.width = "110px";
+          image.style.height = "90px";
+          image.style.objectFit = "cover";
+          image.style.borderRadius = "10px";
+          image.style.margin = "5px";
+
+          preview.appendChild(image);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    });
+  }
+});
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", async function () {
