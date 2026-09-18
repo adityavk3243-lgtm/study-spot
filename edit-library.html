@@ -329,6 +329,20 @@ document.addEventListener("DOMContentLoaded", async function () {
     return;
   }
 
+const locationResult = document.getElementById("locationResult");
+
+if (locationResult) {
+  if (library.latitude != null && library.longitude != null) {
+    locationResult.innerHTML =
+      "Location saved successfully.<br>" +
+      "Latitude: " + library.latitude + "<br>" +
+      "Longitude: " + library.longitude;
+  } else {
+    locationResult.textContent =
+      "Location has not been updated yet.";
+  }
+}
+  
 const rulesDisplay = document.getElementById("libraryRulesDisplay");
 
 if (rulesDisplay) {
