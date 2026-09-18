@@ -870,15 +870,13 @@ document.addEventListener("DOMContentLoaded", function () {
   district: district,
   city: city,
   address: address,
-  latitude: window.studySpotLibraryLocation?.latitude || null,
-  longitude: window.studySpotLibraryLocation?.longitude || null,
   monthly_fee: Number(price),
   seat_availability: Number(seats),
   opening_time: opening || null,
   closing_time: closing || null,
   open_24_hours: open247 === "Yes",
   facilities: facilities,
-  other_facilities: otherFacilities,
+  other_facilities: otherFacilities || null,
   rules: rules
 });
 
