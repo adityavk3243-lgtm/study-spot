@@ -392,6 +392,15 @@ if (rulesDisplay) {
   const openingTime = document.getElementById("openingTime");
   const closingTime = document.getElementById("closingTime");
 
+const ownerName = document.getElementById("ownerName");
+const mobileNumber = document.getElementById("mobileNumber");
+const state = document.getElementById("state");
+const district = document.getElementById("district");
+const availableSeats = document.getElementById("availableSeats");
+const dailyFee = document.getElementById("dailyFee");
+const weeklyFee = document.getElementById("weeklyFee");
+const seatType = document.getElementById("seatType");
+  
   if (libraryName) {
     libraryName.value = library.library_name || "";
   }
@@ -415,7 +424,37 @@ if (rulesDisplay) {
   if (closingTime) {
     closingTime.value = library.closing_time || "";
   }
+if (ownerName) {
+  ownerName.value = library.owner_name || "";
+}
 
+if (mobileNumber) {
+  mobileNumber.value = library.mobile || "";
+}
+
+if (state) {
+  state.value = library.state || "";
+}
+
+if (district) {
+  district.value = library.district || "";
+}
+
+if (availableSeats) {
+  availableSeats.value = library.seat_availability ?? "";
+}
+
+if (dailyFee) {
+  dailyFee.value = library.daily_fee ?? "";
+}
+
+if (weeklyFee) {
+  weeklyFee.value = library.weekly_fee ?? "";
+}
+
+if (seatType) {
+  seatType.value = library.seat_type || "";
+}
   const facilities = library.facilities || [];
 
   if (document.getElementById("wifi")) {
