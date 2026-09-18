@@ -862,20 +862,23 @@ document.addEventListener("DOMContentLoaded", function () {
         await window.supabaseClient
           .from("libraries")
           .insert({
-            owner_id: ownerId,
-            library_name: libraryName,
-            state: state,
-            district: district,
-            city: city,
-            address: address,
-            monthly_fee: Number(price),
-            seat_availability: Number(seats),
-            opening_time: opening || null,
-            closing_time: closing || null,
-            open_24_hours: open247 === "Yes",
-            facilities: facilities,
-            rules: rules
-          });
+  owner_id: ownerId,
+  owner_name: ownerName,
+  mobile: mobile,
+  library_name: libraryName,
+  state: state,
+  district: district,
+  city: city,
+  address: address,
+  monthly_fee: Number(price),
+  seat_availability: Number(seats),
+  opening_time: opening || null,
+  closing_time: closing || null,
+  open_24_hours: open247 === "Yes",
+  facilities: facilities,
+  other_facilities: otherFacilities,
+  rules: rules
+});
 
       if (libraryError) {
         throw libraryError;
