@@ -329,6 +329,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     return;
   }
 
+const rulesDisplay = document.getElementById("libraryRulesDisplay");
+
+if (rulesDisplay) {
+  rulesDisplay.textContent =
+    library.rules || "No library rules have been added yet.";
+}
+  
   const libraryName = document.getElementById("libraryName");
   const address = document.getElementById("address");
   const city = document.getElementById("city");
