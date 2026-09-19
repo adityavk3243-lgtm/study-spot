@@ -535,12 +535,11 @@ if (seatType) {
         selectedFacilities.push("Silent Zone");
       }
 
-      const { error } = await client
-        .from("libraries")
-        .update({
-          monthly_fee: monthlyFee?.value || null,
-          facilities: selectedFacilities
-        })
+      const { error } = await client.from("libraries").update({
+  monthly_fee: monthlyFee?.value || null,
+  facilities: selectedFacilities,
+  other_facilities: document.getElementById("otherFacilities")?.value.trim() || null
+})
         .eq("id", library.id)
         .eq("owner_id", user.id);
 
