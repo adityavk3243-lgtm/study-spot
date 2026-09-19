@@ -649,38 +649,126 @@ if (seatType) {
   }
 
   const photoInput = document.getElementById("libraryPhotos");
+const photoPreview = document.getElementById("photoPreview");
 
-  if (photoInput) {
-    photoInput.addEventListener("change", function (event) {
-      const preview = document.getElementById("photoPreview");
+if (photoInput) {
+  photoInput.addEventListener("change", function (event) {
+    if (!photoPreview) return;
 
-      if (!preview) return;
+    photoPreview.innerHTML = "";
 
-      preview.innerHTML = "";
+    const files = Array.from(event.target.files).slice(0, 15);
 
-      const files = Array.from(event.target.files).slice(0, 15);
+    files.forEach(function (file) {
+      const reader = new FileReader();
 
-      files.forEach(function (file) {
-        const reader = new FileReader();
+      reader.onload = function (event) {
+        const image = document.createElement("img");
 
-        reader.onload = function (event) {
-          const image = document.createElement("img");
+        image.src = event.target.result;
+        image.alt = "Library photo preview";
+        image.style.width = "110px";
+        image.style.height = "90px";
+        image.style.objectFit = "cover";
+        image.style.borderRadius = "10px";
+        image.style.margin = "5px";
 
-          image.src = event.target.result;
-          image.alt = "Library photo preview";
-          image.style.width = "110px";
-          image.style.height = "90px";
-          image.style.objectFit = "cover";
-          image.style.borderRadius = "10px";
-          image.style.margin = "5px";
+        photoPreview.appendChild(image);
+      };
 
-          preview.appendChild(image);
-        };
-
-        reader.readAsDataURL(file);
-      });
+      reader.readAsDataURL(file);
     });
+  });
+}
+
+// Upload library photos to Supabase Storage
+window.updatePhotos = async function () {
+  const files = Array.from(photoInput?.files || []).slice(0, 15);
+
+  if (files.length === 0) {
+    showMessage(
+      "photosMessage",
+      "Please select at least one library photo."
+    );
+    return;
   }
+
+  showMessage(
+    "photosMessage",
+    "Uploading photos..."
+  );
+
+  const uploadedUrls = [];
+
+  for (const file of files) {
+    if (!file.type.startsWith("image/")) {
+      continue;
+    }
+
+    const fileName =
+      user.id +
+      "/" +
+      Date.now() +
+      "-" +
+      Math.random().toString(36).substring(2, 10) +
+      "-" +
+      file.name.replace(/\s+/g, "-");
+
+    const { error: uploadError } =
+      await client.storage
+        .from("library-photos")
+        .upload(fileName, file);
+
+    if (uploadError) {
+      showMessage(
+        "photosMessage",
+        "Photo upload failed: " + uploadError.message
+      );
+      return;
+    }
+
+    const { data: publicUrlData } =
+      client.storage
+        .from("library-photos")
+        .getPublicUrl(fileName);
+
+    uploadedUrls.push(
+      publicUrlData.publicUrl
+    );
+  }
+
+  if (uploadedUrls.length === 0) {
+    showMessage(
+      "photosMessage",
+      "No valid image files were selected."
+    );
+    return;
+  }
+
+  const { error: databaseError } =
+    await client
+      .from("libraries")
+      .update({
+        photos: uploadedUrls
+      })
+      .eq("id", library.id)
+      .eq("owner_id", user.id);
+
+  if (databaseError) {
+    showMessage(
+      "photosMessage",
+      "Photos uploaded, but saving failed: " +
+      databaseError.message
+    );
+    return;
+  }
+
+  showMessage(
+    "photosMessage",
+    uploadedUrls.length +
+    " library photo(s) uploaded successfully."
+  );
+};
 });
 </script>
 
