@@ -716,7 +716,7 @@ window.updatePhotos = async function () {
 
     const { error: uploadError } =
       await client.storage
-        .from("library-photos")
+        .from("StudySpot library-photos")
         .upload(fileName, file);
 
     if (uploadError) {
@@ -729,7 +729,7 @@ window.updatePhotos = async function () {
 
     const { data: publicUrlData } =
       client.storage
-        .from("library-photos")
+        .from("StudySpot library-photos")
         .getPublicUrl(fileName);
 
     uploadedUrls.push(
