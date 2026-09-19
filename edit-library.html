@@ -700,57 +700,185 @@ document.addEventListener("DOMContentLoaded", async function () {
   } = await client.auth.getUser();
 
   if (userError || !user) {
-    alert("Please log in first to view your library details.");
+    alert("Please log in first to view your library.");
     return;
   }
 
-  const { data: library, error: libraryError } = await client
-    .from("libraries")
-    .select("*")
-    .eq("owner_id", user.id)
-    .maybeSingle();
+  const { data: library, error: libraryError } =
+    await client
+      .from("libraries")
+      .select("*")
+      .eq("owner_id", user.id)
+      .maybeSingle();
 
   if (libraryError) {
-    alert("Unable to load library details: " + libraryError.message);
+    alert("Unable to load library information.");
     return;
   }
 
   if (!library) {
-    alert("No registered library found for this account.");
+    alert("No library found for this account.");
     return;
   }
 
-  document.getElementById("libraryName").value = library.library_name || "";
-  document.getElementById("ownerName").value = library.owner_name || "";
-  document.getElementById("mobileNumber").value = library.mobile || "";
-  document.getElementById("address").value = library.address || "";
-  document.getElementById("city").value = library.city || "";
+  const libraryNameEl = document.getElementById("libraryName");
+  const ownerNameEl = document.getElementById("ownerName");
+  const mobileEl = document.getElementById("mobileNumber");
+  const addressEl = document.getElementById("address");
+  const cityEl = document.getElementById("city");
 
-  document.getElementById("monthlyFee").value = library.monthly_fee || "";
+  if (libraryNameEl) {
+    libraryNameEl.value = library.library_name || "";
+  }
 
-  document.getElementById("wifi").checked =
-    (library.facilities || []).includes("Wi-Fi");
+  if (addressEl) {
+    addressEl.value = library.address || "";
+  }
 
-  document.getElementById("ac").checked =
-    (library.facilities || []).includes("Air Conditioning");
+  if (cityEl) {
+    cityEl.value = library.city || "";
+  }
 
-  document.getElementById("cctv").checked =
-    (library.facilities || []).includes("CCTV");
+  // Owner information
+  const ownerNameValue =
+    library.owner_name ||
+    user.user_metadata?.owner_name ||
+    "";
 
-  document.getElementById("powerBackup").checked =
-    (library.facilities || []).includes("Power Backup");
+  const mobileValue =
+    library.mobile ||
+    user.user_metadata?.mobile ||
+    "";
 
-  document.getElementById("silentZone").checked =
-    (library.facilities || []).includes("Silent Zone");
+  if (ownerNameEl) {
+    ownerNameEl.value = ownerNameValue;
+  }
 
-  document.getElementById("otherFacilities").value =
-    library.other_facilities || "";
+  if (mobileEl) {
+    mobileEl.value = mobileValue;
+  }
 
-  document.getElementById("openingTime").value =
-    library.opening_time || "";
+  // Save owner information to database if it was missing
+  if (
+    (!library.owner_name || !library.mobile) &&
+    (ownerNameValue || mobileValue)
+  ) {
+    await client
+      .from("libraries")
+      .update({
+        owner_name: ownerNameValue || library.owner_name || null,
+        mobile: mobileValue || library.mobile || null
+      })
+      .eq("id", library.id)
+      .eq("owner_id", user.id);
+  }
 
-  document.getElementById("closingTime").value =
-    library.closing_time || "";
+  // Monthly fee
+  const monthlyFeeEl = document.getElementById("monthlyFee");
+
+  if (monthlyFeeEl) {
+    monthlyFeeEl.value = library.monthly_fee || "";
+  }
+
+  // Facilities
+  const facilities = library.facilities || [];
+
+  if (document.getElementById("wifi")) {
+    document.getElementById("wifi").checked =
+      facilities.includes("Wi-Fi");
+  }
+
+  if (document.getElementById("ac")) {
+    document.getElementById("ac").checked =
+      facilities.includes("Air Conditioning");
+  }
+
+  if (document.getElementById("cctv")) {
+    document.getElementById("cctv").checked =
+      facilities.includes("CCTV");
+  }
+
+  if (document.getElementById("powerBackup")) {
+    document.getElementById("powerBackup").checked =
+      facilities.includes("Power Backup");
+  }
+
+  if (document.getElementById("silentZone")) {
+    document.getElementById("silentZone").checked =
+      facilities.includes("Silent Zone");
+  }
+
+  const otherFacilitiesEl =
+    document.getElementById("otherFacilities");
+
+  if (otherFacilitiesEl) {
+    otherFacilitiesEl.value =
+      library.other_facilities || "";
+  }
+
+  // Opening hours
+  const openingTimeEl =
+    document.getElementById("openingTime");
+
+  const closingTimeEl =
+    document.getElementById("closingTime");
+
+  if (openingTimeEl) {
+    openingTimeEl.value =
+      library.opening_time || "";
+  }
+
+  if (closingTimeEl) {
+    closingTimeEl.value =
+      library.closing_time || "";
+  }
+
+  // Owner information update button
+  const ownerInfoButton =
+    Array.from(document.querySelectorAll(".update-button"))
+      .find(button =>
+        button.textContent.includes(
+          "Update Owner and Library Information"
+        )
+      );
+
+  if (ownerInfoButton) {
+    ownerInfoButton.addEventListener("click", async function () {
+
+      const ownerName =
+        ownerNameEl?.value.trim() || "";
+
+      const mobile =
+        mobileEl?.value.trim() || "";
+
+      if (!ownerName || !mobile) {
+        alert("Please enter Owner Name and Mobile Number.");
+        return;
+      }
+
+      const { error } =
+        await client
+          .from("libraries")
+          .update({
+            owner_name: ownerName,
+            mobile: mobile
+          })
+          .eq("id", library.id)
+          .eq("owner_id", user.id);
+
+      if (error) {
+        alert(
+          "Unable to update owner information: " +
+          error.message
+        );
+        return;
+      }
+
+      alert(
+        "Owner information updated successfully."
+      );
+    });
+  }
 });
 </script>
 
