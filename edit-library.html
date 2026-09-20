@@ -1000,7 +1000,13 @@ if (seatTypeEl) {
           .from("libraries")
           .update({
             owner_name: ownerName,
-            mobile: mobile
+mobile: mobile,
+state: stateEl?.value.trim() || null,
+district: districtEl?.value.trim() || null,
+seat_availability: Number(availableSeatsEl?.value) || 0,
+daily_fee: dailyFeeEl?.value ? Number(dailyFeeEl.value) : null,
+weekly_fee: weeklyFeeEl?.value ? Number(weeklyFeeEl.value) : null,
+seat_type: seatTypeEl?.value.trim() || null
           })
           .eq("id", library.id)
           .eq("owner_id", user.id);
