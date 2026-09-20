@@ -681,6 +681,26 @@ if (photoInput) {
   });
 }
 
+// Load saved library photos
+const savedPhotos = library.photos || [];
+const savedPhotoPreview = document.getElementById("photoPreview");
+
+if (savedPhotoPreview) {
+  savedPhotos.forEach(function (photoUrl) {
+    const image = document.createElement("img");
+
+    image.src = photoUrl;
+    image.alt = "Library photo";
+    image.style.width = "110px";
+    image.style.height = "90px";
+    image.style.objectFit = "cover";
+    image.style.borderRadius = "10px";
+    image.style.margin = "5px";
+
+    savedPhotoPreview.appendChild(image);
+  });
+}
+  
 // Upload library photos to Supabase Storage
 window.updatePhotos = async function () {
   const files = Array.from(photoInput?.files || []).slice(0, 15);
