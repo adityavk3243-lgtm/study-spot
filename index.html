@@ -617,6 +617,59 @@ function searchAnywhere() {
     <p>Loading libraries...</p>
   </div>
 </section>   
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+  const container = document.getElementById("librariesContainer");
+  const client = window.supabaseClient;
+
+  if (!container) return;
+
+  if (!client) {
+    container.innerHTML = "<p>Unable to connect to the library database.</p>";
+    return;
+  }
+
+  const { data: libraries, error } = await client
+    .from("libraries")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Library loading error:", error);
+    container.innerHTML = "<p>Unable to load libraries.</p>";
+    return;
+  }
+
+  if (!libraries || libraries.length === 0) {
+    container.innerHTML = "<p>No study libraries are available yet.</p>";
+    return;
+  }
+
+  container.innerHTML = "";
+
+  libraries.forEach(function (library) {
+    const card = document.createElement("div");
+
+    card.style.cssText = `
+      background:white;
+      padding:16px;
+      margin-bottom:15px;
+      border-radius:12px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    `;
+
+    card.innerHTML = `
+      <h3 style="margin:0 0 8px;">${library.library_name || "Study Library"}</h3>
+      <p style="margin:5px 0;"><strong>Location:</strong> ${library.city || ""}, ${library.district || ""}</p>
+      <p style="margin:5px 0;"><strong>Monthly Fee:</strong> ₹${library.monthly_fee || "Not available"}</p>
+      <p style="margin:5px 0;"><strong>Available Seats:</strong> ${library.seat_availability ?? "Not available"}</p>
+    `;
+
+    container.appendChild(card);
+  });
+});
+</script>
     
 </body>
 </html>
