@@ -880,6 +880,38 @@ document.addEventListener("DOMContentLoaded", async function () {
       .eq("owner_id", user.id);
   }
 
+// Load Owner and Library Information
+const stateEl = document.getElementById("state");
+const districtEl = document.getElementById("district");
+const availableSeatsEl = document.getElementById("availableSeats");
+const dailyFeeEl = document.getElementById("dailyFee");
+const weeklyFeeEl = document.getElementById("weeklyFee");
+const seatTypeEl = document.getElementById("seatType");
+
+if (stateEl) {
+  stateEl.value = library.state || "";
+}
+
+if (districtEl) {
+  districtEl.value = library.district || "";
+}
+
+if (availableSeatsEl) {
+  availableSeatsEl.value = library.seat_availability ?? "";
+}
+
+if (dailyFeeEl) {
+  dailyFeeEl.value = library.daily_fee ?? "";
+}
+
+if (weeklyFeeEl) {
+  weeklyFeeEl.value = library.weekly_fee ?? "";
+}
+
+if (seatTypeEl) {
+  seatTypeEl.value = library.seat_type || "";
+}
+  
   // Monthly fee
   const monthlyFeeEl = document.getElementById("monthlyFee");
 
