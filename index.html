@@ -504,67 +504,7 @@ function searchAnywhere() {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 
-    <script>
-  async function loadLibraries() {
-    const { data, error } = await supabaseClient
-      .from("libraries")
-      .select("*");
-
-    if (error) {
-      console.error("Library loading error:", error);
-      return;
-    }
-
-    console.log("Libraries loaded:", data);
-  }
-
-  loadLibraries();
-</script>
-
-    <section id="library-results">
-  <h2>Available Study Libraries</h2>
-  <div id="library-list"></div>
-</section>
-
-<script>
-  async function showLibraryCards() {
-    const { data, error } = await supabaseClient
-      .from("libraries")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    const libraryList = document.getElementById("library-list");
-
-    if (error) {
-      libraryList.innerHTML = "<p>Unable to load libraries.</p>";
-      console.error(error);
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      libraryList.innerHTML = "<p>No libraries available yet.</p>";
-      return;
-    }
-
-    libraryList.innerHTML = data.map(function (library) {
-      return `
-        <article class="library-card">
-          <h3>${library.library_name || "Unnamed Library"}</h3>
-          <p>City: ${library.city || "Not provided"}</p>
-          <p>Address: ${library.address || "Not provided"}</p>
-          <p>Monthly Fee: ₹${library.monthly_fee || "Not provided"}</p>
-          <p>Facilities: ${
-            library.facilities
-              ? library.facilities.join(", ")
-              : "Not provided"
-          }</p>
-        </article>
-      `;
-    }).join("");
-  }
-
-  showLibraryCards();
-</script>
+    
 <!-- StudySpot Library Listings -->
 <section id="libraryListings" style="padding:20px;">
   <h2 style="margin-bottom:15px;">Nearby Study Libraries</h2>
