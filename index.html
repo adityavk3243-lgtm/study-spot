@@ -521,57 +521,198 @@ async function findNearby() {
           padding:16px;
           margin-bottom:15px;
           border-radius:12px;
-          box-shadow:0 2px 8px rgba(0,0,0,0.08);
-        `;
 
-        card.innerHTML = `
-          <h3 style="margin:0 0 8px;">
-            ${library.library_name || "Study Library"}
-          </h3>
 
-          <p style="margin:5px 0;">
-            <strong>Location:</strong>
-            ${library.city || ""}, ${library.district || ""}
-          </p>
+function findNearby() {
+    const locationBox = document.getElementById("locationBox");
+    const message = document.getElementById("resultMessage");
+    const container = document.getElementById("librariesContainer");
+    const client = window.supabaseClient;
 
-          <p style="margin:5px 0;">
-            <strong>Distance:</strong>
-            ${library.distance.toFixed(2)} km
-          </p>
+    locationBox.style.display = "block";
+    message.style.display = "block";
 
-          <p style="margin:5px 0;">
-            <strong>Monthly Fee:</strong>
-            ₹${library.monthly_fee || "Not available"}
-          </p>
+    locationBox.innerHTML = "📍 Getting your location...";
+    message.innerHTML = "";
 
-          <p style="margin:5px 0;">
-            <strong>Available Seats:</strong>
-            ${library.seat_availability ?? "Not available"}
-          </p>
-        `;
-
-        container.appendChild(card);
-      });
-    },
-
-    function (error) {
-      locationBox.innerHTML =
-        "❌ Location Error<br><br>" +
-        "Code: " +
-        error.code +
-        "<br>Reason: " +
-        error.message;
-    },
-
-    {
-      enableHighAccuracy: false,
-      timeout: 15000,
-      maximumAge: 300000
+    if (!client) {
+        locationBox.innerHTML =
+            "❌ Unable to connect to the library database.";
+        return;
     }
-  );
+
+    if (!navigator.geolocation) {
+        locationBox.innerHTML =
+            "❌ Location is not supported by this browser.";
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        async function(position) {
+
+            const userLat = position.coords.latitude;
+            const userLon = position.coords.longitude;
+
+            locationBox.innerHTML =
+                "✅ Location found.<br><br>" +
+                "📍 Searching libraries within " +
+                selectedRadius +
+                " km...";
+
+            const { data: libraries, error } = await client
+                .from("libraries")
+                .select("*")
+                .not("latitude", "is", null)
+                .not("longitude", "is", null);
+
+            if (error) {
+                console.error("Nearby library error:", error);
+
+                locationBox.innerHTML =
+                    "❌ Unable to load nearby libraries.";
+
+                return;
+            }
+
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+
+                const R = 6371;
+
+                const dLat =
+                    (lat2 - lat1) * Math.PI / 180;
+
+                const dLon =
+                    (lon2 - lon1) * Math.PI / 180;
+
+                const a =
+                    Math.sin(dLat / 2) *
+                    Math.sin(dLat / 2) +
+                    Math.cos(lat1 * Math.PI / 180) *
+                    Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon / 2) *
+                    Math.sin(dLon / 2);
+
+                const c =
+                    2 * Math.atan2(
+                        Math.sqrt(a),
+                        Math.sqrt(1 - a)
+                    );
+
+                return R * c;
+            }
+
+            const nearbyLibraries = libraries
+                .map(function(library) {
+
+                    const distance =
+                        calculateDistance(
+                            userLat,
+                            userLon,
+                            Number(library.latitude),
+                            Number(library.longitude)
+                        );
+
+                    return {
+                        ...library,
+                        distance: distance
+                    };
+                })
+                .filter(function(library) {
+
+                    return library.distance <= selectedRadius;
+
+                })
+                .sort(function(a, b) {
+
+                    return a.distance - b.distance;
+
+                });
+
+            if (nearbyLibraries.length === 0) {
+
+                message.innerHTML =
+                    "😕 No libraries found within " +
+                    selectedRadius +
+                    " km.";
+
+                container.innerHTML =
+                    "<p>No study libraries were found within the selected distance.</p>";
+
+                return;
+            }
+
+            message.innerHTML =
+                "📚 " +
+                nearbyLibraries.length +
+                " library/libraries found within " +
+                selectedRadius +
+                " km.";
+
+            container.innerHTML = "";
+
+            nearbyLibraries.forEach(function(library) {
+
+                const card =
+                    document.createElement("div");
+
+                card.style.cssText = `
+                    background:white;
+                    padding:16px;
+                    margin-bottom:15px;
+                    border-radius:12px;
+                    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+                `;
+
+                card.innerHTML = `
+                    <h3 style="margin:0 0 8px;">
+                        ${library.library_name || "Study Library"}
+                    </h3>
+
+                    <p style="margin:5px 0;">
+                        <strong>Location:</strong>
+                        ${library.city || ""}, ${library.district || ""}
+                    </p>
+
+                    <p style="margin:5px 0;">
+                        <strong>Distance:</strong>
+                        ${library.distance.toFixed(2)} km
+                    </p>
+
+                    <p style="margin:5px 0;">
+                        <strong>Monthly Fee:</strong>
+                        ₹${library.monthly_fee || "Not available"}
+                    </p>
+
+                    <p style="margin:5px 0;">
+                        <strong>Available Seats:</strong>
+                        ${library.seat_availability ?? "Not available"}
+                    </p>
+                `;
+
+                container.appendChild(card);
+
+            });
+
+        },
+
+        function(error) {
+
+            locationBox.innerHTML =
+                "❌ Location Error<br><br>" +
+                "Code: " +
+                error.code +
+                "<br>Reason: " +
+                error.message;
+
+        },
+
+        {
+            enableHighAccuracy: false,
+            timeout: 15000,
+            maximumAge: 300000
+        }
+    );
 }
-
-
 function searchAnywhere() {
 
     const search =
