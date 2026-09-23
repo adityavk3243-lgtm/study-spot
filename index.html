@@ -405,72 +405,7 @@ function findNearby() {
                 const distance = calculateDistance(
                     userLat,
                     userLon,
-                    library.latitude,
-                    library.longitude
-                );
 
-                library.distance = distance;
-
-                return distance <= selectedRadius;
-
-            });
-
-            message.style.display = "block";
-
-            if (nearbyLibraries.length === 0) {
-
-                message.innerHTML =
-                    "😕 " +
-                    "No libraries found within " +
-                    selectedRadius +
-                    " km.";
-
-            } else {
-
-                let html =
-                    "📚 <b>Libraries within " +
-                    selectedRadius +
-                    " km:</b><br><br>";
-
-                nearbyLibraries.forEach(library => {
-
-                    html +=
-                        "📖 <b>" +
-                        library.name +
-                        "</b><br>" +
-                        "📍 " +
-                        library.city +
-                        "<br>" +
-                        "📏 " +
-                        library.distance.toFixed(2) +
-                        " km away<br>" +
-                        "💰 ₹" +
-                        library.price +
-                        " / Month<br><br>";
-
-                });
-
-                message.innerHTML = html;
-            }
-
-        },
-function(error) {
-
-    locationBox.innerHTML =
-        "❌ Location Error<br><br>" +
-        "Code: " + error.code +
-        "<br>Reason: " + error.message;
-
-},
-
-        {
-            enableHighAccuracy: false,
-            timeout: 15000,
-            maximumAge: 300000
-        }
-
-    );
-}
 
 
 
