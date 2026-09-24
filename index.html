@@ -506,6 +506,25 @@ function findNearby() {
                         <strong>Available Seats:</strong>
                         ${library.seat_availability ?? "Not available"}
                     </p>
+
+         <button
+  onclick="window.location.href='library-details.html?id=${library.id}'"
+  style="
+    width:100%;
+    margin-top:12px;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+  "
+>
+  View Details
+</button>    
+                    
                 `;
 
                 container.appendChild(card);
