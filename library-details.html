@@ -7,15 +7,103 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: #f4f7fb;
+    font-family: Arial, sans-serif;
+    color: #172033;
+  }
+
+  .app-header {
+    background: #2563eb;
+    color: white;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+
+  .back-button {
+    border: none;
+    background: rgba(255,255,255,0.18);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .brand {
+    font-size: 21px;
+    font-weight: 700;
+  }
+
+  .page {
+    padding: 18px 14px 30px;
+    max-width: 600px;
+    margin: auto;
+  }
+
+  .library-card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  }
+
+  .library-card h1,
+  .library-card h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 25px;
+    color: #172033;
+  }
+
+  .library-card p {
+    margin: 10px 0;
+    line-height: 1.5;
+    font-size: 15px;
+    color: #4b5563;
+  }
+
+  .library-card strong {
+    color: #172033;
+  }
+
+  .section-title {
+    margin: 22px 0 10px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #172033;
+  }
+</style>
+
 </head>
 
 <body>
 
-  <h1>Library Details</h1>
+  <header class="app-header">
+  <button class="back-button" onclick="history.back()">‹</button>
+  <div class="brand">StudySpot</div>
+</header>
 
-  <div id="libraryDetails">
+<main class="page">
+  <div class="library-card" id="libraryDetails">
     <p>Loading library details...</p>
   </div>
+</main>
+  
 <script>
 const params = new URLSearchParams(window.location.search);
 const libraryId = params.get("id");
