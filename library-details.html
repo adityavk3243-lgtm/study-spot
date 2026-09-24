@@ -22,5 +22,90 @@ const libraryId = params.get("id");
 
 console.log("Library ID:", libraryId);
 </script>
+
+<script>
+async function loadLibraryDetails() {
+  const container = document.getElementById("libraryDetails");
+  const client = window.supabaseClient;
+
+  if (!libraryId) {
+    container.innerHTML = "<p>Library information is missing.</p>";
+    return;
+  }
+
+  if (!client) {
+    container.innerHTML =
+      "<p>Unable to connect to the library database.</p>";
+    return;
+  }
+
+  const { data: library, error } = await client
+    .from("libraries")
+    .select("*")
+    .eq("id", libraryId)
+    .single();
+
+  if (error || !library) {
+    console.error("Library details error:", error);
+
+    container.innerHTML =
+      "<p>Unable to load library details.</p>";
+
+    return;
+  }
+
+  container.innerHTML = `
+    <h2>${library.library_name || "Study Library"}</h2>
+
+    <p>
+      <strong>Location:</strong>
+      ${library.city || ""}, ${library.district || ""}
+    </p>
+
+    <p>
+      <strong>Address:</strong>
+      ${library.address || "Not available"}
+    </p>
+
+    <p>
+      <strong>Monthly Fee:</strong>
+      ₹${library.monthly_fee ?? "Not available"}
+    </p>
+
+    <p>
+      <strong>Weekly Fee:</strong>
+      ₹${library.weekly_fee ?? "Not available"}
+    </p>
+
+    <p>
+      <strong>Daily Fee:</strong>
+      ₹${library.daily_fee ?? "Not available"}
+    </p>
+
+    <p>
+      <strong>Available Seats:</strong>
+      ${library.seat_availability ?? "Not available"}
+    </p>
+
+    <p>
+      <strong>Seat Type:</strong>
+      ${library.seat_type || "Not available"}
+    </p>
+
+    <p>
+      <strong>Opening Time:</strong>
+      ${library.opening_time || "Not available"}
+    </p>
+
+    <p>
+      <strong>Closing Time:</strong>
+      ${library.closing_time || "Not available"}
+    </p>
+  `;
+}
+
+loadLibraryDetails();
+</script>
+  
 </body>
 </html>
