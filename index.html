@@ -532,29 +532,111 @@ function findNearby() {
         }
     );
 }
-function searchAnywhere() {
-
+async function searchAnywhere() {
     const search =
         document.getElementById("searchInput").value.trim();
 
     const message =
         document.getElementById("resultMessage");
 
+    const container =
+        document.getElementById("librariesContainer");
+
+    const client = window.supabaseClient;
+
     message.style.display = "block";
 
     if (search === "") {
-
         message.innerHTML =
             "🔎 Please enter a city, area or library name.";
+        return;
+    }
 
-    } else {
+    if (!client) {
+        message.innerHTML =
+            "❌ Unable to connect to the library database.";
+        return;
+    }
+
+    message.innerHTML =
+        "🔎 Searching StudySpot...";
+
+    const { data: libraries, error } = await client
+        .from("libraries")
+        .select("*")
+        .or(
+            "library_name.ilike.%" + search + "%," +
+            "city.ilike.%" + search + "%," +
+            "district.ilike.%" + search + "%," +
+            "state.ilike.%" + search + "%," +
+            "address.ilike.%" + search + "%"
+        )
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Search error:", error);
 
         message.innerHTML =
-            "🌍 Searching StudySpot for: <b>" +
+            "❌ Unable to search libraries.";
+
+        return;
+    }
+
+    if (!libraries || libraries.length === 0) {
+        message.innerHTML =
+            "😕 No libraries found for: <b>" +
             search +
             "</b>";
 
+        container.innerHTML =
+            "<p>No study libraries matched your search.</p>";
+
+        return;
     }
+
+    message.innerHTML =
+        "📚 " +
+        libraries.length +
+        " library/libraries found for: <b>" +
+        search +
+        "</b>";
+
+    container.innerHTML = "";
+
+    libraries.forEach(function (library) {
+        const card = document.createElement("div");
+
+        card.style.cssText = `
+            background:white;
+            padding:16px;
+            margin-bottom:15px;
+            border-radius:12px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.08);
+        `;
+
+        card.innerHTML = `
+            <h3 style="margin:0 0 8px;">
+                ${library.library_name || "Study Library"}
+            </h3>
+
+            <p style="margin:5px 0;">
+                <strong>Location:</strong>
+                ${library.city || ""}, ${library.district || ""}
+            </p>
+
+            <p style="margin:5px 0;">
+                <strong>Monthly Fee:</strong>
+                ₹${library.monthly_fee || "Not available"}
+            </p>
+
+            <p style="margin:5px 0;">
+                <strong>Available Seats:</strong>
+                ${library.seat_availability ?? "Not available"}
+            </p>
+        `;
+
+        container.appendChild(card);
+    });
 }
 
 </script>
