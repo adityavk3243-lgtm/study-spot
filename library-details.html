@@ -16,6 +16,11 @@
   <div id="libraryDetails">
     <p>Loading library details...</p>
   </div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const libraryId = params.get("id");
 
+console.log("Library ID:", libraryId);
+</script>
 </body>
 </html>
