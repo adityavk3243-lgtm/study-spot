@@ -141,58 +141,161 @@ async function loadLibraryDetails() {
 
     return;
   }
+container.innerHTML = `
+  <div class="profile-header">
+    <div class="library-title">
+      <h1>${library.library_name || "Study Library"}</h1>
+      <p class="location-text">
+        📍 ${library.city || ""}${library.city && library.district ? ", " : ""}${library.district || ""}${library.state ? ", " + library.state : ""}
+      </p>
+    </div>
+  </div>
 
-  container.innerHTML = `
-    <h2>${library.library_name || "Study Library"}</h2>
+  <div class="quick-info">
+    <div class="info-box">
+      <span class="info-icon">💺</span>
+      <strong>${library.seat_availability ?? "—"}</strong>
+      <small>Available Seats</small>
+    </div>
 
-    <p>
-      <strong>Location:</strong>
-      ${library.city || ""}, ${library.district || ""}
-    </p>
+    <div class="info-box">
+      <span class="info-icon">💰</span>
+      <strong>₹${library.monthly_fee ?? "—"}</strong>
+      <small>Monthly Fee</small>
+    </div>
 
-    <p>
-      <strong>Address:</strong>
-      ${library.address || "Not available"}
-    </p>
+    <div class="info-box">
+      <span class="info-icon">🕐</span>
+      <strong>${library.open_24_hours ? "24 Hours" : (library.opening_time || "—")}</strong>
+      <small>Opening Time</small>
+    </div>
+  </div>
 
-    <p>
-      <strong>Monthly Fee:</strong>
-      ₹${library.monthly_fee ?? "Not available"}
-    </p>
+  <div class="detail-section">
+    <h2>📍 Location</h2>
 
-    <p>
-      <strong>Weekly Fee:</strong>
-      ₹${library.weekly_fee ?? "Not available"}
-    </p>
+    <div class="detail-card">
+      <p><strong>Address</strong></p>
+      <p>${library.address || "Not available"}</p>
 
-    <p>
-      <strong>Daily Fee:</strong>
-      ₹${library.daily_fee ?? "Not available"}
-    </p>
+      <p><strong>City</strong></p>
+      <p>${library.city || "Not available"}</p>
 
-    <p>
-      <strong>Available Seats:</strong>
-      ${library.seat_availability ?? "Not available"}
-    </p>
+      <p><strong>District</strong></p>
+      <p>${library.district || "Not available"}</p>
 
-    <p>
-      <strong>Seat Type:</strong>
-      ${library.seat_type || "Not available"}
-    </p>
+      <p><strong>State</strong></p>
+      <p>${library.state || "Not available"}</p>
+    </div>
+  </div>
 
-    <p>
-      <strong>Opening Time:</strong>
-      ${library.opening_time || "Not available"}
-    </p>
+  <div class="detail-section">
+    <h2>💰 Fees</h2>
 
-    <p>
-      <strong>Closing Time:</strong>
-      ${library.closing_time || "Not available"}
-    </p>
-  `;
+    <div class="fee-grid">
+      <div class="fee-card">
+        <span>Daily</span>
+        <strong>₹${library.daily_fee ?? "—"}</strong>
+      </div>
+
+      <div class="fee-card">
+        <span>Weekly</span>
+        <strong>₹${library.weekly_fee ?? "—"}</strong>
+      </div>
+
+      <div class="fee-card">
+        <span>Monthly</span>
+        <strong>₹${library.monthly_fee ?? "—"}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <h2>💺 Seating Information</h2>
+
+    <div class="detail-card">
+      <div class="row-item">
+        <span>Available Seats</span>
+        <strong>${library.seat_availability ?? "Not available"}</strong>
+      </div>
+
+      <div class="row-item">
+        <span>Seat Type</span>
+        <strong>${library.seat_type || "Not available"}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <h2>🕐 Opening Hours</h2>
+
+    <div class="detail-card">
+      ${
+        library.open_24_hours
+          ? `<div class="open-status">Open 24 Hours</div>`
+          : `
+            <div class="row-item">
+              <span>Opening Time</span>
+              <strong>${library.opening_time || "Not available"}</strong>
+            </div>
+
+            <div class="row-item">
+              <span>Closing Time</span>
+              <strong>${library.closing_time || "Not available"}</strong>
+            </div>
+          `
+      }
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <h2>🏢 Facilities</h2>
+
+    <div class="facility-list">
+      ${
+        Array.isArray(library.facilities) && library.facilities.length
+          ? library.facilities
+              .map(facility => `<span class="facility">${facility}</span>`)
+              .join("")
+          : `<p>No facilities information available.</p>`
+      }
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <h2>✨ Other Facilities</h2>
+
+    <div class="detail-card">
+      <p>${library.other_facilities || "No additional facilities information available."}</p>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <h2>📜 Library Rules</h2>
+
+    <div class="rules-card">
+      <p>${library.rules || "No library rules provided."}</p>
+    </div>
+  </div>
+
+  ${
+    library.mobile
+      ? `
+        <button
+          class="contact-button"
+          onclick="window.location.href='tel:${library.mobile}'"
+        >
+          📞 Contact Library
+        </button>
+      `
+      : ""
+  }
+
+  <p class="powered-by">StudySpot • Find your perfect study space</p>
+`;
 }
+  loadLibraryDetails();
 
-loadLibraryDetails();
 </script>
   
 </body>
