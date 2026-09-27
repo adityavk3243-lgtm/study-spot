@@ -200,8 +200,37 @@
   <label for="weeklyFee">Weekly Fee</label>
   <input type="number" id="weeklyFee" placeholder="Weekly Fee" min="0">
 
-  <label for="seatType">Seat Type</label>
-  <input type="text" id="seatType" placeholder="Seat Type">
+  <label for="maleSeats">Male Seats</label>
+<input
+  type="number"
+  id="maleSeats"
+  min="0"
+  placeholder="Example: 50"
+>
+
+<label for="femaleSeats">Female Seats</label>
+<input
+  type="number"
+  id="femaleSeats"
+  min="0"
+  placeholder="Example: 50"
+>
+
+<label for="deposit">Security Deposit (₹)</label>
+<input
+  type="number"
+  id="deposit"
+  min="0"
+  placeholder="Example: 500"
+>
+
+<label for="registrationFee">Admission / Registration Fee (₹)</label>
+<input
+  type="number"
+  id="registrationFee"
+  min="0"
+  placeholder="Example: 100"
+>
 
   <button class="update-button" type="button">
     Update Owner and Library Information
@@ -986,7 +1015,12 @@ if (registrationFeeEl) {
     closingTimeEl.value =
       library.closing_time || "";
   }
+const openDaysEl = document.getElementById("openDays");
 
+if (openDaysEl) {
+    openDaysEl.value = library.open_days || "";
+  }
+  
   // Owner information update button
   const ownerInfoButton =
     Array.from(document.querySelectorAll(".update-button"))
@@ -1021,7 +1055,12 @@ district: districtEl?.value.trim() || null,
 seat_availability: Number(availableSeatsEl?.value) || 0,
 daily_fee: dailyFeeEl?.value ? Number(dailyFeeEl.value) : null,
 weekly_fee: weeklyFeeEl?.value ? Number(weeklyFeeEl.value) : null,
-seat_type: seatTypeEl?.value.trim() || null
+
+male_seats: maleSeatsEl?.value ? Number(maleSeatsEl.value) : null,
+female_seats: femaleSeatsEl?.value ? Number(femaleSeatsEl.value) : null,
+security_deposit: depositEl?.value ? Number(depositEl.value) : null,
+registration_fee: registrationFeeEl?.value ? Number(registrationFeeEl.value) : null  
+            open_days: document.getElementById("openDays")?.value.trim() || null
           })
           .eq("id", library.id)
           .eq("owner_id", user.id);
