@@ -1025,14 +1025,13 @@ if (openDaysEl) {
     openDaysEl.value = library.open_days || "";
   }
   
-  // Owner information update button
+    // Owner information update button
   const ownerInfoButton =
     document.getElementById("updateOwnerInfoButton");
 
   if (ownerInfoButton) {
     ownerInfoButton.addEventListener("click", async function () {
 
-      
       const ownerName =
         ownerNameEl?.value.trim() || "";
 
@@ -1049,18 +1048,30 @@ if (openDaysEl) {
           .from("libraries")
           .update({
             owner_name: ownerName,
-mobile: mobile,
-state: stateEl?.value.trim() || null,
-district: districtEl?.value.trim() || null,
-seat_availability: Number(availableSeatsEl?.value) || 0,
-daily_fee: dailyFeeEl?.value ? Number(dailyFeeEl.value) : null,
-weekly_fee: weeklyFeeEl?.value ? Number(weeklyFeeEl.value) : null,
-
-male_seats: maleSeatsEl?.value ? Number(maleSeatsEl.value) : null,
-female_seats: femaleSeatsEl?.value ? Number(femaleSeatsEl.value) : null,
-security_deposit: depositEl?.value ? Number(depositEl.value) : null,
-registration_fee: registrationFeeEl?.value ? Number(registrationFeeEl.value) : null,  
-            open_days: document.getElementById("openDays")?.value.trim() || null
+            mobile: mobile,
+            state: stateEl?.value.trim() || null,
+            district: districtEl?.value.trim() || null,
+            seat_availability: Number(availableSeatsEl?.value) || 0,
+            daily_fee: dailyFeeEl?.value
+              ? Number(dailyFeeEl.value)
+              : null,
+            weekly_fee: weeklyFeeEl?.value
+              ? Number(weeklyFeeEl.value)
+              : null,
+            male_seats: maleSeatsEl?.value
+              ? Number(maleSeatsEl.value)
+              : null,
+            female_seats: femaleSeatsEl?.value
+              ? Number(femaleSeatsEl.value)
+              : null,
+            security_deposit: depositEl?.value
+              ? Number(depositEl.value)
+              : null,
+            registration_fee: registrationFeeEl?.value
+              ? Number(registrationFeeEl.value)
+              : null,
+            open_days:
+              document.getElementById("openDays")?.value.trim() || null
           })
           .eq("id", library.id)
           .eq("owner_id", user.id);
@@ -1073,11 +1084,15 @@ registration_fee: registrationFeeEl?.value ? Number(registrationFeeEl.value) : n
         return;
       }
 
-      alert(
-        showMessage(
-  "additionalDetailsMessage",
-  "Owner and library information updated successfully."
-);
+      const successMessage =
+        document.getElementById("additionalDetailsMessage");
+
+      if (successMessage) {
+        successMessage.textContent =
+          "Owner and library information updated successfully.";
+        successMessage.style.display = "block";
+      }
+    });
   }
 });
 </script>
