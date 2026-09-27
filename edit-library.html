@@ -1032,7 +1032,6 @@ if (openDaysEl) {
   if (ownerInfoButton) {
     ownerInfoButton.addEventListener("click", async function () {
 
-      alert("Update button clicked");
       
       const ownerName =
         ownerNameEl?.value.trim() || "";
@@ -1075,9 +1074,10 @@ registration_fee: registrationFeeEl?.value ? Number(registrationFeeEl.value) : n
       }
 
       alert(
-        "Owner information updated successfully."
-      );
-    });
+        showMessage(
+  "additionalDetailsMessage",
+  "Owner and library information updated successfully."
+);
   }
 });
 </script>
