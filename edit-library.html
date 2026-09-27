@@ -886,7 +886,10 @@ const districtEl = document.getElementById("district");
 const availableSeatsEl = document.getElementById("availableSeats");
 const dailyFeeEl = document.getElementById("dailyFee");
 const weeklyFeeEl = document.getElementById("weeklyFee");
-const seatTypeEl = document.getElementById("seatType");
+const maleSeatsEl = document.getElementById("maleSeats");
+const femaleSeatsEl = document.getElementById("femaleSeats");
+const depositEl = document.getElementById("deposit");
+const registrationFeeEl = document.getElementById("registrationFee");
 
 if (stateEl) {
   stateEl.value = library.state || "";
@@ -908,8 +911,20 @@ if (weeklyFeeEl) {
   weeklyFeeEl.value = library.weekly_fee ?? "";
 }
 
-if (seatTypeEl) {
-  seatTypeEl.value = library.seat_type || "";
+if (maleSeatsEl) {
+    maleSeatsEl.value = library.male_seats ?? "";
+}
+
+if (femaleSeatsEl) {
+    femaleSeatsEl.value = library.female_seats ?? "";
+}
+
+if (depositEl) {
+    depositEl.value = library.security_deposit ?? "";
+}
+
+if (registrationFeeEl) {
+    registrationFeeEl.value = library.registration_fee ?? "";
 }
   
   // Monthly fee
