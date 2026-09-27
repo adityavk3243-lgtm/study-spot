@@ -1027,12 +1027,7 @@ if (openDaysEl) {
   
   // Owner information update button
   const ownerInfoButton =
-    Array.from(document.querySelectorAll(".update-button"))
-      .find(button =>
-        button.textContent.includes(
-          "Update Owner and Library Information"
-        )
-      );
+    document.getElementById("updateOwnerInfoButton");
 
   if (ownerInfoButton) {
     ownerInfoButton.addEventListener("click", async function () {
