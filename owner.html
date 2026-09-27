@@ -889,14 +889,25 @@ document.addEventListener("DOMContentLoaded", function () {
   district: district,
   city: city,
   address: address,
-  monthly_fee: Number(price),
-  seat_availability: Number(seats),
-  opening_time: opening || null,
-  closing_time: closing || null,
-  open_24_hours: open247 === "Yes",
-  facilities: facilities,
-  other_facilities: otherFacilities || null,
-  rules: rules
+ monthly_fee: Number(price),
+daily_fee: dailyFee.value ? Number(dailyFee.value) : null,
+weekly_fee: weeklyFee.value ? Number(weeklyFee.value) : null,
+
+seat_availability: Number(seats),
+male_seats: maleSeats.value ? Number(maleSeats.value) : null,
+female_seats: femaleSeats.value ? Number(femaleSeats.value) : null,
+
+security_deposit: deposit.value ? Number(deposit.value) : null,
+registration_fee: registrationFee.value ? Number(registrationFee.value) : null,
+
+opening_time: opening || null,
+closing_time: closing || null,
+open_days: openDays.value.trim() || null,
+open_24_hours: open247 === "Yes",
+
+facilities: facilities,
+other_facilities: otherFacilities || null,
+rules: rules 
 });
 
       if (libraryError) {
