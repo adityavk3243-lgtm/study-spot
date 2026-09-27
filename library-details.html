@@ -327,6 +327,36 @@ container.innerHTML = `
     </div>
   </div>
 
+${
+  Array.isArray(library.photos) && library.photos.length
+    ? `
+      <div class="detail-section">
+        <h2>📸 Library Photos</h2>
+
+        <div style="
+          display:grid;
+          grid-template-columns:repeat(2,1fr);
+          gap:10px;
+        ">
+          ${library.photos.map(photo => `
+            <img
+              src="${photo}"
+              alt="Library Photo"
+              style="
+                width:100%;
+                height:150px;
+                object-fit:cover;
+                border-radius:14px;
+                display:block;
+              "
+            >
+          `).join("")}
+        </div>
+      </div>
+    `
+    : ""
+}
+
   <div class="quick-info">
     <div class="info-box">
       <span class="info-icon">💺</span>
