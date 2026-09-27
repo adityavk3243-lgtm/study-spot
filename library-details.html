@@ -364,6 +364,34 @@ container.innerHTML = `
 
       <p><strong>State</strong></p>
       <p>${library.state || "Not available"}</p>
+
+${
+  library.latitude != null && library.longitude != null
+    ? `
+      <button
+        onclick="window.open(
+          'https://www.google.com/maps/dir/?api=1&destination=${library.latitude},${library.longitude}',
+          '_blank'
+        )"
+        style="
+          width:100%;
+          margin-top:15px;
+          padding:14px;
+          border:none;
+          border-radius:12px;
+          background:#2563eb;
+          color:white;
+          font-size:16px;
+          font-weight:700;
+          cursor:pointer;
+        "
+      >
+        🗺️ Get Directions
+      </button>
+    `
+    : ""
+}
+      
     </div>
   </div>
 
