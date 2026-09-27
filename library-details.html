@@ -396,9 +396,14 @@ container.innerHTML = `
       </div>
 
       <div class="row-item">
-        <span>Seat Type</span>
-        <strong>${library.seat_type || "Not available"}</strong>
-      </div>
+  <span>Male Seats</span>
+  <strong>${library.male_seats ?? "Not available"}</strong>
+</div>
+
+<div class="row-item">
+  <span>Female Seats</span>
+  <strong>${library.female_seats ?? "Not available"}</strong>
+</div>
     </div>
   </div>
 
