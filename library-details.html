@@ -427,22 +427,27 @@ container.innerHTML = `
     <h2>🕐 Opening Hours</h2>
 
     <div class="detail-card">
-      ${
-        library.open_24_hours
-          ? `<div class="open-status">Open 24 Hours</div>`
-          : `
-            <div class="row-item">
-              <span>Opening Time</span>
-              <strong>${library.opening_time || "Not available"}</strong>
-            </div>
+  ${
+    library.open_24_hours
+      ? `<div class="open-status">Open 24 Hours</div>`
+      : `
+        <div class="row-item">
+          <span>Opening Time</span>
+          <strong>${library.opening_time || "Not available"}</strong>
+        </div>
 
-            <div class="row-item">
-              <span>Closing Time</span>
-              <strong>${library.closing_time || "Not available"}</strong>
-            </div>
-          `
-      }
-    </div>
+        <div class="row-item">
+          <span>Closing Time</span>
+          <strong>${library.closing_time || "Not available"}</strong>
+        </div>
+      `
+  }
+
+  <div class="row-item">
+    <span>Open Days</span>
+    <strong>${library.open_days || "Not available"}</strong>
+  </div>
+</div>
   </div>
 
   <div class="detail-section">
