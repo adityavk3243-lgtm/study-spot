@@ -374,16 +374,32 @@ container.innerHTML = `
         <strong>₹${library.daily_fee ?? "—"}</strong>
       </div>
 
-      <div class="fee-card">
-        <span>Weekly</span>
-        <strong>₹${library.weekly_fee ?? "—"}</strong>
-      </div>
+      <div class="fee-grid">
+  <div class="fee-card">
+    <span>Daily</span>
+    <strong>₹${library.daily_fee ?? "—"}</strong>
+  </div>
 
-      <div class="fee-card">
-        <span>Monthly</span>
-        <strong>₹${library.monthly_fee ?? "—"}</strong>
-      </div>
-    </div>
+  <div class="fee-card">
+    <span>Weekly</span>
+    <strong>₹${library.weekly_fee ?? "—"}</strong>
+  </div>
+
+  <div class="fee-card">
+    <span>Monthly</span>
+    <strong>₹${library.monthly_fee ?? "—"}</strong>
+  </div>
+
+  <div class="fee-card">
+    <span>Security Deposit</span>
+    <strong>₹${library.security_deposit ?? "—"}</strong>
+  </div>
+
+  <div class="fee-card">
+    <span>Registration Fee</span>
+    <strong>₹${library.registration_fee ?? "—"}</strong>
+  </div>
+</div>
   </div>
 
   <div class="detail-section">
