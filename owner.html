@@ -812,8 +812,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const femaleSeats = document.getElementById("femaleSeats")?.value;
     const deposit = document.getElementById("deposit")?.value;
     const registrationFee = document.getElementById("registrationFee")?.value;
-
-    const otherFacilities =
+    const dailyFee = document.getElementById("dailyFee")
+    const weeklyFee = document.getElementById("weeklyFee")
+    const openDays = document.getElementById("openDays")
+   
+    const otherFacilities = 
       document.getElementById("otherFacilities")?.value.trim() || "";
 
     const extra =
