@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Student Login - StudySpot</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f4f7fb;
+      font-family: Arial, sans-serif;
+      color: #172033;
+    }
+
+    .header {
+      background: #2563eb;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 430px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 18px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #667085;
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+    }
+
+    .primary-button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .secondary-button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 13px;
+      border: 1px solid #2563eb;
+      border-radius: 10px;
+      background: white;
+      color: #2563eb;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 22px 0;
+      color: #98a2b3;
+      font-size: 13px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      height: 1px;
+      background: #e4e7ec;
+      flex: 1;
+    }
+
+    .switch-text {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .switch-text button {
+      border: none;
+      background: none;
+      color: #2563eb;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    StudySpot
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+
+      <!-- LOGIN -->
+      <div id="loginSection">
+
+        <h2>Student Login</h2>
+
+        <p class="subtitle">
+          Login using your mobile number or email address.
+        </p>
+
+        <label for="loginMobile">Mobile Number</label>
+        <input
+          id="loginMobile"
+          type="tel"
+          placeholder="Enter mobile number"
+        >
+
+        <button class="primary-button" type="button">
+          Login with Mobile OTP
+        </button>
+
+        <div class="divider">OR</div>
+
+        <label for="loginEmail">Email Address</label>
+        <input
+          id="loginEmail"
+          type="email"
+          placeholder="Enter email address"
+        >
+
+        <button class="secondary-button" type="button">
+          Login with Email OTP
+        </button>
+
+        <p class="switch-text">
+          Don't have an account?
+          <button type="button" onclick="showSignup()">
+            Create Account
+          </button>
+        </p>
+
+      </div>
+
+
+      <!-- SIGN UP -->
+      <div id="signupSection" class="hidden">
+
+        <h2>Create Student Account</h2>
+
+        <p class="subtitle">
+          Create your StudySpot student account.
+        </p>
+
+        <label for="signupName">Full Name</label>
+        <input
+          id="signupName"
+          type="text"
+          placeholder="Enter full name"
+        >
+
+        <label for="signupMobile">Mobile Number</label>
+        <input
+          id="signupMobile"
+          type="tel"
+          placeholder="Enter mobile number"
+        >
+
+        <label for="signupEmail">Email Address</label>
+        <input
+          id="signupEmail"
+          type="email"
+          placeholder="Enter email address"
+        >
+
+        <label for="signupPassword">Password</label>
+        <input
+          id="signupPassword"
+          type="password"
+          placeholder="Create password"
+        >
+
+        <label for="signupConfirmPassword">
+          Confirm Password
+        </label>
+
+        <input
+          id="signupConfirmPassword"
+          type="password"
+          placeholder="Confirm password"
+        >
+
+        <button class="primary-button" type="button">
+          Create Account
+        </button>
+
+        <p class="switch-text">
+          Already have an account?
+          <button type="button" onclick="showLogin()">
+            Login
+          </button>
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+    function showSignup() {
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("signupSection").classList.remove("hidden");
+    }
+
+    function showLogin() {
+      document.getElementById("signupSection").classList.add("hidden");
+      document.getElementById("loginSection").classList.remove("hidden");
+    }
+  </script>
+
+</body>
+        </html>
