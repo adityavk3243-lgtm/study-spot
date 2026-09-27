@@ -19,67 +19,107 @@
       color: #172033;
     }
 
-    .header {
-      background: #2563eb;
+    /* ---------- BRAND HEADER ---------- */
+
+    .hero {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
       color: white;
-      padding: 16px;
       text-align: center;
-      font-size: 22px;
-      font-weight: 700;
+      padding: 30px 18px 34px;
+    }
+
+    .logo {
+      font-size: 58px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .brand {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .tagline {
+      margin: 8px 0 0;
+      font-size: 17px;
+      opacity: 0.95;
+    }
+
+    /* ---------- MAIN ---------- */
+
+    .page {
+      padding: 28px 16px 40px;
     }
 
     .container {
       width: 100%;
-      max-width: 430px;
-      margin: 30px auto;
-      padding: 20px;
+      max-width: 470px;
+      margin: auto;
     }
 
-    .card {
+    .login-card {
       background: white;
-      padding: 22px;
-      border-radius: 18px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+      border-radius: 22px;
+      padding: 25px 20px;
+      box-shadow: 0 5px 22px rgba(0,0,0,0.09);
+    }
+
+    .welcome-icon {
+      text-align: center;
+      font-size: 42px;
+      margin-bottom: 5px;
     }
 
     h2 {
-      margin-top: 0;
       text-align: center;
+      margin: 0;
+      font-size: 28px;
     }
 
     .subtitle {
       text-align: center;
       color: #667085;
-      font-size: 14px;
-      margin-bottom: 22px;
+      font-size: 15px;
+      line-height: 1.5;
+      margin: 9px 0 24px;
     }
+
+    /* ---------- FORM ---------- */
 
     label {
       display: block;
-      margin-top: 14px;
-      margin-bottom: 6px;
-      font-weight: 600;
+      margin-top: 15px;
+      margin-bottom: 7px;
+      font-size: 15px;
+      font-weight: 700;
     }
 
     input {
       width: 100%;
-      padding: 13px;
+      padding: 14px;
       border: 1px solid #d0d5dd;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 16px;
       outline: none;
+      background: #fff;
     }
 
     input:focus {
       border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
+    }
+
+    button {
+      font-family: inherit;
     }
 
     .primary-button {
       width: 100%;
-      margin-top: 20px;
+      margin-top: 18px;
       padding: 14px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       background: #2563eb;
       color: white;
       font-size: 16px;
@@ -87,12 +127,16 @@
       cursor: pointer;
     }
 
+    .primary-button:active {
+      transform: scale(0.99);
+    }
+
     .secondary-button {
       width: 100%;
-      margin-top: 10px;
-      padding: 13px;
-      border: 1px solid #2563eb;
-      border-radius: 10px;
+      margin-top: 12px;
+      padding: 14px;
+      border: 2px solid #2563eb;
+      border-radius: 12px;
       background: white;
       color: #2563eb;
       font-size: 16px;
@@ -103,10 +147,11 @@
     .divider {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin: 22px 0;
+      gap: 12px;
+      margin: 22px 0 5px;
       color: #98a2b3;
       font-size: 13px;
+      font-weight: 600;
     }
 
     .divider::before,
@@ -119,7 +164,7 @@
 
     .switch-text {
       text-align: center;
-      margin-top: 18px;
+      margin: 22px 0 0;
       font-size: 14px;
     }
 
@@ -128,144 +173,282 @@
       background: none;
       color: #2563eb;
       font-weight: 700;
+      font-size: 14px;
       cursor: pointer;
+    }
+
+    /* ---------- SIGN UP ---------- */
+
+    .signup-note {
+      background: #f0f6ff;
+      border-radius: 12px;
+      padding: 11px;
+      margin-bottom: 15px;
+      color: #344054;
+      font-size: 13px;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    /* ---------- FOOTER ---------- */
+
+    .footer {
+      text-align: center;
+      color: #667085;
+      font-size: 14px;
+      margin-top: 24px;
     }
 
     .hidden {
       display: none;
+    }
+
+    /* ---------- SMALL PHONES ---------- */
+
+    @media (max-width: 380px) {
+      .hero {
+        padding: 25px 14px 28px;
+      }
+
+      .logo {
+        font-size: 50px;
+      }
+
+      .brand {
+        font-size: 33px;
+      }
+
+      .tagline {
+        font-size: 15px;
+      }
+
+      .login-card {
+        padding: 22px 16px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="header">
-    StudySpot
-  </div>
+  <!-- BRAND HEADER -->
+  <header class="hero">
+    <div class="logo">📚</div>
+    <div class="brand">StudySpot</div>
+    <div class="tagline">Find the perfect study library near you</div>
+  </header>
 
-  <div class="container">
 
-    <div class="card">
+  <main class="page">
 
-      <!-- LOGIN -->
-      <div id="loginSection">
+    <div class="container">
 
-        <h2>Student Login</h2>
+      <div class="login-card">
 
-        <p class="subtitle">
-          Login using your mobile number or email address.
-        </p>
+        <!-- LOGIN SECTION -->
+        <div id="loginSection">
 
-        <label for="loginMobile">Mobile Number</label>
-        <input
-          id="loginMobile"
-          type="tel"
-          placeholder="Enter mobile number"
-        >
+          <div class="welcome-icon">🔐</div>
 
-        <button class="primary-button" type="button">
-          Login with Mobile OTP
-        </button>
+          <h2>Student Login</h2>
 
-        <div class="divider">OR</div>
+          <p class="subtitle">
+            Login using your mobile number or email address.
+          </p>
 
-        <label for="loginEmail">Email Address</label>
-        <input
-          id="loginEmail"
-          type="email"
-          placeholder="Enter email address"
-        >
 
-        <button class="secondary-button" type="button">
-          Login with Email OTP
-        </button>
+          <!-- MOBILE LOGIN -->
 
-        <p class="switch-text">
-          Don't have an account?
-          <button type="button" onclick="showSignup()">
+          <label for="loginMobile">
+            Mobile Number
+          </label>
+
+          <input
+            id="loginMobile"
+            type="tel"
+            inputmode="numeric"
+            placeholder="Enter mobile number"
+          >
+
+          <button
+            class="primary-button"
+            type="button"
+          >
+            Login with Mobile OTP
+          </button>
+
+
+          <div class="divider">
+            OR
+          </div>
+
+
+          <!-- EMAIL LOGIN -->
+
+          <label for="loginEmail">
+            Email Address
+          </label>
+
+          <input
+            id="loginEmail"
+            type="email"
+            placeholder="Enter email address"
+          >
+
+          <button
+            class="secondary-button"
+            type="button"
+          >
+            Login with Email OTP
+          </button>
+
+
+          <p class="switch-text">
+            Don't have an account?
+
+            <button
+              type="button"
+              onclick="showSignup()"
+            >
+              Create Account
+            </button>
+          </p>
+
+        </div>
+
+
+        <!-- SIGN UP SECTION -->
+
+        <div id="signupSection" class="hidden">
+
+          <div class="welcome-icon">👤</div>
+
+          <h2>Create Account</h2>
+
+          <p class="subtitle">
+            Create your StudySpot student account.
+          </p>
+
+          <div class="signup-note">
+            Your mobile number and email can be verified with OTP.
+          </div>
+
+
+          <label for="signupName">
+            Full Name
+          </label>
+
+          <input
+            id="signupName"
+            type="text"
+            placeholder="Enter full name"
+          >
+
+
+          <label for="signupMobile">
+            Mobile Number
+          </label>
+
+          <input
+            id="signupMobile"
+            type="tel"
+            inputmode="numeric"
+            placeholder="Enter mobile number"
+          >
+
+
+          <label for="signupEmail">
+            Email Address
+          </label>
+
+          <input
+            id="signupEmail"
+            type="email"
+            placeholder="Enter email address"
+          >
+
+
+          <label for="signupPassword">
+            Password
+          </label>
+
+          <input
+            id="signupPassword"
+            type="password"
+            placeholder="Create password"
+          >
+
+
+          <label for="signupConfirmPassword">
+            Confirm Password
+          </label>
+
+          <input
+            id="signupConfirmPassword"
+            type="password"
+            placeholder="Confirm password"
+          >
+
+
+          <button
+            class="primary-button"
+            type="button"
+          >
             Create Account
           </button>
-        </p>
+
+
+          <p class="switch-text">
+            Already have an account?
+
+            <button
+              type="button"
+              onclick="showLogin()"
+            >
+              Login
+            </button>
+          </p>
+
+        </div>
 
       </div>
 
 
-      <!-- SIGN UP -->
-      <div id="signupSection" class="hidden">
-
-        <h2>Create Student Account</h2>
-
-        <p class="subtitle">
-          Create your StudySpot student account.
-        </p>
-
-        <label for="signupName">Full Name</label>
-        <input
-          id="signupName"
-          type="text"
-          placeholder="Enter full name"
-        >
-
-        <label for="signupMobile">Mobile Number</label>
-        <input
-          id="signupMobile"
-          type="tel"
-          placeholder="Enter mobile number"
-        >
-
-        <label for="signupEmail">Email Address</label>
-        <input
-          id="signupEmail"
-          type="email"
-          placeholder="Enter email address"
-        >
-
-        <label for="signupPassword">Password</label>
-        <input
-          id="signupPassword"
-          type="password"
-          placeholder="Create password"
-        >
-
-        <label for="signupConfirmPassword">
-          Confirm Password
-        </label>
-
-        <input
-          id="signupConfirmPassword"
-          type="password"
-          placeholder="Confirm password"
-        >
-
-        <button class="primary-button" type="button">
-          Create Account
-        </button>
-
-        <p class="switch-text">
-          Already have an account?
-          <button type="button" onclick="showLogin()">
-            Login
-          </button>
-        </p>
-
+      <div class="footer">
+        © 2026 StudySpot • Find. Choose. Study.
       </div>
 
     </div>
 
-  </div>
+  </main>
 
 
   <script>
+
     function showSignup() {
-      document.getElementById("loginSection").classList.add("hidden");
-      document.getElementById("signupSection").classList.remove("hidden");
+
+      document
+        .getElementById("loginSection")
+        .classList.add("hidden");
+
+      document
+        .getElementById("signupSection")
+        .classList.remove("hidden");
     }
 
+
     function showLogin() {
-      document.getElementById("signupSection").classList.add("hidden");
-      document.getElementById("loginSection").classList.remove("hidden");
+
+      document
+        .getElementById("signupSection")
+        .classList.add("hidden");
+
+      document
+        .getElementById("loginSection")
+        .classList.remove("hidden");
     }
+
   </script>
 
 </body>
-        </html>
+</html>
