@@ -1,1 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>StudySpot - Find Libraries</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f7fb;
+      font-family: Arial, sans-serif;
+      color: #172033;
+    }
+
+    .header {
+      background: #2563eb;
+      color: white;
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .header-inner {
+      max-width: 700px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-button {
+      border: none;
+      background: rgba(255,255,255,0.18);
+      color: white;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .page {
+      max-width: 700px;
+      margin: auto;
+      padding: 18px 14px 30px;
+    }
+
+    .search-card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    }
+
+    .search-card h1 {
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d5dbe7;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .main-button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .radius-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .radius-button {
+      padding: 11px 6px;
+      border: 1px solid #d5dbe7;
+      border-radius: 10px;
+      background: white;
+      color: #172033;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .radius-button.active {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+    }
+
+    #resultMessage {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #526071;
+    }
+
+    #librariesContainer {
+      margin-top: 18px;
+    }
+
+    .library-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+    }
+
+    .library-card h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+    }
+
+    .library-card p {
+      margin: 6px 0;
+      color: #526071;
+      font-size: 14px;
+    }
+
+    .details-button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .empty-message {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+      color: #667085;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <button class="back-button" onclick="window.location.href='index.html'">
+        ←
+      </button>
+
+      <div class="brand">
+        📚 StudySpot
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+
+    <div class="search-card">
+
+      <h1>Find a Study Library</h1>
+
+      <input
+        id="searchInput"
+        class="search-input"
+        type="text"
+        placeholder="Search by library, city, district or state"
+      >
+
+      <button
+        class="main-button"
+        onclick="searchAnywhere()"
+      >
+        🔎 Search Anywhere
+      </button>
+
+      <button
+        class="main-button"
+        onclick="findNearby()"
+        style="background:#16a34a;"
+      >
+        📍 Find Near Me
+      </button>
+
+      <div class="radius-buttons">
+
+        <button
+          id="radius5"
+          class="radius-button"
+          onclick="selectRadius(5)"
+        >
+          5 km
+        </button>
+
+        <button
+          id="radius10"
+          class="radius-button"
+          onclick="selectRadius(10)"
+        >
+          10 km
+        </button>
+
+        <button
+          id="radius15"
+          class="radius-button"
+          onclick="selectRadius(15)"
+        >
+          15 km
+        </button>
+
+      </div>
+
+      <div id="resultMessage">
+        Search for libraries or find libraries near your location.
+      </div>
+
+    </div>
+
+    <div id="librariesContainer"></div>
+
+  </main>
+
+  <script>
+
+    let selectedRadius = 5;
+
+    function selectRadius(radius) {
+      selectedRadius = radius;
+
+      document.getElementById("radius5").classList.remove("active");
+      document.getElementById("radius10").classList.remove("active");
+      document.getElementById("radius15").classList.remove("active");
+
+      document.getElementById("radius" + radius).classList.add("active");
+
+      document.getElementById("resultMessage").textContent =
+        "Selected search radius: " + radius + " km.";
+    }
+
+    async function searchAnywhere() {
+
+      const search =
+        document.getElementById("searchInput").value.trim();
+
+      const message =
+        document.getElementById("resultMessage");
+
+      const container =
+        document.getElementById("librariesContainer");
+
+      const client =
+        window.supabaseClient;
+
+      if (!search) {
+        message.textContent =
+          "Please enter a library, city, district or state.";
+        return;
+      }
+
+      message.textContent = "Searching libraries...";
+      container.innerHTML = "";
+
+      const { data: libraries, error } = await client
+        .from("libraries")
+        .select("*")
+        .or(
+          "library_name.ilike.%" + search + "%," +
+          "city.ilike.%" + search + "%," +
+          "district.ilike.%" + search + "%," +
+          "state.ilike.%" + search + "%," +
+          "address.ilike.%" + search + "%"
+        )
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error(error);
+        message.textContent =
+          "Unable to search libraries right now.";
+        return;
+      }
+
+      if (!libraries || libraries.length === 0) {
+        message.textContent = "No libraries found.";
+        container.innerHTML =
+          '<div class="empty-message">No study libraries matched your search.</div>';
+        return;
+      }
+
+      message.textContent =
+        libraries.length + " library/libraries found.";
+
+      libraries.forEach(function(library) {
+
+        const card =
+          document.createElement("div");
+
+        card.className = "library-card";
+
+        card.innerHTML = `
+          <h3>
+            ${library.library_name || "Study Library"}
+          </h3>
+
+          <p>
+            <strong>Location:</strong>
+            ${library.city || ""}, ${library.district || ""}
+          </p>
+
+          <p>
+            <strong>Monthly Fee:</strong>
+            ₹${library.monthly_fee ?? "Not available"}
+          </p>
+
+          <p>
+            <strong>Available Seats:</strong>
+            ${library.seat_availability ?? "Not available"}
+          </p>
+
+          <button
+            class="details-button"
+            onclick="window.location.href='../library-details.html?id=${library.id}'"
+          >
+            View Details
+          </button>
+        `;
+
+        container.appendChild(card);
+
+      });
+    }
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+
+      const R = 6371;
+
+      const dLat =
+        (lat2 - lat1) * Math.PI / 180;
+
+      const dLon =
+        (lon2 - lon1) * Math.PI / 180;
+
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) *
+        Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+      const c =
+        2 * Math.atan2(
+          Math.sqrt(a),
+          Math.sqrt(1 - a)
+        );
+
+      return R * c;
+    }
+
+    async function findNearby() {
+
+      const message =
+        document.getElementById("resultMessage");
+
+      const container =
+        document.getElementById("librariesContainer");
+
+      const client =
+        window.supabaseClient;
+
+      if (!navigator.geolocation) {
+        message.textContent =
+          "Location is not supported on this device.";
+        return;
+      }
+
+      message.textContent =
+        "Getting your location...";
+
+      container.innerHTML = "";
+
+      navigator.geolocation.getCurrentPosition(
+        async function(position) {
+
+          const userLat =
+            position.coords.latitude;
+
+          const userLon =
+            position.coords.longitude;
+
+          message.textContent =
+            "Finding libraries within " +
+            selectedRadius +
+            " km...";
+
+          const { data: libraries, error } =
+            await client
+              .from("libraries")
+              .select("*")
+              .not("latitude", "is", null)
+              .not("longitude", "is", null);
+
+          if (error) {
+            console.error(error);
+
+            message.textContent =
+              "Unable to load nearby libraries.";
+
+            return;
+          }
+
+          const nearbyLibraries =
+            libraries
+              .map(function(library) {
+
+                const distance =
+                  calculateDistance(
+                    userLat,
+                    userLon,
+                    Number(library.latitude),
+                    Number(library.longitude)
+                  );
+
+                return {
+                  library: library,
+                  distance: distance
+                };
+
+              })
+              .filter(function(item) {
+
+                return item.distance <= selectedRadius;
+
+              })
+              .sort(function(a, b) {
+
+                return a.distance - b.distance;
+
+              });
+
+          if (nearbyLibraries.length === 0) {
+
+            message.textContent =
+              "No libraries found within " +
+              selectedRadius +
+              " km.";
+
+            container.innerHTML =
+              '<div class="empty-message">No study libraries were found nearby.</div>';
+
+            return;
+          }
+
+          message.textContent =
+            nearbyLibraries.length +
+            " nearby library/libraries found.";
+
+          nearbyLibraries.forEach(function(item) {
+
+            const library =
+              item.library;
+
+            const card =
+              document.createElement("div");
+
+            card.className =
+              "library-card";
+
+            card.innerHTML = `
+              <h3>
+                ${library.library_name || "Study Library"}
+              </h3>
+
+              <p>
+                <strong>Location:</strong>
+                ${library.city || ""}, ${library.district || ""}
+              </p>
+
+              <p>
+                <strong>Distance:</strong>
+                ${item.distance.toFixed(1)} km
+              </p>
+
+              <p>
+                <strong>Monthly Fee:</strong>
+                ₹${library.monthly_fee ?? "Not available"}
+              </p>
+
+              <p>
+                <strong>Available Seats:</strong>
+                ${library.seat_availability ?? "Not available"}
+              </p>
+
+              <button
+                class="details-button"
+                onclick="window.location.href='../library-details.html?id=${library.id}'"
+              >
+                View Details
+              </button>
+            `;
+
+            container.appendChild(card);
+
+          });
+
+        },
+
+        function(error) {
+
+          console.error(error);
+
+          if (error.code === 1) {
+
+            message.textContent =
+              "Location permission was denied. Please allow location access.";
+
+          } else {
+
+            message.textContent =
+              "Unable to get your location.";
+
+          }
+
+        }
+      );
+    }
+
+  </script>
+
+</body>
+  </html>
