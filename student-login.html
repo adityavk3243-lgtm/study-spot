@@ -578,12 +578,32 @@ document
             "Please enter your email address or mobile number.";
           return;
         }
-
-        message.textContent =
-          "Verification will be added in the next step.";
-
       });
+const { error } =
+  await supabaseClient.auth.resetPasswordForEmail(
+    identifier,
+    {
+      redirectTo:
+        "https://adityavk3243-lgtm.github.io/study-spot/student/reset-password.html"
+    }
+  );
 
+if (error) {
+
+  console.error(error);
+
+  message.textContent =
+    "Unable to send the password reset email. Please check your email address and try again.";
+
+  message.style.color = "#dc2626";
+
+  return;
+}
+
+message.textContent =
+  "Password reset instructions have been sent to your email. Please check your inbox.";
+
+message.style.color = "#16a34a";
 });
    document
   .getElementById("createAccountButton")
