@@ -412,38 +412,18 @@
 
   </main>
 
+      <script>
+function showSignup() {
+  document.getElementById("loginSection").classList.add("hidden");
+  document.getElementById("signupSection").classList.remove("hidden");
+}
 
- <script>
-
-  let otpMethod = "";
-  let otpDestination = "";
-
-
-  function showSignup() {
-
-    document
-      .getElementById("loginSection")
-      .classList.add("hidden");
-
-    document
-      .getElementById("signupSection")
-      .classList.remove("hidden");
-  }
-
-
-  function showLogin() {
-
-    document
-      .getElementById("signupSection")
-      .classList.add("hidden");
-
-    document
-      .getElementById("loginSection")
-      .classList.remove("hidden");
-  }  
+function showLogin() {
+  document.getElementById("signupSection").classList.add("hidden");
+  document.getElementById("loginSection").classList.remove("hidden");
+}
 
 async function studentLogin() {
-
   const identifier =
     document.getElementById("loginIdentifier").value.trim();
 
@@ -460,17 +440,19 @@ async function studentLogin() {
     return;
   }
 
-  let loginData = {};
+  if (!window.supabaseClient) {
+    alert("StudySpot connection is not ready. Please refresh the page.");
+    return;
+  }
+
+  let loginData;
 
   if (identifier.includes("@")) {
-
     loginData = {
       email: identifier,
       password: password
     };
-
   } else {
-
     let phone = identifier.replace(/\s+/g, "");
 
     if (/^\d{10}$/.test(phone)) {
@@ -484,7 +466,7 @@ async function studentLogin() {
   }
 
   const { data, error } =
-    await supabaseClient.auth.signInWithPassword(loginData);
+    await window.supabaseClient.auth.signInWithPassword(loginData);
 
   if (error) {
     alert("Login failed: " + error.message);
@@ -493,328 +475,275 @@ async function studentLogin() {
 
   if (data && data.user) {
     alert("Login successful.");
-
     window.location.href = "student/index.html";
   }
 }
 
+function openForgotPassword() {
+  const loginSection =
+    document.getElementById("loginSection");
 
-document
-  .getElementById("loginButton")
-  .addEventListener("click", studentLogin);
+  const oldForm =
+    document.getElementById("forgotPasswordForm");
 
-document
-  .getElementById("forgotPasswordButton")
-  .addEventListener("click", function () {
+  if (oldForm) {
+    oldForm.remove();
+    return;
+  }
 
-    const loginSection =
-      document.getElementById("loginSection");
+  const form =
+    document.createElement("div");
 
-    if (!loginSection) {
-      return;
-    }
+  form.id = "forgotPasswordForm";
 
-    const oldForm =
-      document.getElementById("forgotPasswordForm");
+  form.style.marginTop = "20px";
+  form.style.padding = "18px";
+  form.style.background = "#f4f7fb";
+  form.style.borderRadius = "14px";
+  form.style.border = "1px solid #dbe2ea";
 
-    if (oldForm) {
-      oldForm.remove();
-      return;
-    }
+  form.innerHTML = `
+    <h3 style="margin-top:0;">
+      Forgot Password
+    </h3>
 
-    const form =
-      document.createElement("div");
+    <p style="color:#667085;font-size:14px;">
+      Enter your registered email address or mobile number.
+    </p>
 
-    form.id = "forgotPasswordForm";
+    <input
+      id="forgotIdentifier"
+      type="text"
+      placeholder="Email or Mobile Number"
+      style="width:100%;padding:13px;border:1px solid #d5dbe7;border-radius:10px;font-size:16px;"
+    >
 
-    form.style.marginTop = "20px";
-    form.style.padding = "18px";
-    form.style.background = "#f4f7fb";
-    form.style.borderRadius = "14px";
-    form.style.border = "1px solid #dbe2ea";
+    <button
+      id="sendOtpButton"
+      type="button"
+      style="width:100%;margin-top:12px;padding:13px;border:none;border-radius:10px;background:#2563eb;color:white;font-size:16px;font-weight:700;"
+    >
+      Continue
+    </button>
 
-    form.innerHTML = `
-      <h3 style="margin-top:0;">
-        Forgot Password
-      </h3>
-
+    <div
+      id="otpSection"
+      style="display:none;margin-top:18px;"
+    >
       <p style="color:#667085;font-size:14px;">
-        Enter your registered email address or mobile number.
+        Enter the OTP sent to your registered contact.
       </p>
 
       <input
-        id="forgotIdentifier"
+        id="resetOtp"
         type="text"
-        placeholder="Email or Mobile Number"
+        inputmode="numeric"
+        maxlength="6"
+        placeholder="Enter 6-digit OTP"
         style="width:100%;padding:13px;border:1px solid #d5dbe7;border-radius:10px;font-size:16px;"
       >
 
       <button
-        id="sendOtpButton"
+        id="verifyOtpButton"
         type="button"
-        style="width:100%;margin-top:12px;padding:13px;border:none;border-radius:10px;background:#2563eb;color:white;font-size:16px;font-weight:700;"
+        style="width:100%;margin-top:12px;padding:13px;border:none;border-radius:10px;background:#16a34a;color:white;font-size:16px;font-weight:700;"
       >
-        Continue
+        Verify OTP
       </button>
+    </div>
 
-      <div id="otpSection" style="display:none;margin-top:18px;">
+    <p
+      id="forgotMessage"
+      style="margin-top:12px;font-size:14px;color:#667085;"
+    ></p>
+  `;
 
-        <p style="color:#667085;font-size:14px;">
-          Enter the OTP sent to your registered contact.
-        </p>
+  loginSection.appendChild(form);
 
-        <input
-          id="resetOtp"
-          type="text"
-          inputmode="numeric"
-          maxlength="6"
-          placeholder="Enter 6-digit OTP"
-          style="width:100%;padding:13px;border:1px solid #d5dbe7;border-radius:10px;font-size:16px;"
-        >
+  document
+    .getElementById("sendOtpButton")
+    .addEventListener("click", function () {
 
-        <button
-          id="verifyOtpButton"
-          type="button"
-          style="width:100%;margin-top:12px;padding:13px;border:none;border-radius:10px;background:#16a34a;color:white;font-size:16px;font-weight:700;"
-        >
-          Verify OTP
-        </button>
-
-      </div>
-
-      <p
-        id="forgotMessage"
-        style="margin-top:12px;font-size:14px;color:#667085;"
-      ></p>
-    `;
-
-    loginSection.appendChild(form);
-
-    document
-      .getElementById("sendOtpButton")
-      .addEventListener("click", function () {
-
-        const identifier =
-          document
-            .getElementById("forgotIdentifier")
-            .value
-            .trim();
-
-        const message =
-          document.getElementById("forgotMessage");
-
-        if (!identifier) {
-          message.textContent =
-            "Please enter your email address or mobile number.";
-
-          message.style.color = "#dc2626";
-          return;
-        }
-
+      const identifier =
         document
-          .getElementById("otpSection")
-          .style.display = "block";
+          .getElementById("forgotIdentifier")
+          .value
+          .trim();
 
+      const message =
+        document.getElementById("forgotMessage");
+
+      if (!identifier) {
         message.textContent =
-          "OTP verification is ready. OTP service will be enabled after the email/SMS provider is connected.";
+          "Please enter your email address or mobile number.";
 
-        message.style.color = "#667085";
-      });
+        message.style.color = "#dc2626";
+        return;
+      }
 
-    document
-  .getElementById("verifyOtpButton")
-  .addEventListener("click", function () {
-
-    const otp =
       document
-        .getElementById("resetOtp")
-        .value
-        .trim();
-
-    const message =
-      document.getElementById("forgotMessage");
-
-    if (!/^\d{6}$/.test(otp)) {
+        .getElementById("otpSection")
+        .style.display = "block";
 
       message.textContent =
-        "Please enter a valid 6-digit OTP.";
+        "OTP verification will be enabled after the email/SMS provider is connected.";
 
-      message.style.color = "#dc2626";
+      message.style.color = "#667085";
+    });
 
-      return;
-    }
+  document
+    .getElementById("verifyOtpButton")
+    .addEventListener("click", function () {
 
-    const otpSection =
-      document.getElementById("otpSection");
+      const otp =
+        document
+          .getElementById("resetOtp")
+          .value
+          .trim();
 
-    otpSection.innerHTML = `
-      <h3 style="margin-top:0;">
-        Create New Password
-      </h3>
+      const message =
+        document.getElementById("forgotMessage");
 
-      <p style="color:#667085;font-size:14px;">
-        Enter your new password below.
-      </p>
+      if (!/^\d{6}$/.test(otp)) {
+        message.textContent =
+          "Please enter a valid 6-digit OTP.";
 
-      <input
-        id="newResetPassword"
-        type="password"
-        placeholder="New Password"
-        style="width:100%;padding:13px;border:1px solid #d5dbe7;border-radius:10px;font-size:16px;"
-      >
+        message.style.color = "#dc2626";
+        return;
+      }
 
-      <input
-        id="confirmResetPassword"
-        type="password"
-        placeholder="Confirm New Password"
-        style="width:100%;margin-top:12px;padding:13px;border:1px solid #d5dbe7;border-radius:10px;font-size:16px;"
-      >
+      message.textContent =
+        "OTP verification is ready. Password reset will be enabled after the OTP service is connected.";
 
-      <button
-        id="resetPasswordButton"
-        type="button"
-        style="width:100%;margin-top:12px;padding:13px;border:none;border-radius:10px;background:#2563eb;color:white;font-size:16px;font-weight:700;"
-      >
-        Reset Password
-      </button>
+      message.style.color = "#667085";
+    });
+}
 
-      <p
-        id="resetPasswordMessage"
-        style="margin-top:12px;font-size:14px;color:#667085;"
-      ></p>
-    `;
+async function createStudentAccount() {
+  const name =
+    document.getElementById("signupName").value.trim();
 
+  const mobile =
+    document.getElementById("signupMobile").value.trim();
+
+  const email =
+    document.getElementById("signupEmail").value.trim();
+
+  const password =
+    document.getElementById("signupPassword").value;
+
+  const confirmPassword =
     document
-      .getElementById("resetPasswordButton")
-      .addEventListener("click", function () {
+      .getElementById("signupConfirmPassword")
+      .value;
 
-        const newPassword =
-          document
-            .getElementById("newResetPassword")
-            .value;
+  if (!name) {
+    alert("Please enter your full name.");
+    return;
+  }
 
-        const confirmPassword =
-          document
-            .getElementById("confirmResetPassword")
-            .value;
+  if (!mobile) {
+    alert("Please enter your mobile number.");
+    return;
+  }
 
-        const resetMessage =
-          document.getElementById("resetPasswordMessage");
+  if (!email) {
+    alert("Please enter your email address.");
+    return;
+  }
 
-        if (!newPassword || !confirmPassword) {
+  if (!password) {
+    alert("Please create a password.");
+    return;
+  }
 
-          resetMessage.textContent =
-            "Please enter and confirm your new password.";
+  if (password !== confirmPassword) {
+    alert("Passwords do not match.");
+    return;
+  }
 
-          resetMessage.style.color = "#dc2626";
+  if (!window.supabaseClient) {
+    alert("StudySpot connection is not ready. Please refresh the page.");
+    return;
+  }
 
-          return;
+  let formattedMobile =
+    mobile.replace(/\s+/g, "");
+
+  if (/^\d{10}$/.test(formattedMobile)) {
+    formattedMobile = "+91" + formattedMobile;
+  }
+
+  const { data, error } =
+    await window.supabaseClient.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          full_name: name,
+          mobile: formattedMobile
         }
+      }
+    });
 
-        if (newPassword.length < 6) {
+  if (error) {
+    alert(
+      "Account creation failed: " +
+      error.message
+    );
+    return;
+  }
 
-          resetMessage.textContent =
-            "Password must be at least 6 characters.";
+  if (data && data.user) {
+    alert(
+      "Account created successfully. Please verify your account before logging in."
+    );
 
-          resetMessage.style.color = "#dc2626";
+    showLogin();
+  }
+}
 
-          return;
-        }
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
 
-        if (newPassword !== confirmPassword) {
+    const loginButton =
+      document.getElementById("loginButton");
 
-          resetMessage.textContent =
-            "Passwords do not match.";
+    const forgotButton =
+      document.getElementById("forgotPasswordButton");
 
-          resetMessage.style.color = "#dc2626";
+    const createButton =
+      document.getElementById("createAccountButton");
 
-          return;
-        }
-
-        resetMessage.textContent =
-          "Password reset is ready. Actual password update will be enabled after the OTP service is connected.";
-
-        resetMessage.style.color = "#16a34a";
-      });
-
-  });
-
-   document
-  .getElementById("createAccountButton")
-  .addEventListener("click", async function () {
-
-    const name =
-      document.getElementById("signupName").value.trim();
-
-    const mobile =
-      document.getElementById("signupMobile").value.trim();
-
-    const email =
-      document.getElementById("signupEmail").value.trim();
-
-    const password =
-      document.getElementById("signupPassword").value;
-
-    const confirmPassword =
-      document.getElementById("signupConfirmPassword").value;
-
-    if (!name) {
-      alert("Please enter your full name.");
-      return;
-    }
-
-    if (!mobile) {
-      alert("Please enter your mobile number.");
-      return;
-    }
-
-    if (!email) {
-      alert("Please enter your email address.");
-      return;
-    }
-
-    if (!password) {
-      alert("Please create a password.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert("Passwords do not match.");
-      return;
-    }
-
-    let formattedMobile = mobile.replace(/\s+/g, "");
-
-    if (/^\d{10}$/.test(formattedMobile)) {
-      formattedMobile = "+91" + formattedMobile;
-    }
-
-    const { data, error } =
-      await supabaseClient.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            full_name: name,
-            mobile: formattedMobile
-          }
-        }
-      });
-
-    if (error) {
-      alert("Account creation failed: " + error.message);
-      return;
-    }
-
-    if (data && data.user) {
-      alert(
-        "Account created successfully. Please verify your account before logging in."
+    if (loginButton) {
+      loginButton.addEventListener(
+        "click",
+        studentLogin
       );
-
-      showLogin();
     }
-  });
-</script> 
+
+    if (forgotButton) {
+      forgotButton.addEventListener(
+        "click",
+        openForgotPassword
+      );
+    }
+
+    if (createButton) {
+      createButton.addEventListener(
+        "click",
+        createStudentAccount
+      );
+    }
+
+    console.log(
+      "StudySpot Student Login JavaScript loaded."
+    );
+  }
+);
+</script>
+          
 <script>
   if (window.supabaseClient) {
     console.log("StudySpot Supabase connected successfully.");
