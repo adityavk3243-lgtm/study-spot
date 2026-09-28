@@ -564,47 +564,134 @@ document
     loginSection.appendChild(form);
 
     document
+  .getElementById("forgotPasswordButton")
+  .addEventListener("click", function () {
+
+    const loginSection =
+      document.getElementById("loginSection");
+
+    if (!loginSection) {
+      return;
+    }
+
+    const oldForm =
+      document.getElementById("forgotPasswordForm");
+
+    if (oldForm) {
+      oldForm.remove();
+      return;
+    }
+
+    const form =
+      document.createElement("div");
+
+    form.id = "forgotPasswordForm";
+
+    form.style.marginTop = "20px";
+    form.style.padding = "18px";
+    form.style.background = "#f4f7fb";
+    form.style.borderRadius = "14px";
+    form.style.border = "1px solid #dbe2ea";
+
+    form.innerHTML = `
+      <h3 style="margin-top:0;">
+        Forgot Password
+      </h3>
+
+      <p style="color:#667085;font-size:14px;">
+        Enter your registered email address or mobile number.
+      </p>
+
+      <input
+        id="forgotIdentifier"
+        type="text"
+        placeholder="Email or Mobile Number"
+        style="width:100%;padding:13px;border:1px solid #d5dbe7;border-radius:10px;font-size:16px;"
+      >
+
+      <button
+        id="forgotContinueButton"
+        type="button"
+        style="width:100%;margin-top:12px;padding:13px;border:none;border-radius:10px;background:#2563eb;color:white;font-size:16px;font-weight:700;"
+      >
+        Continue
+      </button>
+
+      <p
+        id="forgotMessage"
+        style="margin-top:12px;font-size:14px;color:#667085;"
+      ></p>
+    `;
+
+    loginSection.appendChild(form);
+
+    document
       .getElementById("forgotContinueButton")
-      .addEventListener("click", function () {
+      .addEventListener("click", async function () {
 
         const identifier =
-          document.getElementById("forgotIdentifier").value.trim();
+          document
+            .getElementById("forgotIdentifier")
+            .value
+            .trim();
 
         const message =
           document.getElementById("forgotMessage");
 
         if (!identifier) {
+
           message.textContent =
             "Please enter your email address or mobile number.";
+
+          message.style.color = "#dc2626";
+
           return;
         }
+
+        if (!identifier.includes("@")) {
+
+          message.textContent =
+            "For now, please enter your registered email address.";
+
+          message.style.color = "#dc2626";
+
+          return;
+        }
+
+        message.textContent =
+          "Sending password reset instructions...";
+
+        message.style.color = "#667085";
+
+        const { error } =
+          await supabaseClient.auth.resetPasswordForEmail(
+            identifier,
+            {
+              redirectTo:
+                "https://adityavk3243-lgtm.github.io/study-spot/student/reset-password.html"
+            }
+          );
+
+        if (error) {
+
+          console.error(error);
+
+          message.textContent =
+            "Unable to send the password reset email. Please check your email address and try again.";
+
+          message.style.color = "#dc2626";
+
+          return;
+        }
+
+        message.textContent =
+          "Password reset instructions have been sent to your email. Please check your inbox.";
+
+        message.style.color = "#16a34a";
+
       });
-const { error } =
-  await supabaseClient.auth.resetPasswordForEmail(
-    identifier,
-    {
-      redirectTo:
-        "https://adityavk3243-lgtm.github.io/study-spot/student/reset-password.html"
-    }
-  );
 
-if (error) {
-
-  console.error(error);
-
-  message.textContent =
-    "Unable to send the password reset email. Please check your email address and try again.";
-
-  message.style.color = "#dc2626";
-
-  return;
-}
-
-message.textContent =
-  "Password reset instructions have been sent to your email. Please check your inbox.";
-
-message.style.color = "#16a34a";
-});
+  });
    document
   .getElementById("createAccountButton")
   .addEventListener("click", async function () {
