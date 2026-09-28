@@ -1,1 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>StudySpot - Students</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f4f7fb;
+      font-family: Arial, sans-serif;
+      color: #172033;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      text-align: center;
+      padding: 42px 18px 38px;
+    }
+
+    .logo {
+      font-size: 60px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .brand {
+      font-size: 38px;
+      font-weight: 800;
+    }
+
+    .student-label {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 5px;
+    }
+
+    .tagline {
+      margin-top: 10px;
+      font-size: 15px;
+      opacity: 0.95;
+    }
+
+    .page {
+      padding: 28px 16px 40px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 470px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 24px 20px;
+      border-radius: 22px;
+      box-shadow: 0 5px 22px rgba(0,0,0,0.09);
+    }
+
+    .welcome-icon {
+      text-align: center;
+      font-size: 42px;
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      text-align: center;
+      margin: 0;
+      font-size: 27px;
+    }
+
+    .description {
+      text-align: center;
+      color: #667085;
+      font-size: 15px;
+      line-height: 1.5;
+      margin: 10px 0 24px;
+    }
+
+    .button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin-top: 12px;
+      border-radius: 12px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .secondary {
+      background: white;
+      color: #2563eb;
+      border: 2px solid #2563eb;
+    }
+
+    .features {
+      margin-top: 22px;
+      background: #f0f6ff;
+      border-radius: 12px;
+      padding: 15px;
+    }
+
+    .feature {
+      padding: 7px 0;
+      font-size: 14px;
+      color: #344054;
+    }
+
+    .footer {
+      text-align: center;
+      color: #667085;
+      font-size: 13px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 380px) {
+      .hero {
+        padding: 34px 14px;
+      }
+
+      .brand {
+        font-size: 33px;
+      }
+
+      .logo {
+        font-size: 52px;
+      }
+
+      .card {
+        padding: 22px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="hero">
+
+    <div class="logo">📚</div>
+
+    <div class="brand">
+      StudySpot
+    </div>
+
+    <div class="student-label">
+      For Students
+    </div>
+
+    <div class="tagline">
+      Find the perfect study library near you
+    </div>
+
+  </header>
+
+
+  <main class="page">
+
+    <div class="container">
+
+      <div class="card">
+
+        <div class="welcome-icon">
+          🎓
+        </div>
+
+        <h2>
+          Welcome to StudySpot
+        </h2>
+
+        <p class="description">
+          Discover study libraries near you, compare facilities,
+          check fees and choose the right study space.
+        </p>
+
+
+        <a
+          class="button primary"
+          href="../index.html"
+        >
+          Find a Study Library
+        </a>
+
+
+        <a
+          class="button secondary"
+          href="../student-login.html"
+        >
+          Student Login
+        </a>
+
+
+        <div class="features">
+
+          <div class="feature">
+            📍 Find libraries near your location
+          </div>
+
+          <div class="feature">
+            🔎 Search libraries anywhere
+          </div>
+
+          <div class="feature">
+            💰 Compare fees and facilities
+          </div>
+
+          <div class="feature">
+            🪑 Check available seats
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="footer">
+        © 2026 StudySpot • Find. Choose. Study.
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>
