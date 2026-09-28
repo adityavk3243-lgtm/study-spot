@@ -425,32 +425,294 @@
   </main>
 
 
-  <script>
+ <script>
 
-    function showSignup() {
+  let otpMethod = "";
+  let otpDestination = "";
 
-      document
-        .getElementById("loginSection")
-        .classList.add("hidden");
 
-      document
-        .getElementById("signupSection")
-        .classList.remove("hidden");
+  function showSignup() {
+
+    document
+      .getElementById("loginSection")
+      .classList.add("hidden");
+
+    document
+      .getElementById("signupSection")
+      .classList.remove("hidden");
+  }
+
+
+  function showLogin() {
+
+    document
+      .getElementById("signupSection")
+      .classList.add("hidden");
+
+    document
+      .getElementById("loginSection")
+      .classList.remove("hidden");
+  }
+
+
+  async function sendEmailOTP() {
+
+    const email =
+      document.getElementById("loginEmail").value.trim();
+
+    if (!email) {
+      alert("Please enter your email address.");
+      return;
     }
 
+    otpMethod = "email";
+    otpDestination = email;
 
-    function showLogin() {
+    const { error } =
+      await supabaseClient.auth.signInWithOtp({
+        email: email,
+        options: {
+          shouldCreateUser: true
+        }
+      });
 
-      document
-        .getElementById("signupSection")
-        .classList.add("hidden");
-
-      document
-        .getElementById("loginSection")
-        .classList.remove("hidden");
+    if (error) {
+      alert(
+        "Unable to send email OTP: " +
+        error.message
+      );
+      return;
     }
 
-  </script>
+    showOTPBox();
+
+    document.getElementById("otpMessage").textContent =
+      "A verification code has been sent to your email address.";
+  }
+
+
+  async function sendMobileOTP() {
+
+    const mobile =
+      document.getElementById("loginMobile").value.trim();
+
+    if (!mobile) {
+      alert("Please enter your mobile number.");
+      return;
+    }
+
+    otpMethod = "phone";
+    otpDestination = mobile;
+
+    const { error } =
+      await supabaseClient.auth.signInWithOtp({
+        phone: mobile
+      });
+
+    if (error) {
+      alert(
+        "Mobile OTP is not active yet. " +
+        "Please use Email OTP for testing."
+      );
+      return;
+    }
+
+    showOTPBox();
+
+    document.getElementById("otpMessage").textContent =
+      "A verification code has been sent to your mobile number.";
+  }
+
+
+  function showOTPBox() {
+
+    let existingBox =
+      document.getElementById("studentOTPBox");
+
+    if (existingBox) {
+      existingBox.classList.remove("hidden");
+      return;
+    }
+
+    const box =
+      document.createElement("div");
+
+    box.id = "studentOTPBox";
+
+    box.style.marginTop = "20px";
+    box.style.padding = "16px";
+    box.style.background = "#f0f6ff";
+    box.style.borderRadius = "12px";
+
+    box.innerHTML = `
+
+      <h3 style="
+        margin:0 0 8px;
+        text-align:center;
+      ">
+        Enter OTP
+      </h3>
+
+      <p
+        id="otpMessage"
+        style="
+          margin:0 0 12px;
+          text-align:center;
+          color:#667085;
+          font-size:14px;
+          line-height:1.5;
+        "
+      ></p>
+
+      <input
+        id="studentOTP"
+        type="text"
+        inputmode="numeric"
+        maxlength="6"
+        placeholder="Enter 6-digit OTP"
+        style="
+          width:100%;
+          padding:14px;
+          border:1px solid #d0d5dd;
+          border-radius:10px;
+          font-size:18px;
+          text-align:center;
+          letter-spacing:5px;
+        "
+      >
+
+      <button
+        type="button"
+        onclick="verifyStudentOTP()"
+        style="
+          width:100%;
+          margin-top:12px;
+          padding:14px;
+          border:none;
+          border-radius:10px;
+          background:#2563eb;
+          color:white;
+          font-size:16px;
+          font-weight:700;
+        "
+      >
+        Verify OTP
+      </button>
+
+      <button
+        type="button"
+        onclick="closeOTPBox()"
+        style="
+          width:100%;
+          margin-top:8px;
+          padding:12px;
+          border:none;
+          background:transparent;
+          color:#2563eb;
+          font-size:14px;
+          font-weight:700;
+        "
+      >
+        Change Email / Mobile Number
+      </button>
+    `;
+
+    document
+      .getElementById("loginSection")
+      .appendChild(box);
+  }
+
+
+  async function verifyStudentOTP() {
+
+    const token =
+      document.getElementById("studentOTP").value.trim();
+
+    if (!token) {
+      alert("Please enter the OTP.");
+      return;
+    }
+
+    let result;
+
+    if (otpMethod === "email") {
+
+      result =
+        await supabaseClient.auth.verifyOtp({
+          email: otpDestination,
+          token: token,
+          type: "email"
+        });
+
+    } else if (otpMethod === "phone") {
+
+      result =
+        await supabaseClient.auth.verifyOtp({
+          phone: otpDestination,
+          token: token,
+          type: "sms"
+        });
+    }
+
+    if (result.error) {
+
+      alert(
+        "OTP verification failed: " +
+        result.error.message
+      );
+
+      return;
+    }
+
+    alert("Login successful.");
+
+    window.location.href =
+      "../index.html";
+  }
+
+
+  function closeOTPBox() {
+
+    const box =
+      document.getElementById("studentOTPBox");
+
+    if (box) {
+      box.remove();
+    }
+
+    otpMethod = "";
+    otpDestination = "";
+  }
+
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+      const mobileButton =
+        document.querySelector(
+          "#loginMobile + button"
+        );
+
+      const emailButton =
+        document.querySelector(
+          "#loginEmail + button"
+        );
+
+      if (mobileButton) {
+        mobileButton.onclick =
+          sendMobileOTP;
+      }
+
+      if (emailButton) {
+        emailButton.onclick =
+          sendEmailOTP;
+      }
+
+    }
+  );
+
+</script> 
 <script>
   if (window.supabaseClient) {
     console.log("StudySpot Supabase connected successfully.");
