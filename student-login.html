@@ -248,76 +248,63 @@
       <div class="login-card">
 
         <!-- LOGIN SECTION -->
-        <div id="loginSection">
+        
+<div id="loginSection">
 
-          <div class="welcome-icon">🔐</div>
+  <h2 style="text-align:center;margin-bottom:20px;">
+    🔐 Student Login
+  </h2>
 
-          <h2>Student Login</h2>
+  <label style="display:block;margin-bottom:6px;font-weight:600;">
+    Email or Mobile Number
+  </label>
 
-          <p class="subtitle">
-            Login using your mobile number or email address.
-          </p>
+  <input
+    type="text"
+    id="loginIdentifier"
+    placeholder="Enter your email or mobile number"
+    style="width:100%;padding:13px;border:1px solid #d1d5db;border-radius:10px;margin-bottom:15px;font-size:16px;"
+  >
 
+  <label style="display:block;margin-bottom:6px;font-weight:600;">
+    Password
+  </label>
 
-          <!-- MOBILE LOGIN -->
+  <input
+    type="password"
+    id="loginPassword"
+    placeholder="Enter your password"
+    style="width:100%;padding:13px;border:1px solid #d1d5db;border-radius:10px;margin-bottom:10px;font-size:16px;"
+  >
 
-          <label for="loginMobile">
-            Mobile Number
-          </label>
+  <button
+    type="button"
+    id="loginButton"
+    style="width:100%;padding:14px;border:none;border-radius:10px;background:#2563eb;color:white;font-size:16px;font-weight:700;cursor:pointer;"
+  >
+    Login
+  </button>
 
-          <input
-            id="loginMobile"
-            type="tel"
-            inputmode="numeric"
-            placeholder="Enter mobile number"
-          >
+  <button
+    type="button"
+    id="forgotPasswordButton"
+    style="display:block;margin:15px auto 0;border:none;background:none;color:#2563eb;font-size:15px;cursor:pointer;"
+  >
+    Forgot Password?
+  </button>
 
-          <button
-            class="primary-button"
-            type="button"
-          >
-            Login with Mobile OTP
-          </button>
+  <p style="text-align:center;margin-top:20px;">
+    Don't have an account?
+    <button
+      type="button"
+      onclick="showSignup()"
+      style="border:none;background:none;color:#2563eb;font-weight:700;cursor:pointer;"
+    >
+      Create Account
+    </button>
+  </p>
 
-
-          <div class="divider">
-            OR
-          </div>
-
-
-          <!-- EMAIL LOGIN -->
-
-          <label for="loginEmail">
-            Email Address
-          </label>
-
-          <input
-            id="loginEmail"
-            type="email"
-            placeholder="Enter email address"
-          >
-
-          <button
-            class="secondary-button"
-            type="button"
-          >
-            Login with Email OTP
-          </button>
-
-
-          <p class="switch-text">
-            Don't have an account?
-
-            <button
-              type="button"
-              onclick="showSignup()"
-            >
-              Create Account
-            </button>
-          </p>
-
-        </div>
-
+</div>
 
         <!-- SIGN UP SECTION -->
 
