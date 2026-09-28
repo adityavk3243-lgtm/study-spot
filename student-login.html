@@ -380,6 +380,7 @@
 
 
           <button
+            id="createAccountButton"
             class="primary-button"
             type="button"
           >
@@ -509,6 +510,81 @@ document
 
     alert("Password recovery will be added in the next step.");
 
+  });
+   document
+  .getElementById("createAccountButton")
+  .addEventListener("click", async function () {
+
+    const name =
+      document.getElementById("signupName").value.trim();
+
+    const mobile =
+      document.getElementById("signupMobile").value.trim();
+
+    const email =
+      document.getElementById("signupEmail").value.trim();
+
+    const password =
+      document.getElementById("signupPassword").value;
+
+    const confirmPassword =
+      document.getElementById("signupConfirmPassword").value;
+
+    if (!name) {
+      alert("Please enter your full name.");
+      return;
+    }
+
+    if (!mobile) {
+      alert("Please enter your mobile number.");
+      return;
+    }
+
+    if (!email) {
+      alert("Please enter your email address.");
+      return;
+    }
+
+    if (!password) {
+      alert("Please create a password.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    let formattedMobile = mobile.replace(/\s+/g, "");
+
+    if (/^\d{10}$/.test(formattedMobile)) {
+      formattedMobile = "+91" + formattedMobile;
+    }
+
+    const { data, error } =
+      await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            full_name: name,
+            mobile: formattedMobile
+          }
+        }
+      });
+
+    if (error) {
+      alert("Account creation failed: " + error.message);
+      return;
+    }
+
+    if (data && data.user) {
+      alert(
+        "Account created successfully. Please verify your account before logging in."
+      );
+
+      showLogin();
+    }
   });
 </script> 
 <script>
