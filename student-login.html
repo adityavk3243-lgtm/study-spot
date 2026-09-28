@@ -622,31 +622,119 @@ document
       });
 
     document
-      .getElementById("verifyOtpButton")
+  .getElementById("verifyOtpButton")
+  .addEventListener("click", function () {
+
+    const otp =
+      document
+        .getElementById("resetOtp")
+        .value
+        .trim();
+
+    const message =
+      document.getElementById("forgotMessage");
+
+    if (!/^\d{6}$/.test(otp)) {
+
+      message.textContent =
+        "Please enter a valid 6-digit OTP.";
+
+      message.style.color = "#dc2626";
+
+      return;
+    }
+
+    const otpSection =
+      document.getElementById("otpSection");
+
+    otpSection.innerHTML = `
+      <h3 style="margin-top:0;">
+        Create New Password
+      </h3>
+
+      <p style="color:#667085;font-size:14px;">
+        Enter your new password below.
+      </p>
+
+      <input
+        id="newResetPassword"
+        type="password"
+        placeholder="New Password"
+        style="width:100%;padding:13px;border:1px solid #d5dbe7;border-radius:10px;font-size:16px;"
+      >
+
+      <input
+        id="confirmResetPassword"
+        type="password"
+        placeholder="Confirm New Password"
+        style="width:100%;margin-top:12px;padding:13px;border:1px solid #d5dbe7;border-radius:10px;font-size:16px;"
+      >
+
+      <button
+        id="resetPasswordButton"
+        type="button"
+        style="width:100%;margin-top:12px;padding:13px;border:none;border-radius:10px;background:#2563eb;color:white;font-size:16px;font-weight:700;"
+      >
+        Reset Password
+      </button>
+
+      <p
+        id="resetPasswordMessage"
+        style="margin-top:12px;font-size:14px;color:#667085;"
+      ></p>
+    `;
+
+    document
+      .getElementById("resetPasswordButton")
       .addEventListener("click", function () {
 
-        const otp =
+        const newPassword =
           document
-            .getElementById("resetOtp")
-            .value
-            .trim();
+            .getElementById("newResetPassword")
+            .value;
 
-        const message =
-          document.getElementById("forgotMessage");
+        const confirmPassword =
+          document
+            .getElementById("confirmResetPassword")
+            .value;
 
-        if (!/^\d{6}$/.test(otp)) {
+        const resetMessage =
+          document.getElementById("resetPasswordMessage");
 
-          message.textContent =
-            "Please enter a valid 6-digit OTP.";
+        if (!newPassword || !confirmPassword) {
 
-          message.style.color = "#dc2626";
+          resetMessage.textContent =
+            "Please enter and confirm your new password.";
+
+          resetMessage.style.color = "#dc2626";
+
           return;
         }
 
-        message.textContent =
-          "OTP verified. New password setup will be enabled after the OTP service is connected.";
+        if (newPassword.length < 6) {
 
-        message.style.color = "#16a34a";
+          resetMessage.textContent =
+            "Password must be at least 6 characters.";
+
+          resetMessage.style.color = "#dc2626";
+
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+
+          resetMessage.textContent =
+            "Passwords do not match.";
+
+          resetMessage.style.color = "#dc2626";
+
+          return;
+        }
+
+        resetMessage.textContent =
+          "Password reset is ready. Actual password update will be enabled after the OTP service is connected.";
+
+        resetMessage.style.color = "#16a34a";
       });
 
   });
