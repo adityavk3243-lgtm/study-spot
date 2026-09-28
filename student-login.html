@@ -451,6 +451,12 @@
     }
 
   </script>
-
+<script>
+  if (window.supabaseClient) {
+    console.log("StudySpot Supabase connected successfully.");
+  } else {
+    console.error("StudySpot Supabase connection failed.");
+  }
+</script>
 </body>
 </html>
