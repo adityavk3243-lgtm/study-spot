@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>My Card - StudySpot</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f3f7ff;
+      color: #172033;
+      font-family: Arial, sans-serif;
+      padding-bottom: 30px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      padding: 15px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-button {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.18);
+      color: white;
+      font-size: 23px;
+      cursor: pointer;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .page {
+      max-width: 600px;
+      margin: auto;
+      padding: 18px 14px 30px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 800;
+      margin: 8px 0 5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #667085;
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .membership-card {
+      background: white;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+      border: 1px solid #e4e9f2;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      padding: 17px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-brand {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .card-label {
+      font-size: 11px;
+      opacity: 0.9;
+      margin-top: 3px;
+    }
+
+    .status {
+      background: #16a34a;
+      padding: 7px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    .student-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .student-photo {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      background: #e8eef9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .student-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .student-name {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .student-mobile {
+      color: #667085;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    .library-name {
+      font-size: 21px;
+      font-weight: 800;
+      color: #2563eb;
+      margin-bottom: 5px;
+    }
+
+    .library-location {
+      color: #667085;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .detail-box {
+      background: #f5f7fb;
+      border-radius: 13px;
+      padding: 12px;
+    }
+
+    .detail-label {
+      color: #667085;
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+
+    .detail-value {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .card-footer {
+      background: #f8faff;
+      border-top: 1px dashed #d7deea;
+      padding: 15px 18px;
+      text-align: center;
+    }
+
+    .verification-text {
+      color: #667085;
+      font-size: 12px;
+    }
+
+    .empty-card {
+      background: white;
+      border-radius: 22px;
+      padding: 35px 20px;
+      text-align: center;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.07);
+    }
+
+    .empty-icon {
+      font-size: 55px;
+      margin-bottom: 12px;
+    }
+
+    .empty-title {
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .empty-text {
+      color: #667085;
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+
+    .search-button {
+      margin-top: 18px;
+      border: none;
+      border-radius: 13px;
+      padding: 13px 20px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .message {
+      text-align: center;
+      color: #dc2626;
+      font-size: 14px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+
+    <button
+      class="back-button"
+      type="button"
+      onclick="window.location.href='index.html'"
+    >
+      ←
+    </button>
+
+    <div class="brand">
+      🎫 StudySpot My Card
+    </div>
+
+  </header>
+
+
+  <main class="page">
+
+    <div class="title">
+      My Card
+    </div>
+
+    <div class="subtitle">
+      Your StudySpot library membership passes
+    </div>
+
+
+    <div
+      id="cardsContainer"
+      class="cards-container"
+    >
+
+      <div class="empty-card">
+
+        <div class="empty-icon">
+          🎫
+        </div>
+
+        <div class="empty-title">
+          No Active Membership
+        </div>
+
+        <div class="empty-text">
+          Your library membership cards will appear here after you become a member of a StudySpot library.
+        </div>
+
+        <button
+          class="search-button"
+          type="button"
+          onclick="window.location.href='libraries.html'"
+        >
+          Find a Study Library
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="message"
+      class="message"
+    ></div>
+
+  </main>
+
+
+  <script>
+
+    async function loadMyCards() {
+
+      if (!window.supabaseClient) {
+
+        document.getElementById("message").textContent =
+          "StudySpot connection is not ready. Please refresh the page.";
+
+        return;
+      }
+
+
+      const {
+        data: sessionData,
+        error: sessionError
+      } = await window.supabaseClient.auth.getSession();
+
+
+      if (sessionError || !sessionData.session) {
+
+        window.location.href =
+          "../student-login.html";
+
+        return;
+      }
+
+
+      const user =
+        sessionData.session.user;
+
+      const metadata =
+        user.user_metadata || {};
+
+
+      const {
+        data: memberships,
+        error
+      } = await window.supabaseClient
+        .from("student_memberships")
+        .select(`
+          membership_type,
+          start_date,
+          due_date,
+          seat_number,
+          status,
+          libraries (
+            library_name,
+            city,
+            district,
+            state,
+            photos
+          )
+        `)
+        .eq("student_id", user.id)
+        .order("created_at", {
+          ascending: false
+        });
+
+
+      if (error) {
+
+        document.getElementById("message").textContent =
+          "Unable to load membership cards.";
+
+        return;
+      }
+
+
+      if (!memberships || memberships.length === 0) {
+        return;
+      }
+
+
+      const container =
+        document.getElementById("cardsContainer");
+
+      container.innerHTML = "";
+
+
+      memberships.forEach(function(membership) {
+
+        const library =
+          membership.libraries || {};
+
+
+        const photo =
+          library.photos &&
+          library.photos.length > 0
+            ? library.photos[0]
+            : "";
+
+
+        const card =
+          document.createElement("div");
+
+        card.className =
+          "membership-card";
+
+
+        const status =
+          membership.status || "active";
+
+
+        const statusText =
+          status.toUpperCase();
+
+
+        card.innerHTML = `
+
+          <div class="card-header">
+
+            <div>
+
+              <div class="card-brand">
+                📚 StudySpot
+              </div>
+
+              <div class="card-label">
+                DIGITAL MEMBERSHIP CARD
+              </div>
+
+            </div>
+
+            <div class="status">
+              ${statusText}
+            </div>
+
+          </div>
+
+
+          <div class="card-body">
+
+            <div class="student-area">
+
+              <div class="student-photo">
+
+                ${
+                  photo
+                  ? `<img src="${photo}" alt="Library">`
+                  : "👤"
+                }
+
+              </div>
+
+              <div>
+
+                <div class="student-name">
+                  ${metadata.full_name || "Student"}
+                </div>
+
+                <div class="student-mobile">
+                  ${metadata.mobile || user.email || ""}
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="library-name">
+              ${library.library_name || "Study Library"}
+            </div>
+
+
+            <div class="library-location">
+              📍 ${library.city || ""}
+              ${library.district ? ", " + library.district : ""}
+              ${library.state ? ", " + library.state : ""}
+            </div>
+
+
+            <div class="details">
+
+              <div class="detail-box">
+
+                <div class="detail-label">
+                  Membership Type
+                </div>
+
+                <div class="detail-value">
+                  ${membership.membership_type || "Membership"}
+                </div>
+
+              </div>
+
+
+              <div class="detail-box">
+
+                <div class="detail-label">
+                  Seat Number
+                </div>
+
+                <div class="detail-value">
+                  ${membership.seat_number || "Not assigned"}
+                </div>
+
+              </div>
+
+
+              <div class="detail-box">
+
+                <div class="detail-label">
+                  Membership Date
+                </div>
+
+                <div class="detail-value">
+                  ${membership.start_date || "Not available"}
+                </div>
+
+              </div>
+
+
+              <div class="detail-box">
+
+                <div class="detail-label">
+                  Due Date
+                </div>
+
+                <div class="detail-value">
+                  ${membership.due_date || "Not available"}
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="card-footer">
+
+            <div class="verification-text">
+              Show this digital card at the library for membership verification.
+            </div>
+
+          </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+      });
+
+    }
+
+
+    loadMyCards();
+
+  </script>
+
+</body>
+</html>
