@@ -400,11 +400,8 @@
           membership.libraries || {};
 
 
-        const photo =
-          library.photos &&
-          library.photos.length > 0
-            ? library.photos[0]
-            : "";
+const photo =
+  metadata.profile_photo_url || "";
 
 
         const card =
