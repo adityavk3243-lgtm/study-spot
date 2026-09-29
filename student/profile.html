@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>My Account - StudySpot</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f7fb;
+      font-family: Arial, sans-serif;
+      color: #172033;
+    }
+
+    .header {
+      background: #2563eb;
+      color: white;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-button {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.18);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .page {
+      padding: 20px 14px 30px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    }
+
+    .profile-icon {
+      text-align: center;
+      font-size: 55px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0 0 22px;
+      font-size: 27px;
+    }
+
+    .info-box {
+      background: #f4f7fb;
+      border: 1px solid #e0e6ef;
+      border-radius: 14px;
+      padding: 15px;
+      margin-top: 12px;
+    }
+
+    .label {
+      color: #667085;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .value {
+      font-size: 16px;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .logout-button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #dc2626;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .message {
+      text-align: center;
+      color: #667085;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+
+    <button
+      class="back-button"
+      type="button"
+      onclick="window.location.href='index.html'"
+    >
+      ←
+    </button>
+
+    <div class="brand">
+      📚 StudySpot
+    </div>
+
+  </header>
+
+  <main class="page">
+
+    <div class="card">
+
+      <div class="profile-icon">
+        👤
+      </div>
+
+      <h1>
+        My Account
+      </h1>
+
+      <div class="info-box">
+        <div class="label">
+          Full Name
+        </div>
+
+        <div
+          class="value"
+          id="profileName"
+        >
+          Loading...
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="label">
+          Mobile Number
+        </div>
+
+        <div
+          class="value"
+          id="profileMobile"
+        >
+          Loading...
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="label">
+          Email Address
+        </div>
+
+        <div
+          class="value"
+          id="profileEmail"
+        >
+          Loading...
+        </div>
+      </div>
+
+      <button
+        id="logoutButton"
+        class="logout-button"
+        type="button"
+      >
+        Logout
+      </button>
+
+      <div
+        id="profileMessage"
+        class="message"
+      ></div>
+
+    </div>
+
+  </main>
+
+  <script>
+
+    async function loadStudentProfile() {
+
+      if (!window.supabaseClient) {
+
+        document.getElementById("profileMessage").textContent =
+          "StudySpot connection is not ready. Please refresh the page.";
+
+        return;
+      }
+
+      const {
+        data,
+        error
+      } = await window.supabaseClient.auth.getSession();
+
+      if (error || !data.session) {
+
+        window.location.href =
+          "../student-login.html";
+
+        return;
+      }
+
+      const user =
+        data.session.user;
+
+      const metadata =
+        user.user_metadata || {};
+
+      document.getElementById("profileName").textContent =
+        metadata.full_name || "Not available";
+
+      document.getElementById("profileMobile").textContent =
+        metadata.mobile || "Not available";
+
+      document.getElementById("profileEmail").textContent =
+        user.email || "Not available";
+    }
+
+    document
+      .getElementById("logoutButton")
+      .addEventListener("click", async function () {
+
+        const {
+          error
+        } = await window.supabaseClient.auth.signOut();
+
+        if (error) {
+
+          document.getElementById("profileMessage").textContent =
+            "Logout failed: " + error.message;
+
+          return;
+        }
+
+        window.location.href =
+          "../student-login.html";
+      });
+
+    loadStudentProfile();
+
+  </script>
+
+</body>
+</html>
