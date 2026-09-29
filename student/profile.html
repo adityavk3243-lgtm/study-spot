@@ -59,10 +59,48 @@
       box-shadow: 0 4px 18px rgba(0,0,0,0.08);
     }
 
-    .profile-icon {
+    .photo-section {
       text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e8eef9;
+      border: 4px solid #2563eb;
+      display: block;
+      margin: 0 auto 14px;
+    }
+
+    .photo-placeholder {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #e8eef9;
+      border: 4px solid #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
       font-size: 55px;
-      margin-bottom: 8px;
+    }
+
+    .photo-button {
+      display: inline-block;
+      padding: 11px 18px;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #photoInput {
+      display: none;
     }
 
     h1 {
@@ -107,8 +145,9 @@
     .message {
       text-align: center;
       color: #667085;
-      margin-top: 20px;
+      margin-top: 16px;
       font-size: 14px;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -135,8 +174,27 @@
 
     <div class="card">
 
-      <div class="profile-icon">
-        👤
+      <div class="photo-section">
+
+        <div id="photoContainer">
+          <div class="photo-placeholder">
+            👤
+          </div>
+        </div>
+
+        <label
+          class="photo-button"
+          for="photoInput"
+        >
+          Add / Change Photo
+        </label>
+
+        <input
+          type="file"
+          id="photoInput"
+          accept="image/*"
+        >
+
       </div>
 
       <h1>
@@ -201,6 +259,8 @@
 
   <script>
 
+    let currentUser = null;
+
     async function loadStudentProfile() {
 
       if (!window.supabaseClient) {
@@ -224,11 +284,11 @@
         return;
       }
 
-      const user =
+      currentUser =
         data.session.user;
 
       const metadata =
-        user.user_metadata || {};
+        currentUser.user_metadata || {};
 
       document.getElementById("profileName").textContent =
         metadata.full_name || "Not available";
@@ -237,8 +297,116 @@
         metadata.mobile || "Not available";
 
       document.getElementById("profileEmail").textContent =
-        user.email || "Not available";
+        currentUser.email || "Not available";
+
+      if (metadata.profile_photo_url) {
+
+        document.getElementById("photoContainer").innerHTML = `
+          <img
+            src="${metadata.profile_photo_url}"
+            class="profile-photo"
+            alt="Student profile photo"
+          >
+        `;
+      }
     }
+
+
+    document
+      .getElementById("photoInput")
+      .addEventListener("change", async function () {
+
+        const file =
+          this.files[0];
+
+        if (!file || !currentUser) {
+          return;
+        }
+
+        if (!file.type.startsWith("image/")) {
+
+          document.getElementById("profileMessage").textContent =
+            "Please select an image file.";
+
+          this.value = "";
+          return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+
+          document.getElementById("profileMessage").textContent =
+            "Please choose an image smaller than 5 MB.";
+
+          this.value = "";
+          return;
+        }
+
+        document.getElementById("profileMessage").textContent =
+          "Uploading photo...";
+
+        const filePath =
+          currentUser.id + "/profile.jpg";
+
+        const {
+          error: uploadError
+        } = await window.supabaseClient.storage
+          .from("student-profile-photos")
+          .upload(
+            filePath,
+            file,
+            {
+              upsert: true,
+              contentType: file.type
+            }
+          );
+
+        if (uploadError) {
+
+          document.getElementById("profileMessage").textContent =
+            "Photo upload failed: " + uploadError.message;
+
+          return;
+        }
+
+        const {
+          data: publicData
+        } = window.supabaseClient.storage
+          .from("student-profile-photos")
+          .getPublicUrl(filePath);
+
+        const photoUrl =
+          publicData.publicUrl + "?v=" + Date.now();
+
+        const {
+          error: updateError
+        } = await window.supabaseClient.auth.updateUser({
+
+          data: {
+            profile_photo_url: photoUrl
+          }
+
+        });
+
+        if (updateError) {
+
+          document.getElementById("profileMessage").textContent =
+            "Photo saved, but profile update failed.";
+
+          return;
+        }
+
+        document.getElementById("photoContainer").innerHTML = `
+          <img
+            src="${photoUrl}"
+            class="profile-photo"
+            alt="Student profile photo"
+          >
+        `;
+
+        document.getElementById("profileMessage").textContent =
+          "Profile photo updated successfully.";
+      });
+
 
     document
       .getElementById("logoutButton")
@@ -259,6 +427,7 @@
         window.location.href =
           "../student-login.html";
       });
+
 
     loadStudentProfile();
 
