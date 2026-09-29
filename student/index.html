@@ -81,6 +81,14 @@
       font-size: 21px;
     }
 
+.profile-circle img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+    
     .profile-text {
       text-align: left;
     }
@@ -658,9 +666,23 @@
         metadata.full_name || "Student";
 
       document.getElementById("studentName").textContent =
-        "Hi, " + fullName.split(" ")[0];
+  "Hi, " + fullName.split(" ")[0];
 
-      loadRecommendedLibraries();
+const profileCircle =
+  document.querySelector(".profile-circle");
+
+if (metadata.profile_photo_url) {
+
+  profileCircle.innerHTML = `
+    <img
+      src="${metadata.profile_photo_url}"
+      alt="Profile photo"
+    >
+  `;
+
+}
+
+loadRecommendedLibraries();
     }
 
 
