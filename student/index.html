@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>StudySpot - Students</title>
+  <title>StudySpot - Student Home</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
 
   <style>
     * {
@@ -13,137 +16,357 @@
 
     body {
       margin: 0;
-      min-height: 100vh;
-      background: #f4f7fb;
-      font-family: Arial, sans-serif;
+      background: #f3f7ff;
       color: #172033;
+      font-family: Arial, sans-serif;
+      padding-bottom: 78px;
     }
 
-    .hero {
-      background: linear-gradient(135deg, #2563eb, #4f46e5);
+    .header {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: white;
-      text-align: center;
-      padding: 42px 18px 38px;
+      padding: 18px 16px 22px;
+      border-radius: 0 0 24px 24px;
     }
 
-    .logo {
-      font-size: 60px;
-      line-height: 1;
-      margin-bottom: 10px;
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
 
     .brand {
-      font-size: 38px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      font-size: 35px;
+    }
+
+    .brand-name {
+      font-size: 25px;
       font-weight: 800;
     }
 
-    .student-label {
-      font-size: 18px;
-      font-weight: 700;
-      margin-top: 5px;
+    .tagline {
+      font-size: 13px;
+      opacity: 0.9;
+      margin-top: 2px;
     }
 
-    .tagline {
-      margin-top: 10px;
-      font-size: 15px;
-      opacity: 0.95;
+    .profile-button {
+      border: none;
+      background: rgba(255,255,255,0.16);
+      color: white;
+      border-radius: 16px;
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .profile-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: white;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+    }
+
+    .profile-text {
+      text-align: left;
+    }
+
+    .profile-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .profile-link {
+      font-size: 11px;
+      opacity: 0.9;
     }
 
     .page {
-      padding: 28px 16px 40px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 470px;
+      max-width: 700px;
       margin: auto;
+      padding: 14px;
     }
 
-    .card {
+    .section {
       background: white;
-      padding: 24px 20px;
-      border-radius: 22px;
-      box-shadow: 0 5px 22px rgba(0,0,0,0.09);
+      border-radius: 20px;
+      padding: 16px;
+      margin-top: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
     }
 
-    .welcome-icon {
-      text-align: center;
-      font-size: 42px;
-      margin-bottom: 5px;
+    .section-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 13px;
     }
 
-    h2 {
-      text-align: center;
-      margin: 0;
-      font-size: 27px;
+    .section-title {
+      font-size: 21px;
+      font-weight: 800;
     }
 
-    .description {
-      text-align: center;
-      color: #667085;
-      font-size: 15px;
-      line-height: 1.5;
-      margin: 10px 0 24px;
-    }
-
-    .button {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      margin-top: 12px;
-      border-radius: 12px;
-      text-align: center;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .primary {
-      background: #2563eb;
-      color: white;
-    }
-
-    .secondary {
-      background: white;
+    .view-all {
       color: #2563eb;
-      border: 2px solid #2563eb;
-    }
-
-    .features {
-      margin-top: 22px;
-      background: #f0f6ff;
-      border-radius: 12px;
-      padding: 15px;
-    }
-
-    .feature {
-      padding: 7px 0;
       font-size: 14px;
-      color: #344054;
+      font-weight: 700;
+      cursor: pointer;
     }
 
-    .footer {
-      text-align: center;
+    .libraries-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .library-card {
+      min-width: 245px;
+      border: 1px solid #e5eaf2;
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .library-image {
+      width: 100%;
+      height: 125px;
+      object-fit: cover;
+      background: #e9eef7;
+    }
+
+    .library-content {
+      padding: 12px;
+    }
+
+    .library-name {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+
+    .library-info {
       color: #667085;
       font-size: 13px;
-      margin-top: 24px;
+      margin-top: 6px;
     }
 
-    @media (max-width: 380px) {
-      .hero {
-        padding: 34px 14px;
+    .empty-message {
+      text-align: center;
+      color: #667085;
+      padding: 22px 10px;
+      font-size: 14px;
+    }
+
+    .search-section {
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #d7deea;
+      border-radius: 14px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #2563eb;
+    }
+
+    .search-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 11px;
+    }
+
+    .search-button,
+    .near-button {
+      border: none;
+      border-radius: 13px;
+      padding: 14px 8px;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .search-button {
+      background: #2563eb;
+    }
+
+    .near-button {
+      background: #16a34a;
+    }
+
+    .distance-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 10px;
+    }
+
+    .distance-button {
+      border: 1px solid #d7deea;
+      background: white;
+      border-radius: 12px;
+      padding: 12px 5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .distance-button.active {
+      background: #e8f0ff;
+      color: #2563eb;
+      border-color: #2563eb;
+    }
+
+    .ad-box {
+      margin-top: 14px;
+      border-radius: 18px;
+      min-height: 105px;
+      background: linear-gradient(135deg, #312e81, #7c3aed);
+      color: white;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ad-label {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      background: rgba(255,255,255,0.25);
+      padding: 3px 7px;
+      border-radius: 7px;
+      font-size: 10px;
+    }
+
+    .ad-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .ad-text {
+      margin-top: 5px;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .recommended-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+    }
+
+    .recommended-card {
+      min-width: 190px;
+      border: 1px solid #e5eaf2;
+      border-radius: 15px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .recommended-card img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+    }
+
+    .recommended-content {
+      padding: 10px;
+    }
+
+    .recommended-name {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .recommended-location {
+      color: #667085;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .recommended-price {
+      color: #2563eb;
+      font-size: 15px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .card-button {
+      width: 100%;
+      border: none;
+      background: #eaf1ff;
+      color: #2563eb;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 9px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 70px;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 1000;
+    }
+
+    .nav-button {
+      border: none;
+      background: white;
+      color: #667085;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .nav-icon {
+      display: block;
+      font-size: 23px;
+      margin-bottom: 3px;
+    }
+
+    .nav-button.active {
+      color: #2563eb;
+    }
+
+    @media (max-width: 430px) {
+      .profile-text {
+        display: none;
       }
 
-      .brand {
-        font-size: 33px;
+      .profile-button {
+        padding: 6px;
       }
 
-      .logo {
-        font-size: 52px;
-      }
-
-      .card {
-        padding: 22px 16px;
+      .brand-name {
+        font-size: 22px;
       }
     }
   </style>
@@ -151,20 +374,51 @@
 
 <body>
 
-  <header class="hero">
+  <header class="header">
 
-    <div class="logo">📚</div>
+    <div class="header-top">
 
-    <div class="brand">
-      StudySpot
-    </div>
+      <div class="brand">
+        <div class="brand-icon">📚</div>
 
-    <div class="student-label">
-      For Students
-    </div>
+        <div>
+          <div class="brand-name">
+            StudySpot
+          </div>
 
-    <div class="tagline">
-      Find the perfect study library near you
+          <div class="tagline">
+            Find. Choose. Study.
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="profile-button"
+        type="button"
+        onclick="window.location.href='profile.html'"
+      >
+
+        <div class="profile-circle">
+          👤
+        </div>
+
+        <div class="profile-text">
+
+          <div
+            class="profile-name"
+            id="studentName"
+          >
+            Student
+          </div>
+
+          <div class="profile-link">
+            View Profile →
+          </div>
+
+        </div>
+
+      </button>
+
     </div>
 
   </header>
@@ -172,70 +426,387 @@
 
   <main class="page">
 
-    <div class="container">
 
-      <div class="card">
+    <!-- MY LIBRARIES -->
 
-        <div class="welcome-icon">
-          🎓
+    <section class="section">
+
+      <div class="section-title-row">
+
+        <div class="section-title">
+          📖 My Libraries
         </div>
 
-        <h2>
-          Welcome to StudySpot
-        </h2>
-
-        <p class="description">
-          Discover study libraries near you, compare facilities,
-          check fees and choose the right study space.
-        </p>
-
-
-        <a
-    class="button primary"
-    href="libraries.html"
->
-          Find a Study Library
-        </a>
-
-
-        <a
-          class="button secondary"
-          href="../student-login.html"
+        <div
+          class="view-all"
+          onclick="showMyLibraries()"
         >
-          Student Login
-        </a>
-
-
-        <div class="features">
-
-          <div class="feature">
-            📍 Find libraries near your location
-          </div>
-
-          <div class="feature">
-            🔎 Search libraries anywhere
-          </div>
-
-          <div class="feature">
-            💰 Compare fees and facilities
-          </div>
-
-          <div class="feature">
-            🪑 Check available seats
-          </div>
-
+          View All →
         </div>
 
       </div>
 
+      <div
+        id="myLibraries"
+        class="libraries-scroll"
+      >
 
-      <div class="footer">
-        © 2026 StudySpot • Find. Choose. Study.
+        <div class="empty-message">
+          You do not have any active library memberships yet.
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SEARCH -->
+
+    <section class="section search-section">
+
+      <div class="section-title">
+        🔎 Find a Study Library
+      </div>
+
+      <input
+        id="searchInput"
+        class="search-input"
+        type="text"
+        placeholder="Search by library name, city, district or state..."
+      >
+
+      <div class="search-buttons">
+
+        <button
+          class="search-button"
+          type="button"
+          onclick="searchLibraries()"
+        >
+          🔎 Search Anywhere
+        </button>
+
+        <button
+          class="near-button"
+          type="button"
+          onclick="findNearMe()"
+        >
+          📍 Find Near Me
+        </button>
+
+      </div>
+
+      <div class="distance-buttons">
+
+        <button
+          class="distance-button active"
+          type="button"
+          onclick="selectDistance(5, this)"
+        >
+          5 km
+        </button>
+
+        <button
+          class="distance-button"
+          type="button"
+          onclick="selectDistance(10, this)"
+        >
+          10 km
+        </button>
+
+        <button
+          class="distance-button"
+          type="button"
+          onclick="selectDistance(15, this)"
+        >
+          15 km
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ADVERTISEMENT -->
+
+    <div class="ad-box">
+
+      <div class="ad-label">
+        AD
+      </div>
+
+      <div class="ad-title">
+        Advertisement Space
+      </div>
+
+      <div class="ad-text">
+        Sponsored content will appear here after advertising is enabled.
       </div>
 
     </div>
 
+
+    <!-- RECOMMENDED LIBRARIES -->
+
+    <section class="section">
+
+      <div class="section-title-row">
+
+        <div class="section-title">
+          ⭐ Recommended Libraries
+        </div>
+
+        <div
+          class="view-all"
+          onclick="window.location.href='libraries.html'"
+        >
+          View All →
+        </div>
+
+      </div>
+
+      <div
+        id="recommendedLibraries"
+        class="recommended-scroll"
+      >
+
+        <div class="empty-message">
+          Loading libraries...
+        </div>
+
+      </div>
+
+    </section>
+
+
   </main>
+
+
+  <!-- BOTTOM NAVIGATION -->
+
+  <nav class="bottom-nav">
+
+    <button
+      class="nav-button active"
+      type="button"
+      onclick="window.location.href='index.html'"
+    >
+      <span class="nav-icon">🏠</span>
+      Home
+    </button>
+
+    <button
+      class="nav-button"
+      type="button"
+      onclick="showMyLibraries()"
+    >
+      <span class="nav-icon">📖</span>
+      My Libraries
+    </button>
+
+    <button
+      class="nav-button"
+      type="button"
+      onclick="showMyCard()"
+    >
+      <span class="nav-icon">🎫</span>
+      My Card
+    </button>
+
+    <button
+      class="nav-button"
+      type="button"
+      onclick="window.location.href='libraries.html'"
+    >
+      <span class="nav-icon">🔎</span>
+      Search
+    </button>
+
+  </nav>
+
+
+  <script>
+
+    let selectedDistance = 5;
+
+
+    async function loadStudentHome() {
+
+      if (!window.supabaseClient) {
+        return;
+      }
+
+      const {
+        data,
+        error
+      } = await window.supabaseClient.auth.getSession();
+
+      if (error || !data.session) {
+
+        window.location.href =
+          "../student-login.html";
+
+        return;
+      }
+
+      const user =
+        data.session.user;
+
+      const metadata =
+        user.user_metadata || {};
+
+      const fullName =
+        metadata.full_name || "Student";
+
+      document.getElementById("studentName").textContent =
+        "Hi, " + fullName.split(" ")[0];
+
+      loadRecommendedLibraries();
+    }
+
+
+    async function loadRecommendedLibraries() {
+
+      const container =
+        document.getElementById("recommendedLibraries");
+
+      const {
+        data,
+        error
+      } = await window.supabaseClient
+        .from("libraries")
+        .select("*")
+        .limit(6);
+
+      if (error || !data || data.length === 0) {
+
+        container.innerHTML =
+          '<div class="empty-message">No libraries available yet.</div>';
+
+        return;
+      }
+
+      container.innerHTML = "";
+
+      data.forEach(function(library) {
+
+        const photo =
+          library.photos && library.photos.length > 0
+            ? library.photos[0]
+            : "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=700&q=80";
+
+        const price =
+          library.monthly_fee
+            ? "₹" + library.monthly_fee + " / month"
+            : "Contact library";
+
+        const card =
+          document.createElement("div");
+
+        card.className =
+          "recommended-card";
+
+        card.innerHTML = `
+
+          <img
+            src="${photo}"
+            alt="Library"
+          >
+
+          <div class="recommended-content">
+
+            <div class="recommended-name">
+              ${library.library_name || "Study Library"}
+            </div>
+
+            <div class="recommended-location">
+              📍 ${library.city || ""}${library.district ? ", " + library.district : ""}
+            </div>
+
+            <div class="recommended-price">
+              ${price}
+            </div>
+
+            <button
+              class="card-button"
+              type="button"
+              onclick="window.location.href='../library-details.html?id=${library.id}'"
+            >
+              View Details
+            </button>
+
+          </div>
+        `;
+
+        container.appendChild(card);
+
+      });
+    }
+
+
+    function selectDistance(distance, button) {
+
+      selectedDistance =
+        distance;
+
+      document
+        .querySelectorAll(".distance-button")
+        .forEach(function(item) {
+
+          item.classList.remove("active");
+
+        });
+
+      button.classList.add("active");
+    }
+
+
+    function searchLibraries() {
+
+      const query =
+        document.getElementById("searchInput").value.trim();
+
+      if (query) {
+
+        window.location.href =
+          "libraries.html?search=" +
+          encodeURIComponent(query);
+
+      } else {
+
+        window.location.href =
+          "libraries.html";
+
+      }
+    }
+
+
+    function findNearMe() {
+
+      window.location.href =
+        "libraries.html?near=" +
+        selectedDistance;
+    }
+
+
+    function showMyLibraries() {
+
+      document.getElementById("myLibraries").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+
+    function showMyCard() {
+
+      alert(
+        "My Card will be available after the membership card system is completed."
+      );
+    }
+
+
+    loadStudentHome();
+
+  </script>
 
 </body>
 </html>
