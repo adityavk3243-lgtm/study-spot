@@ -696,7 +696,7 @@ function joinLibrary() {
         </h2>
 
         <button
-          onclick="this.closest('div[style*=&quot;position:fixed&quot;]').remove()"
+          onclick="this.parentElement.parentElement.remove()"
           style="
             border:none;
             background:#eef2f7;
