@@ -431,7 +431,46 @@
       });
 
 
+    async function protectProfilePage() {
+
+  const {
+    data,
+    error
+  } = await window.supabaseClient.auth.getSession();
+
+  if (error || !data.session) {
+
+    window.location.replace("../student-login.html");
+
+    return false;
+  }
+
+  return true;
+}
+
+
+window.addEventListener("pageshow", async function () {
+
+  const allowed =
+    await protectProfilePage();
+
+  if (allowed) {
     loadStudentProfile();
+  }
+
+});
+
+
+window.addEventListener("popstate", async function () {
+
+  const allowed =
+    await protectProfilePage();
+
+  if (!allowed) {
+    window.location.replace("../student-login.html");
+  }
+
+});
 
   </script>
 
