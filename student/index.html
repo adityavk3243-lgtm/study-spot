@@ -682,6 +682,105 @@ if (metadata.profile_photo_url) {
 
 }
 
+loadMyLibraries();
+
+  async function loadMyLibraries() {
+
+  const container =
+    document.getElementById("myLibraries");
+
+  const {
+    data: sessionData,
+    error: sessionError
+  } = await window.supabaseClient.auth.getSession();
+
+  if (sessionError || !sessionData.session) {
+    return;
+  }
+
+  const user =
+    sessionData.session.user;
+
+  const {
+    data: memberships,
+    error
+  } = await window.supabaseClient
+    .from("student_memberships")
+    .select(`
+      membership_type,
+      start_date,
+      due_date,
+      seat_number,
+      status,
+      libraries (
+        library_name,
+        city,
+        district,
+        state
+      )
+    `)
+    .eq("student_id", user.id)
+    .eq("status", "active")
+    .order("created_at", {
+      ascending: false
+    });
+
+  if (error || !memberships || memberships.length === 0) {
+
+    container.innerHTML = `
+      <div class="empty-message">
+        You do not have any active library memberships yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  memberships.forEach(function(membership) {
+
+    const library =
+      membership.libraries || {};
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "library-card";
+
+    card.innerHTML = `
+
+      <div class="library-content">
+
+        <div class="library-name">
+          ${library.library_name || "Study Library"}
+        </div>
+
+        <div class="library-info">
+          📍 ${library.city || ""}
+          ${library.district ? ", " + library.district : ""}
+        </div>
+
+        <div class="library-info">
+          Membership: ${membership.membership_type || "Active"}
+        </div>
+
+        <div class="library-info">
+          Seat: ${membership.seat_number || "Not assigned"}
+        </div>
+
+        <div class="library-info">
+          Due: ${membership.due_date || "Not available"}
+        </div>
+
+      </div>
+    `;
+
+    container.appendChild(card);
+
+  });
+}    
 loadRecommendedLibraries();
     }
 
