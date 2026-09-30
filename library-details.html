@@ -663,6 +663,8 @@ function joinLibrary() {
 
   const overlay = document.createElement("div");
 
+  overlay.className = "membership-overlay";
+  
   overlay.style.position = "fixed";
   overlay.style.inset = "0";
   overlay.style.background = "rgba(0,0,0,0.55)";
@@ -696,7 +698,7 @@ function joinLibrary() {
         </h2>
 
         <button
-          onclick="this.parentElement.parentElement.remove()"
+         onclick="document.querySelector('.membership-overlay').remove()" 
           style="
             border:none;
             background:#eef2f7;
