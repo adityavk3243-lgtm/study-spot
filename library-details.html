@@ -317,6 +317,8 @@ async function loadLibraryDetails() {
 
     return;
   }
+  window.currentLibraryData = library;
+  
 container.innerHTML = `
   <div class="profile-header">
     <div class="library-title">
@@ -542,6 +544,17 @@ ${
     : ""
 }
 
+   <button
+    class="contact-button"
+    onclick="joinLibrary()"
+    style="
+      background:#16a34a;
+      margin-top:24px;
+    "
+  >
+    🎫 Join Library
+  </button>
+
   ${
     library.mobile
       ? `
@@ -553,7 +566,7 @@ ${
         </button>
       `
       : ""
-  }
+  } 
 
   <p class="powered-by">StudySpot • Find your perfect study space</p>
 `;
@@ -610,6 +623,205 @@ function openPhotoViewer(photoUrl) {
   };
 
   document.body.appendChild(viewer);
+}
+
+function joinLibrary() {
+  if (!window.currentLibraryData) {
+    alert("Library information is not ready. Please try again.");
+    return;
+  }
+
+  const library = window.currentLibraryData;
+
+  const plans = [];
+
+  if (library.daily_plan_enabled === true) {
+    plans.push({
+      type: "One Day",
+      price: library.daily_fee
+    });
+  }
+
+  if (library.weekly_plan_enabled === true) {
+    plans.push({
+      type: "Weekly",
+      price: library.weekly_fee
+    });
+  }
+
+  if (library.monthly_plan_enabled === true) {
+    plans.push({
+      type: "Monthly",
+      price: library.monthly_fee
+    });
+  }
+
+  if (plans.length === 0) {
+    alert("This library has no membership plans available right now.");
+    return;
+  }
+
+  const overlay = document.createElement("div");
+
+  overlay.style.position = "fixed";
+  overlay.style.inset = "0";
+  overlay.style.background = "rgba(0,0,0,0.55)";
+  overlay.style.zIndex = "9999";
+  overlay.style.display = "flex";
+  overlay.style.alignItems = "flex-end";
+  overlay.style.justifyContent = "center";
+
+  overlay.innerHTML = `
+    <div style="
+      width:100%;
+      max-width:600px;
+      background:white;
+      border-radius:22px 22px 0 0;
+      padding:22px 18px 28px;
+      box-shadow:0 -5px 25px rgba(0,0,0,0.18);
+    ">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:18px;
+      ">
+        <h2 style="
+          margin:0;
+          font-size:21px;
+          color:#172033;
+        ">
+          Choose Membership Plan
+        </h2>
+
+        <button
+          onclick="this.closest('div[style*=&quot;position:fixed&quot;]').remove()"
+          style="
+            border:none;
+            background:#eef2f7;
+            width:38px;
+            height:38px;
+            border-radius:50%;
+            font-size:22px;
+            cursor:pointer;
+          "
+        >×</button>
+      </div>
+
+      <p style="
+        margin:0 0 18px;
+        color:#64748b;
+        font-size:14px;
+      ">
+        Select the membership duration you want.
+      </p>
+
+      <div id="membershipPlanOptions">
+        ${plans.map((plan, index) => `
+          <label style="
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            border:2px solid #e5e7eb;
+            border-radius:14px;
+            padding:15px;
+            margin-bottom:10px;
+            cursor:pointer;
+          ">
+
+            <div>
+              <strong style="
+                display:block;
+                color:#172033;
+                font-size:16px;
+              ">
+                ${plan.type}
+              </strong>
+
+              <span style="
+                color:#64748b;
+                font-size:13px;
+              ">
+                Membership plan
+              </span>
+            </div>
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:10px;
+            ">
+              <strong style="
+                color:#2563eb;
+                font-size:17px;
+              ">
+                ₹${plan.price ?? "—"}
+              </strong>
+
+              <input
+                type="radio"
+                name="membershipPlan"
+                value="${index}"
+                style="
+                  width:20px;
+                  height:20px;
+                "
+              >
+            </div>
+
+          </label>
+        `).join("")}
+      </div>
+
+      <button
+        onclick="continueMembershipSelection()"
+        style="
+          width:100%;
+          margin-top:8px;
+          padding:14px;
+          border:none;
+          border-radius:14px;
+          background:#2563eb;
+          color:white;
+          font-size:16px;
+          font-weight:700;
+          cursor:pointer;
+        "
+      >
+        Continue
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  window.currentMembershipPlans = plans;
+}
+
+function continueMembershipSelection() {
+  const selected = document.querySelector(
+    'input[name="membershipPlan"]:checked'
+  );
+
+  if (!selected) {
+    alert("Please select a membership plan.");
+    return;
+  }
+
+  const plan =
+    window.currentMembershipPlans[
+      Number(selected.value)
+    ];
+
+  alert(
+    "Selected plan: " +
+    plan.type +
+    " — ₹" +
+    plan.price
+  );
 }
   
   loadLibraryDetails();
