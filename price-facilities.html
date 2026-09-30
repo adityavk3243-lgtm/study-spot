@@ -333,17 +333,236 @@
   </div>
 
   <script>
-    const updateButton = document.getElementById("updateButton");
-    const message = document.getElementById("message");
+    <script>
 
-    updateButton.addEventListener("click", function () {
-      message.style.display = "block";
-      message.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-    });
-  </script>
+  const updateButton =
+    document.getElementById("updateButton");
+
+  const message =
+    document.getElementById("message");
+
+
+  async function getOwnerLibrary() {
+
+    const {
+      data,
+      error
+    } = await window.supabaseClient.auth.getSession();
+
+    if (error || !data.session) {
+
+      window.location.href =
+        "owner-login.html";
+
+      return null;
+    }
+
+    const user =
+      data.session.user;
+
+
+    const {
+      data: library,
+      error: libraryError
+    } = await window.supabaseClient
+      .from("libraries")
+      .select("id")
+      .eq("owner_id", user.id)
+      .maybeSingle();
+
+
+    if (libraryError || !library) {
+
+      message.textContent =
+        "Your library could not be found.";
+
+      message.style.display =
+        "block";
+
+      return null;
+    }
+
+
+    return library;
+  }
+
+
+  async function loadMembershipPlans() {
+
+    const library =
+      await getOwnerLibrary();
+
+    if (!library) {
+      return;
+    }
+
+
+    const {
+      data,
+      error
+    } = await window.supabaseClient
+      .from("libraries")
+      .select(`
+        one_day_enabled,
+        one_day_fee,
+        weekly_enabled,
+        weekly_fee,
+        monthly_enabled,
+        monthly_fee,
+        daily_fee,
+        weekly_fee,
+        monthly_fee
+      `)
+      .eq("id", library.id)
+      .single();
+
+
+    if (error || !data) {
+      return;
+    }
+
+
+    document.getElementById("oneDayEnabled").checked =
+      data.one_day_enabled || false;
+
+    document.getElementById("weeklyEnabled").checked =
+      data.weekly_enabled || false;
+
+    document.getElementById("monthlyEnabled").checked =
+      data.monthly_enabled || false;
+
+
+    document.getElementById("dailyFee").value =
+      data.one_day_fee ?? data.daily_fee ?? "";
+
+    document.getElementById("weeklyFee").value =
+      data.weekly_fee ?? "";
+
+    document.getElementById("monthlyFee").value =
+      data.monthly_fee ?? "";
+  }
+
+
+  updateButton.addEventListener(
+    "click",
+    async function () {
+
+      updateButton.disabled = true;
+
+      updateButton.textContent =
+        "Saving...";
+
+
+      const library =
+        await getOwnerLibrary();
+
+
+      if (!library) {
+
+        updateButton.disabled = false;
+
+        updateButton.textContent =
+          "Update Price & Facilities";
+
+        return;
+      }
+
+
+      const oneDayEnabled =
+        document.getElementById("oneDayEnabled").checked;
+
+      const weeklyEnabled =
+        document.getElementById("weeklyEnabled").checked;
+
+      const monthlyEnabled =
+        document.getElementById("monthlyEnabled").checked;
+
+
+      const oneDayFee =
+        document.getElementById("dailyFee").value;
+
+      const weeklyFee =
+        document.getElementById("weeklyFee").value;
+
+      const monthlyFee =
+        document.getElementById("monthlyFee").value;
+
+
+      const {
+        error
+      } = await window.supabaseClient
+        .from("libraries")
+        .update({
+
+          one_day_enabled:
+            oneDayEnabled,
+
+          one_day_fee:
+            oneDayFee
+              ? Number(oneDayFee)
+              : null,
+
+          weekly_enabled:
+            weeklyEnabled,
+
+          weekly_fee:
+            weeklyFee
+              ? Number(weeklyFee)
+              : null,
+
+          monthly_enabled:
+            monthlyEnabled,
+
+          monthly_fee:
+            monthlyFee
+              ? Number(monthlyFee)
+              : null,
+
+          daily_fee:
+            oneDayFee
+              ? Number(oneDayFee)
+              : null
+
+        })
+        .eq("id", library.id);
+
+
+      if (error) {
+
+        message.textContent =
+          "Update failed: " + error.message;
+
+        message.style.display =
+          "block";
+
+        updateButton.disabled = false;
+
+        updateButton.textContent =
+          "Update Price & Facilities";
+
+        return;
+      }
+
+
+      message.textContent =
+        "Membership plans and pricing updated successfully.";
+
+      message.style.display =
+        "block";
+
+
+      updateButton.disabled = false;
+
+      updateButton.textContent =
+        "Update Price & Facilities";
+
+    }
+  );
+
+
+  loadMembershipPlans();
+
+</script>
 
 </body>
 </html>
