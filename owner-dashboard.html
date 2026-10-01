@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Owner Dashboard - StudySpot</title>
+  <title>StudySpot - Owner Home</title>
 
   <style>
     * {
@@ -14,209 +13,673 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
+      background: #f4f7fb;
+      color: #172033;
+      padding-bottom: 82px;
     }
+
+    /* ================= TOP HEADER ================= */
 
     .header {
-      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      background: linear-gradient(135deg, #1769e0, #315bea);
       color: white;
-      text-align: center;
-      padding: 32px 20px;
+      padding: 15px 16px 26px;
+      border-radius: 0 0 26px 26px;
     }
 
-    .header h1 {
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .menu-button,
+    .notification {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 13px;
+      background: rgba(255,255,255,0.16);
+      color: white;
+      font-size: 21px;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .notification {
+      position: relative;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -4px;
+      right: -3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .greeting {
+      margin-top: 23px;
+    }
+
+    .greeting h1 {
       margin: 0;
-      font-size: 32px;
+      font-size: 25px;
     }
 
-    .header p {
-      margin: 10px 0 0;
-      font-size: 16px;
+    .greeting p {
+      margin: 7px 0 0;
+      font-size: 14px;
+      opacity: 0.9;
     }
+
+    /* ================= MAIN ================= */
 
     .container {
-      max-width: 850px;
-      margin: 30px auto;
-      padding: 0 18px;
+      max-width: 620px;
+      margin: auto;
+      padding: 0 14px 25px;
     }
 
-    .welcome {
+    /* ================= LIBRARY CARD ================= */
+
+    .library-card {
       background: white;
-      padding: 24px;
-      border-radius: 18px;
-      margin-bottom: 22px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+      margin-top: -14px;
+      border-radius: 19px;
+      padding: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      position: relative;
     }
 
-    .welcome h2 {
-      margin-top: 0;
+    .library-photo {
+      width: 82px;
+      height: 82px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #e2e8f0;
+      flex-shrink: 0;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
+    .library-info {
+      min-width: 0;
+      flex: 1;
     }
 
-    .card {
-      background: white;
-      padding: 22px;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    .library-info h2 {
+      margin: 0;
+      font-size: 18px;
     }
 
-    .card h3 {
-      margin-top: 0;
-      color: #2563eb;
-    }
-
-    .card p {
+    .library-location {
+      margin: 6px 0 8px;
       color: #64748b;
-      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .library-arrow {
+      font-size: 22px;
+      color: #94a3b8;
+    }
+
+    /* ================= SECTION ================= */
+
+    .section-title {
+      margin: 23px 2px 11px;
+      font-size: 18px;
+    }
+
+    /* ================= STATS ================= */
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .stat-icon {
+      font-size: 22px;
+    }
+
+    .stat-number {
+      display: block;
+      margin-top: 7px;
+      font-size: 23px;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      display: block;
+      margin-top: 4px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    /* ================= MONTHLY COLLECTION ================= */
+
+    .collection-card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .collection-label {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .collection-amount {
+      margin-top: 7px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .collection-count {
+      margin-top: 6px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    /* ================= QUICK ACTIONS ================= */
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
     }
 
     .action-button {
       display: block;
-      width: 100%;
-      padding: 13px;
-      margin-top: 15px;
-      border: none;
-      border-radius: 10px;
-      background: #2563eb;
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
       text-decoration: none;
+      color: #172033;
+      background: white;
+      border-radius: 16px;
+      padding: 16px 10px;
       text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease;
     }
 
-    .action-button:hover {
-      background: #1d4ed8;
+    .action-button:active {
+      transform: scale(0.97);
     }
 
-    .logout {
-      background: #dc2626;
+    .action-icon {
+      display: block;
+      font-size: 25px;
+      margin-bottom: 7px;
     }
 
-    .logout:hover {
-      background: #b91c1c;
+    .action-title {
+      font-size: 13px;
+      font-weight: 700;
     }
 
-    .back {
-      background: #64748b;
+    .action-description {
+      margin-top: 4px;
+      color: #64748b;
+      font-size: 11px;
     }
 
-    .back:hover {
-      background: #475569;
+    /* ================= TODAY OVERVIEW ================= */
+
+    .today-card {
+      background: white;
+      border-radius: 18px;
+      padding: 17px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
     }
 
-    .notice {
-      margin-top: 22px;
-      padding: 16px;
-      border-radius: 12px;
-      background: #fef3c7;
-      color: #92400e;
+    .today-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 0;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .today-row:last-child {
+      border-bottom: none;
+    }
+
+    .today-label {
+      color: #475569;
+      font-size: 13px;
+    }
+
+    .today-value {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    /* ================= RECENT STUDENTS ================= */
+
+    .empty-card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px 16px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .empty-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .empty-title {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .empty-text {
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 5px;
       line-height: 1.5;
+    }
+
+    /* ================= ACTIVITY ================= */
+
+    .activity-card {
+      background: white;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .activity-row {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .activity-row:last-child {
+      border-bottom: none;
+    }
+
+    .activity-dot {
+      width: 10px;
+      height: 10px;
+      background: #2563eb;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .activity-text {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    /* ================= BOTTOM NAV ================= */
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 70px;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 100;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: #64748b;
+      text-align: center;
+      padding-top: 9px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .bottom-nav span {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 3px;
+    }
+
+    .bottom-nav .active {
+      color: #2563eb;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (min-width: 700px) {
+
+      .container {
+        max-width: 850px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .actions {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
     }
   </style>
 </head>
 
 <body>
 
-  <div class="header">
-    <h1>📚 StudySpot</h1>
-    <p>Library Owner Dashboard</p>
-  </div>
+  <!-- ================= HEADER ================= -->
 
-  <div class="container">
+  <header class="header">
 
-   
-<div class="welcome">
-    <h2>🏠 Home</h2>
-    <p>Welcome to your StudySpot Owner Dashboard. Manage your library and keep your information up to date.</p>
-</div>
- 
+    <div class="top-row">
 
-    <div class="grid">
+      <button class="menu-button" type="button">
+        ☰
+      </button>
 
-      <div class="card">
-        <h3>🏫 My Library</h3>
-        <p>View your registered library information.</p>
-        <a class="action-button" href="edit-library.html">
-          View Library
-        </a>
+      <div class="brand">
+        📚 StudySpot
       </div>
 
-      <div class="card">
-        <h3>✏️ Edit Library Details</h3>
-        <p>Update your library name, address, facilities and other details.</p>
-        <a class="action-button" href="edit-library.html">
-          Edit Details
-        </a>
-      </div>
-
-      <div class="card">
-        <h3>📷 Manage Photos</h3>
-        <p>Add or update photos of your library.</p>
-        <a class="action-button" href="manage-photos.html">
-          Manage Photos
-        </a>
-      </div>
-
-      <div class="card">
-        <h3>💰 Price & Facilities</h3>
-        <p>Update library fees and available facilities.</p>
-        <a class="action-button" href="price-facilities.html">
-          Update Information
-        </a>
-      </div>
-
-      <div class="card">
-        <h3>👤 Account Settings</h3>
-        <p>Manage your account information and password settings.</p>
-        <a class="action-button" href="owner-login.html">
-          Account Settings
-        </a>
-      </div>
-
-<div class="card">
-  <h3>🕒 Opening Hours</h3>
-  <p>Update your library opening and closing time.</p>
-  <a class="action-button" href="opening-hours.html">
-    Update Opening Hours
-  </a>
-</div>
-
-      <div class="card">
-  <h3>📋 Library Rules</h3>
-  <p>Add or update your library rules and guidelines.</p>
-  <a class="action-button" href="library-rules.html">
-    Update Library Rules
-  </a>
-</div>
-      
-      <div class="card">
-        <h3>🚪 Logout</h3>
-        <p>Return to the owner login page.</p>
-        <a class="action-button logout" href="owner-login.html">
-          Logout
-        </a>
-      </div>
+      <button class="notification" type="button">
+        🔔
+        <span class="notification-badge">!</span>
+      </button>
 
     </div>
 
-    <div class="notice">
-      <strong>Important:</strong> This is currently a dashboard design.
-      Real account data, secure login and permanent library updates will be
-      connected after the database is added.
+    <div class="greeting">
+      <h1>Hello, Library Owner 👋</h1>
+      <p>Manage your library from one place.</p>
     </div>
 
-    <a class="action-button back" href="index.html">
-      ⬅️ Back to StudySpot
+  </header>
+
+
+  <main class="container">
+
+    <!-- ================= LIBRARY ================= -->
+
+    <section class="library-card">
+
+      <div class="library-photo">
+        📚
+      </div>
+
+      <div class="library-info">
+
+        <h2>Your Library</h2>
+
+        <p class="library-location">
+          📍 Library location will appear here
+        </p>
+
+        <span class="status">
+          🟢 Active
+        </span>
+
+      </div>
+
+      <div class="library-arrow">
+        ›
+      </div>
+
+    </section>
+
+
+    <!-- ================= LIBRARY OVERVIEW ================= -->
+
+    <h2 class="section-title">
+      📊 Library Overview
+    </h2>
+
+    <section class="stats-grid">
+
+      <div class="stat-card">
+        <span class="stat-icon">👥</span>
+        <span class="stat-number">—</span>
+        <span class="stat-label">Total Students</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">🟢</span>
+        <span class="stat-number">—</span>
+        <span class="stat-label">Active Students</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">💺</span>
+        <span class="stat-number">—</span>
+        <span class="stat-label">Occupied Seats</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">🪑</span>
+        <span class="stat-number">—</span>
+        <span class="stat-label">Available Seats</span>
+      </div>
+
+    </section>
+
+
+    <!-- ================= MONTHLY COLLECTION ================= -->
+
+    <h2 class="section-title">
+      💰 This Month
+    </h2>
+
+    <section class="collection-card">
+
+      <div class="collection-label">
+        Total Collection
+      </div>
+
+      <div class="collection-amount">
+        ₹—
+      </div>
+
+      <div class="collection-count">
+        — successful payments this month
+      </div>
+
+    </section>
+
+
+    <!-- ================= QUICK ACTIONS ================= -->
+
+    <h2 class="section-title">
+      ⚡ Quick Actions
+    </h2>
+
+    <section class="actions">
+
+      <a class="action-button" href="edit-library.html">
+        <span class="action-icon">🏫</span>
+        <div class="action-title">My Library</div>
+        <div class="action-description">View & edit details</div>
+      </a>
+
+      <a class="action-button" href="manage-photos.html">
+        <span class="action-icon">📸</span>
+        <div class="action-title">Manage Photos</div>
+        <div class="action-description">Library photos</div>
+      </a>
+
+      <a class="action-button" href="price-facilities.html">
+        <span class="action-icon">💰</span>
+        <div class="action-title">Price & Facilities</div>
+        <div class="action-description">Plans & facilities</div>
+      </a>
+
+      <a class="action-button" href="opening-hours.html">
+        <span class="action-icon">🕐</span>
+        <div class="action-title">Opening Hours</div>
+        <div class="action-description">Update timings</div>
+      </a>
+
+      <a class="action-button" href="library-rules.html">
+        <span class="action-icon">📋</span>
+        <div class="action-title">Library Rules</div>
+        <div class="action-description">Manage rules</div>
+      </a>
+
+      <a class="action-button" href="owner-login.html">
+        <span class="action-icon">⚙️</span>
+        <div class="action-title">Account</div>
+        <div class="action-description">Account settings</div>
+      </a>
+
+    </section>
+
+
+    <!-- ================= TODAY'S OVERVIEW ================= -->
+
+    <h2 class="section-title">
+      📅 Today's Overview
+    </h2>
+
+    <section class="today-card">
+
+      <div class="today-row">
+        <span class="today-label">Total Students</span>
+        <span class="today-value">—</span>
+      </div>
+
+      <div class="today-row">
+        <span class="today-label">Active Students</span>
+        <span class="today-value">—</span>
+      </div>
+
+      <div class="today-row">
+        <span class="today-label">Available Seats</span>
+        <span class="today-value">—</span>
+      </div>
+
+      <div class="today-row">
+        <span class="today-label">Expiring Soon</span>
+        <span class="today-value">—</span>
+      </div>
+
+    </section>
+
+
+    <!-- ================= RECENT STUDENTS ================= -->
+
+    <h2 class="section-title">
+      👥 Recent Students
+    </h2>
+
+    <section class="empty-card">
+
+      <div class="empty-icon">
+        👥
+      </div>
+
+      <div class="empty-title">
+        No student data yet
+      </div>
+
+      <div class="empty-text">
+        Recent student information will appear here after the student system is connected.
+      </div>
+
+    </section>
+
+
+    <!-- ================= TODAY'S ACTIVITY ================= -->
+
+    <h2 class="section-title">
+      📈 Today's Activity
+    </h2>
+
+    <section class="activity-card">
+
+      <div class="activity-row">
+        <span class="activity-dot"></span>
+        <span class="activity-text">
+          Activity data will appear here.
+        </span>
+      </div>
+
+      <div class="activity-row">
+        <span class="activity-dot"></span>
+        <span class="activity-text">
+          New registrations will appear here.
+        </span>
+      </div>
+
+      <div class="activity-row">
+        <span class="activity-dot"></span>
+        <span class="activity-text">
+          Membership updates will appear here.
+        </span>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= BOTTOM NAVIGATION ================= -->
+
+  <nav class="bottom-nav">
+
+    <a href="owner-dashboard.html" class="active">
+      <span>🏠</span>
+      Home
     </a>
 
-  </div>
+    <a href="#">
+      <span>👥</span>
+      Students
+    </a>
+
+    <a href="edit-library.html">
+      <span>🏫</span>
+      Library
+    </a>
+
+    <a href="owner-login.html">
+      <span>👤</span>
+      Profile
+    </a>
+
+  </nav>
 
 </body>
 </html>
