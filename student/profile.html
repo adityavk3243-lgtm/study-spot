@@ -427,7 +427,7 @@
         }
 
         window.location.href =
-          "../student-login.html";
+  "student-login.html";
       });
 
 
@@ -440,7 +440,7 @@
 
   if (error || !data.session) {
 
-    window.location.replace("../student-login.html");
+    window.location.replace("student-login.html");
 
     return false;
   }
@@ -467,7 +467,7 @@ window.addEventListener("popstate", async function () {
     await protectProfilePage();
 
   if (!allowed) {
-    window.location.replace("../student-login.html");
+    window.location.replace("student-login.html");
   }
 
 });
