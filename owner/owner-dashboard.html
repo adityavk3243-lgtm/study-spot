@@ -776,6 +776,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 </script>
 
+  
 <script>
 document.addEventListener("DOMContentLoaded", async function () {
 
@@ -788,19 +789,24 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   try {
 
-    /* Get logged-in owner */
+    /* ================= LOGIN ================= */
+
     const {
       data: { user },
       error: userError
     } = await client.auth.getUser();
 
     if (userError || !user) {
-      console.error("Owner login not found.");
+      window.location.href = "owner-login.html";
       return;
     }
 
-    /* Get owner's library */
-    const { data: library, error: libraryError } = await client
+    /* ================= OWNER LIBRARY ================= */
+
+    const {
+      data: library,
+      error: libraryError
+    } = await client
       .from("libraries")
       .select("*")
       .eq("owner_id", user.id)
@@ -808,7 +814,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       .maybeSingle();
 
     if (libraryError) {
-      console.error("Library error:", libraryError);
+      console.error("Library loading error:", libraryError);
       return;
     }
 
@@ -822,22 +828,27 @@ document.addEventListener("DOMContentLoaded", async function () {
     const libraryName =
       document.querySelector(".library-info h2");
 
-    const libraryLocation =
-      document.querySelector(".library-location");
-
     if (libraryName) {
       libraryName.textContent =
         library.library_name || "Your Library";
     }
 
+    const libraryLocation =
+      document.querySelector(".library-location");
+
     if (libraryLocation) {
+
+      const locationParts = [
+        library.city,
+        library.district,
+        library.state
+      ].filter(Boolean);
+
       libraryLocation.textContent =
         "📍 " +
-        (library.city || "") +
-        ", " +
-        (library.district || "") +
-        ", " +
-        (library.state || "");
+        (locationParts.length
+          ? locationParts.join(", ")
+          : "Location not available");
     }
 
     /* ================= MEMBERSHIPS ================= */
@@ -851,38 +862,52 @@ document.addEventListener("DOMContentLoaded", async function () {
       .eq("library_id", library.id);
 
     if (membershipError) {
-      console.error("Membership error:", membershipError);
+      console.error(
+        "Membership loading error:",
+        membershipError
+      );
       return;
     }
 
     const allMemberships = memberships || [];
 
-    /* Unique students */
+    /* ================= STUDENTS ================= */
+
     const totalStudentIds = new Set(
       allMemberships
         .map(row => row.student_id)
         .filter(Boolean)
     );
 
-    /* Active students */
     const activeStudentIds = new Set(
       allMemberships
-        .filter(row => String(row.status).toLowerCase() === "active")
+        .filter(
+          row =>
+            String(row.status).toLowerCase() === "active"
+        )
         .map(row => row.student_id)
         .filter(Boolean)
     );
 
-    const totalStudents = totalStudentIds.size;
-    const activeStudents = activeStudentIds.size;
+    const totalStudents =
+      totalStudentIds.size;
 
-    /* Occupied seats = active students */
-    const occupiedSeats = activeStudents;
+    const activeStudents =
+      activeStudentIds.size;
 
-    /* Available seats */
-    const totalSeats = Number(library.seat_availability || 0);
+    /* ================= SEATS ================= */
+
+    const totalSeats =
+      Number(library.seat_availability || 0);
+
+    const occupiedSeats =
+      activeStudents;
 
     const availableSeats =
-      Math.max(totalSeats - occupiedSeats, 0);
+      Math.max(
+        totalSeats - occupiedSeats,
+        0
+      );
 
     /* ================= DASHBOARD CARDS ================= */
 
@@ -920,6 +945,17 @@ document.addEventListener("DOMContentLoaded", async function () {
       todayValues[2].textContent =
         availableSeats;
     }
+
+    console.log(
+      "Dashboard loaded successfully:",
+      {
+        library: library.library_name,
+        totalStudents,
+        activeStudents,
+        occupiedSeats,
+        availableSeats
+      }
+    );
 
   } catch (error) {
 
