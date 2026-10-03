@@ -775,6 +775,163 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+
+  const client = window.supabaseClient;
+
+  if (!client) {
+    console.error("Supabase client not found.");
+    return;
+  }
+
+  try {
+
+    /* Get logged-in owner */
+    const {
+      data: { user },
+      error: userError
+    } = await client.auth.getUser();
+
+    if (userError || !user) {
+      console.error("Owner login not found.");
+      return;
+    }
+
+    /* Get owner's library */
+    const { data: library, error: libraryError } = await client
+      .from("libraries")
+      .select("*")
+      .eq("owner_id", user.id)
+      .limit(1)
+      .maybeSingle();
+
+    if (libraryError) {
+      console.error("Library error:", libraryError);
+      return;
+    }
+
+    if (!library) {
+      console.log("No library found for this owner.");
+      return;
+    }
+
+    /* ================= LIBRARY DETAILS ================= */
+
+    const libraryName =
+      document.querySelector(".library-info h2");
+
+    const libraryLocation =
+      document.querySelector(".library-location");
+
+    if (libraryName) {
+      libraryName.textContent =
+        library.library_name || "Your Library";
+    }
+
+    if (libraryLocation) {
+      libraryLocation.textContent =
+        "📍 " +
+        (library.city || "") +
+        ", " +
+        (library.district || "") +
+        ", " +
+        (library.state || "");
+    }
+
+    /* ================= MEMBERSHIPS ================= */
+
+    const {
+      data: memberships,
+      error: membershipError
+    } = await client
+      .from("student_memberships")
+      .select("student_id,status")
+      .eq("library_id", library.id);
+
+    if (membershipError) {
+      console.error("Membership error:", membershipError);
+      return;
+    }
+
+    const allMemberships = memberships || [];
+
+    /* Unique students */
+    const totalStudentIds = new Set(
+      allMemberships
+        .map(row => row.student_id)
+        .filter(Boolean)
+    );
+
+    /* Active students */
+    const activeStudentIds = new Set(
+      allMemberships
+        .filter(row => String(row.status).toLowerCase() === "active")
+        .map(row => row.student_id)
+        .filter(Boolean)
+    );
+
+    const totalStudents = totalStudentIds.size;
+    const activeStudents = activeStudentIds.size;
+
+    /* Occupied seats = active students */
+    const occupiedSeats = activeStudents;
+
+    /* Available seats */
+    const totalSeats = Number(library.seat_availability || 0);
+
+    const availableSeats =
+      Math.max(totalSeats - occupiedSeats, 0);
+
+    /* ================= DASHBOARD CARDS ================= */
+
+    const statNumbers =
+      document.querySelectorAll(".stat-number");
+
+    if (statNumbers.length >= 4) {
+
+      statNumbers[0].textContent =
+        totalStudents;
+
+      statNumbers[1].textContent =
+        activeStudents;
+
+      statNumbers[2].textContent =
+        occupiedSeats;
+
+      statNumbers[3].textContent =
+        availableSeats;
+    }
+
+    /* ================= TODAY'S OVERVIEW ================= */
+
+    const todayValues =
+      document.querySelectorAll(".today-value");
+
+    if (todayValues.length >= 3) {
+
+      todayValues[0].textContent =
+        totalStudents;
+
+      todayValues[1].textContent =
+        activeStudents;
+
+      todayValues[2].textContent =
+        availableSeats;
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Dashboard data error:",
+      error
+    );
+
+  }
+
+});
+</script>
   
 </body>
 </html>
