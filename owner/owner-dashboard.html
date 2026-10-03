@@ -948,6 +948,64 @@ document.addEventListener("DOMContentLoaded", async function () {
         availableSeats;
     }
 
+/* ================= THIS MONTH COLLECTION ================= */
+
+const startOfMonth = new Date();
+
+startOfMonth.setDate(1);
+startOfMonth.setHours(0, 0, 0, 0);
+
+const {
+  data: payments,
+  error: paymentError
+} = await client
+  .from("payments")
+  .select("amount,payment_status,payment_date")
+  .eq("library_id", library.id)
+  .eq("payment_status", "successful")
+  .gte("payment_date", startOfMonth.toISOString());
+
+if (paymentError) {
+
+  console.error(
+    "Payment loading error:",
+    paymentError
+  );
+
+} else {
+
+  const successfulPayments =
+    payments || [];
+
+  const totalCollection =
+    successfulPayments.reduce(
+      (sum, payment) =>
+        sum + Number(payment.amount || 0),
+      0
+    );
+
+  const collectionAmount =
+    document.querySelector(".collection-amount");
+
+  const collectionCount =
+    document.querySelector(".collection-count");
+
+  if (collectionAmount) {
+    collectionAmount.textContent =
+      "₹" +
+      totalCollection.toLocaleString("en-IN");
+  }
+
+  if (collectionCount) {
+    collectionCount.textContent =
+      successfulPayments.length +
+      " successful payment" +
+      (successfulPayments.length === 1 ? "" : "s") +
+      " this month";
+  }
+
+}
+    
     console.log(
       "Dashboard loaded successfully:",
       {
