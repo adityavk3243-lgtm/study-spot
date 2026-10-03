@@ -881,10 +881,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const activeStudentIds = new Set(
       allMemberships
-        .filter(
-          row =>
-            String(row.status).toLowerCase() === "active"
-        )
+
+     .filter(
+  row =>
+    String(row.status).trim().toLowerCase() === "active"
+) 
+        
         .map(row => row.student_id)
         .filter(Boolean)
     );
