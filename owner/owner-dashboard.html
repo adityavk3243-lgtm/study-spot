@@ -398,6 +398,10 @@
 
     }
   </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../supabase-config.js"></script>
+  
 </head>
 
 <body>
@@ -681,5 +685,96 @@
 
   </nav>
 
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+
+  const client = window.supabaseClient;
+
+  if (!client) {
+    console.error("Supabase client not found.");
+    return;
+  }
+
+  const {
+    data: { user },
+    error: userError
+  } = await client.auth.getUser();
+
+  if (userError || !user) {
+    window.location.href = "owner-login.html";
+    return;
+  }
+
+  const { data: library, error: libraryError } = await client
+    .from("libraries")
+    .select("*")
+    .eq("owner_id", user.id)
+    .maybeSingle();
+
+  if (libraryError) {
+    console.error("Library loading error:", libraryError);
+    return;
+  }
+
+  if (!library) {
+    console.log("No library found for this owner.");
+    return;
+  }
+
+  /* Library name */
+  const libraryName = document.querySelector(".library-info h2");
+
+  if (libraryName) {
+    libraryName.textContent =
+      library.library_name || "Your Library";
+  }
+
+  /* Library location */
+  const libraryLocation =
+    document.querySelector(".library-location");
+
+  if (libraryLocation) {
+
+    const locationParts = [
+      library.city,
+      library.district,
+      library.state
+    ].filter(Boolean);
+
+    libraryLocation.textContent =
+      "📍 " +
+      (locationParts.length
+        ? locationParts.join(", ")
+        : "Location not available");
+  }
+
+  /* Available seats */
+  const statNumbers =
+    document.querySelectorAll(".stat-number");
+
+  if (statNumbers.length >= 4) {
+
+    const totalSeats =
+      Number(library.total_seats || library.seat_capacity || 0);
+
+    const availableSeats =
+      Number(library.seat_availability || 0);
+
+    const occupiedSeats =
+      totalSeats > 0
+        ? Math.max(totalSeats - availableSeats, 0)
+        : 0;
+
+    statNumbers[2].textContent =
+      totalSeats > 0 ? occupiedSeats : "—";
+
+    statNumbers[3].textContent =
+      availableSeats;
+
+  }
+
+});
+</script>
+  
 </body>
 </html>
