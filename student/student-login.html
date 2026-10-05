@@ -695,12 +695,37 @@ async function createStudentAccount() {
   }
 
   if (data && data.user) {
-    alert(
-      "Account created successfully. Please verify your account before logging in."
+
+  const { error: studentProfileError } =
+    await window.supabaseClient
+      .from("students")
+      .upsert({
+        id: data.user.id,
+        full_name: name,
+        email: email,
+        phone: formattedMobile
+      });
+
+  if (studentProfileError) {
+
+    console.error(
+      "Student profile save error:",
+      studentProfileError
     );
 
-    showLogin();
+    alert(
+      "Account was created, but student profile could not be saved. Please try again."
+    );
+
+    return;
   }
+
+  alert(
+    "Account created successfully."
+  );
+
+  showLogin();
+}
 }
 
 document.addEventListener(
