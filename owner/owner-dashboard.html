@@ -897,6 +897,84 @@ document.addEventListener("DOMContentLoaded", async function () {
     const activeStudents =
       activeStudentIds.size;
 
+/* ================= RECENT STUDENTS ================= */
+
+const recentStudentsBox =
+  document.getElementById("recentStudents");
+
+if (recentStudentsBox) {
+
+  const {
+    data: recentStudents,
+    error: recentStudentsError
+  } = await client.rpc(
+    "get_library_students",
+    {
+      p_library_id: library.id
+    }
+  );
+
+  if (recentStudentsError) {
+
+    console.error(
+      "Recent students loading error:",
+      recentStudentsError
+    );
+
+    recentStudentsBox.innerHTML = `
+      <div class="empty-icon">⚠️</div>
+      <div class="empty-title">
+        Unable to load students
+      </div>
+      <div class="empty-text">
+        Please try again later.
+      </div>
+    `;
+
+  } else if (!recentStudents || recentStudents.length === 0) {
+
+    recentStudentsBox.innerHTML = `
+      <div class="empty-icon">👥</div>
+      <div class="empty-title">
+        No students yet
+      </div>
+      <div class="empty-text">
+        Students who join your library will appear here.
+      </div>
+    `;
+
+  } else {
+
+    recentStudentsBox.innerHTML = `
+      <div style="text-align:left;">
+        ${recentStudents.map(student => `
+          <div style="
+            padding:12px 0;
+            border-bottom:1px solid #eef2f7;
+          ">
+            <div style="
+              font-weight:700;
+              font-size:14px;
+              color:#172033;
+            ">
+              👤 ${student.email || "Student"}
+            </div>
+
+            <div style="
+              margin-top:5px;
+              color:#64748b;
+              font-size:12px;
+            ">
+              Status:
+              ${student.status || "Unknown"}
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+}
+    
     /* ================= SEATS ================= */
 
     const totalSeats =
