@@ -853,19 +853,19 @@
 
         if (libraryError) {
 
-          console.error(
-            "Library loading error:",
-            libraryError
-          );
+  console.error(
+    "Library loading error:",
+    libraryError
+  );
 
-          showMessage(
-            "Unable to load your library.",
-            false
-          );
+  showMessage(
+    "Library loading error: " +
+    (libraryError.message || "Unknown error"),
+    false
+  );
 
-          return;
-        }
-
+  return;
+}
 
         if (!library) {
 
