@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Library - StudySpot</title>
+
+  <title>My Library - StudySpot</title>
 
   <style>
     * {
@@ -15,1088 +15,827 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f7fb;
-      color: #222;
+      color: #172033;
+      padding-bottom: 82px;
     }
 
-    header {
-      background: linear-gradient(135deg, #4f46e5, #2563eb);
+    /* ================= HEADER ================= */
+
+    .header {
+      background: linear-gradient(135deg, #1769e0, #315bea);
       color: white;
-      text-align: center;
-      padding: 25px 15px;
+      padding: 15px 16px 25px;
+      border-radius: 0 0 26px 26px;
     }
 
-    header h1 {
-      margin: 0 0 8px;
+    .top-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
+
+    .back-button {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 13px;
+      background: rgba(255,255,255,0.16);
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .header-title {
+      flex: 1;
+    }
+
+    .header-title h1 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .header-title p {
+      margin: 5px 0 0;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    /* ================= MAIN ================= */
 
     .container {
-      max-width: 700px;
-      margin: 25px auto;
-      padding: 15px;
+      max-width: 650px;
+      margin: auto;
+      padding: 18px 14px 25px;
     }
 
     .section {
       background: white;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
     }
 
-    h2 {
-      color: #2563eb;
-      margin-top: 0;
-      font-size: 22px;
+    .section-title {
+      margin: 0 0 16px;
+      font-size: 18px;
     }
+
+    .section-description {
+      margin: -8px 0 16px;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* ================= FORM ================= */
 
     label {
       display: block;
-      margin-top: 14px;
-      margin-bottom: 6px;
-      font-weight: bold;
+      margin: 15px 0 7px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
     }
 
     input,
     textarea,
     select {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 15px;
+      padding: 13px;
+      border: 1px solid #d7dee8;
+      border-radius: 11px;
+      background: #fff;
+      color: #172033;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
     }
 
     textarea {
-      min-height: 90px;
+      min-height: 95px;
       resize: vertical;
     }
 
-    input[type="checkbox"] {
-      width: auto;
-      margin-right: 8px;
+    /* ================= LOCATION ================= */
+
+    .location-card {
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 14px;
     }
 
-    .facility {
-      margin-top: 12px;
-      font-weight: normal;
+    .location-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e40af;
     }
 
-    .update-button {
+    .location-result {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .location-button {
       width: 100%;
-      margin-top: 20px;
-      padding: 13px;
+      margin-top: 12px;
+      padding: 12px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       background: #2563eb;
       color: white;
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
     }
 
-    .update-button:hover {
-      background: #1d4ed8;
+    .location-button:active {
+      transform: scale(0.98);
+    }
+
+    /* ================= SAVE ================= */
+
+    .save-button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 5px 14px rgba(37,99,235,0.20);
+    }
+
+    .save-button:active {
+      transform: scale(0.98);
     }
 
     .message {
       display: none;
       margin-top: 12px;
       padding: 12px;
-      border-radius: 8px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .message.success {
+      display: block;
       background: #dcfce7;
       color: #166534;
-      text-align: center;
     }
 
-    .photo-preview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .photo-preview img {
-      width: 95px;
-      height: 95px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-    }
-
-    .location-box {
-      padding: 12px;
-      background: #eff6ff;
-      border-radius: 8px;
-      margin-top: 12px;
-      color: #1e40af;
-      word-break: break-word;
-    }
-
-    .back-button {
+    .message.error {
       display: block;
-      text-align: center;
-      margin: 20px 0;
-      color: #2563eb;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* ================= BOTTOM NAV ================= */
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 70px;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 100;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+    }
+
+    .bottom-nav a {
       text-decoration: none;
-      font-weight: bold;
+      color: #64748b;
+      text-align: center;
+      padding-top: 8px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .bottom-nav span {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 3px;
+    }
+
+    .bottom-nav .active {
+      color: #2563eb;
+    }
+
+    @media (min-width: 700px) {
+      .container {
+        max-width: 700px;
+      }
     }
   </style>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../supabase-config.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
 </head>
 
 <body>
-  <header>
-    <h1>📚 StudySpot</h1>
-    <p>Edit Library Information</p>
-  </header>
 
-  <div class="container">
+  <!-- ================= HEADER ================= -->
 
-    <!-- Library Details -->
-    <div class="section">
-      <h2>1. Library Details</h2>
+  <header class="header">
 
-      <label for="libraryName">Library Name</label>
-      <input type="text" id="libraryName" placeholder="Enter library name">
+    <div class="top-row">
 
-      <label for="address">Complete Address</label>
-      <textarea id="address" placeholder="Enter complete library address"></textarea>
-
-      <label for="city">City</label>
-      <input type="text" id="city" placeholder="Enter city">
-
-      <button class="update-button" type="button" onclick="updateDetails()">
-        Update Library Details
+      <button
+        class="back-button"
+        type="button"
+        onclick="history.back()"
+      >
+        ←
       </button>
 
-      <div class="message" id="detailsMessage"></div>
-    </div>
-
-<!-- Additional Library Details -->
-<div class="section">
-  <h2>1A. Owner and Library Information</h2>
-
-  <label for="ownerName">Owner Name</label>
-  <input type="text" id="ownerName" placeholder="Owner Name">
-
-  <label for="mobileNumber">Mobile Number</label>
-  <input type="tel" id="mobileNumber" placeholder="Mobile Number">
-
-  <label for="state">State</label>
-  <input type="text" id="state" placeholder="State">
-
-  <label for="district">District</label>
-  <input type="text" id="district" placeholder="District">
-
-  <label for="availableSeats">Available Seats</label>
-  <input type="number" id="availableSeats" placeholder="Available Seats" min="0">
-
-  <label for="dailyFee">Daily Fee</label>
-  <input type="number" id="dailyFee" placeholder="Daily Fee" min="0">
-
-  <label for="weeklyFee">Weekly Fee</label>
-  <input type="number" id="weeklyFee" placeholder="Weekly Fee" min="0">
-
-  <label for="maleSeats">Male Seats</label>
-<input
-  type="number"
-  id="maleSeats"
-  min="0"
-  placeholder="Example: 50"
->
-
-<label for="femaleSeats">Female Seats</label>
-<input
-  type="number"
-  id="femaleSeats"
-  min="0"
-  placeholder="Example: 50"
->
-
-<label for="deposit">Security Deposit (₹)</label>
-<input
-  type="number"
-  id="deposit"
-  min="0"
-  placeholder="Example: 500"
->
-
-<label for="registrationFee">Admission / Registration Fee (₹)</label>
-<input
-  type="number"
-  id="registrationFee"
-  min="0"
-  placeholder="Example: 100"
->
-
-<button
-    id="updateOwnerInfoButton"
-    class="update-button"
-    type="button"
->
-    Update Owner and Library Information
-</button>
-
-  <div class="message" id="additionalDetailsMessage"></div>
-</div>
-    
-    <!-- Price and Facilities -->
-    <div class="section">
-      <h2>2. Price and Facilities</h2>
-
-      <label for="monthlyFee">Monthly Fee</label>
-      <input type="number" id="monthlyFee" placeholder="Enter monthly fee in rupees">
-
-      <label class="facility">
-        <input type="checkbox" id="wifi"> Wi-Fi
-      </label>
-
-      <label class="facility">
-        <input type="checkbox" id="ac"> Air Conditioning
-      </label>
-
-      <label class="facility">
-        <input type="checkbox" id="cctv"> CCTV
-      </label>
-
-      <label class="facility">
-        <input type="checkbox" id="powerBackup"> Power Backup
-      </label>
-
-      <label class="facility">
-        <input type="checkbox" id="silentZone"> Silent Zone
-      </label>
-
-      <label for="otherFacilities">Other Facilities</label>
-      <textarea id="otherFacilities" placeholder="Enter other facilities"></textarea>
-
-      <button class="update-button" type="button" onclick="updateFacilities()">
-        Update Price and Facilities
-      </button>
-
-      <div class="message" id="facilitiesMessage"></div>
-    </div>
-
-    <!-- Library Photos -->
-    <div class="section">
-      <h2>3. Library Photos</h2>
-
-      <label for="libraryPhotos">Select Library Photos</label>
-      <input type="file" id="libraryPhotos" accept="image/*" multiple>
-
-      <div class="photo-preview" id="photoPreview"></div>
-
-      <button class="update-button" type="button" onclick="updatePhotos()">
-        Update Library Photos
-      </button>
-
-      <div class="message" id="photosMessage"></div>
-    </div>
-
-    <!-- Opening Hours -->
-    <div class="section">
-      <h2>4. Opening Hours</h2>
-
-      <label for="openingTime">Opening Time</label>
-      <input type="time" id="openingTime">
-
-      <label for="closingTime">Closing Time</label>
-      <input type="time" id="closingTime">
-
-      <button class="update-button" type="button" onclick="updateHours()">
-        Update Opening Hours
-      </button>
-
-      <div class="message" id="hoursMessage"></div>
-    </div>
-
-    <!-- Library Rules -->
-<div class="section">
-  <h2>6. Library Rules</h2>
-
-  <div
-    id="libraryRulesDisplay"
-    style="white-space: pre-wrap; background:#f1f5f9; padding:15px; border-radius:10px;"
-  >
-    Loading library rules...
-  </div>
-</div>
-    
-    <!-- Library Location -->
-    <div class="section">
-      <h2>5. Library Location</h2>
-
-      <p>Use this button to update the exact location of your library.</p>
-
-      <button class="update-button" type="button" onclick="updateLocation()">
-        📍 Update Library Location
-      </button>
-
-      <div class="location-box" id="locationResult">
-        Location has not been updated yet.
+      <div class="header-title">
+        <h1>My Library</h1>
+        <p>View and update your library details</p>
       </div>
 
-      <div class="message" id="locationMessage"></div>
     </div>
 
-    <a class="back-button" href="owner-dashboard.html">
-      ← Back to Owner Dashboard
+  </header>
+
+
+  <main class="container">
+
+    <!-- ================= BASIC INFORMATION ================= -->
+
+    <section class="section">
+
+      <h2 class="section-title">
+        🏫 Basic Information
+      </h2>
+
+      <p class="section-description">
+        Keep your library information accurate so students can find the correct details.
+      </p>
+
+      <label for="libraryName">
+        Library Name
+      </label>
+
+      <input
+        type="text"
+        id="libraryName"
+        placeholder="Enter library name"
+      >
+
+
+      <label for="address">
+        Full Address
+      </label>
+
+      <textarea
+        id="address"
+        placeholder="Enter complete library address"
+      ></textarea>
+
+
+      <label for="state">
+        State
+      </label>
+
+      <input
+        type="text"
+        id="state"
+        placeholder="State"
+      >
+
+
+      <label for="district">
+        District
+      </label>
+
+      <input
+        type="text"
+        id="district"
+        placeholder="District"
+      >
+
+
+      <label for="city">
+        City / Town
+      </label>
+
+      <input
+        type="text"
+        id="city"
+        placeholder="City or town"
+      >
+
+    </section>
+
+
+    <!-- ================= LOCATION ================= -->
+
+    <section class="section">
+
+      <h2 class="section-title">
+        📍 Library Location
+      </h2>
+
+      <p class="section-description">
+        Save the exact location of your library so students can find it more easily.
+      </p>
+
+      <div class="location-card">
+
+        <div class="location-title">
+          Saved Location
+        </div>
+
+        <div
+          class="location-result"
+          id="locationResult"
+        >
+          Loading location...
+        </div>
+
+        <button
+          class="location-button"
+          id="locationButton"
+          type="button"
+        >
+          📍 Get Current Location
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= SAVE ================= -->
+
+    <section class="section">
+
+      <button
+        class="save-button"
+        id="saveButton"
+        type="button"
+      >
+        Save Changes
+      </button>
+
+      <div
+        class="message"
+        id="message"
+      ></div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= BOTTOM NAV ================= -->
+
+  <nav class="bottom-nav">
+
+    <a href="owner-dashboard.html">
+      <span>🏠</span>
+      Home
     </a>
-  </div>
+
+    <a href="#">
+      <span>👥</span>
+      Students
+    </a>
+
+    <a href="edit-library.html" class="active">
+      <span>🏫</span>
+      Library
+    </a>
+
+    <a href="owner-login.html">
+      <span>👤</span>
+      Profile
+    </a>
+
+  </nav>
+
 
   <script>
-document.addEventListener("DOMContentLoaded", async function () {
-  const client = window.supabaseClient;
 
-  if (!client) {
-    alert("Supabase connection not found.");
-    return;
-  }
+    document.addEventListener(
+      "DOMContentLoaded",
+      async function () {
 
-  function showMessage(elementId, message) {
-    const element = document.getElementById(elementId);
+        const client =
+          window.supabaseClient;
 
-    if (element) {
-      element.textContent = message;
-      element.style.display = "block";
-    }
-  }
+        if (!client) {
 
-  const { data: userData, error: userError } =
-    await client.auth.getUser();
+          showMessage(
+            "Supabase connection not found.",
+            "error"
+          );
 
-  if (userError || !userData.user) {
-    alert("Please log in first to edit your library.");
-    return;
-  }
-
-  const user = userData.user;
-
-  const { data: library, error: libraryError } = await client
-    .from("libraries")
-    .select("*")
-    .eq("owner_id", user.id)
-    .maybeSingle();
-
-  if (libraryError) {
-    alert("Unable to load library details: " + libraryError.message);
-    return;
-  }
-
-  if (!library) {
-    alert("No registered library found for this account.");
-    return;
-  }
-
-const locationResult = document.getElementById("locationResult");
-
-if (locationResult) {
-  if (library.latitude != null && library.longitude != null) {
-    locationResult.innerHTML =
-      "Location saved successfully.<br>" +
-      "Latitude: " + library.latitude + "<br>" +
-      "Longitude: " + library.longitude;
-  } else {
-    locationResult.textContent =
-      "Location has not been updated yet.";
-  }
-}
-  
-const rulesDisplay = document.getElementById("libraryRulesDisplay");
-
-if (rulesDisplay) {
-  rulesDisplay.textContent =
-    library.rules || "No library rules have been added yet.";
-}
-  
-  const libraryName = document.getElementById("libraryName");
-  const address = document.getElementById("address");
-  const city = document.getElementById("city");
-  const monthlyFee = document.getElementById("monthlyFee");
-  const openingTime = document.getElementById("openingTime");
-  const closingTime = document.getElementById("closingTime");
-
-const ownerName = document.getElementById("ownerName");
-const mobileNumber = document.getElementById("mobileNumber");
-const state = document.getElementById("state");
-const district = document.getElementById("district");
-const availableSeats = document.getElementById("availableSeats");
-const dailyFee = document.getElementById("dailyFee");
-const weeklyFee = document.getElementById("weeklyFee");
-const seatType = document.getElementById("seatType");
-  
-  if (libraryName) {
-    libraryName.value = library.library_name || "";
-  }
-
-  if (address) {
-    address.value = library.address || "";
-  }
-
-  if (city) {
-    city.value = library.city || "";
-  }
-
-  if (monthlyFee) {
-    monthlyFee.value = library.monthly_fee || "";
-  }
-
-  if (openingTime) {
-    openingTime.value = library.opening_time || "";
-  }
-
-  if (closingTime) {
-    closingTime.value = library.closing_time || "";
-  }
-if (ownerName) {
-  ownerName.value = library.owner_name || "";
-}
-
-if (mobileNumber) {
-  mobileNumber.value = library.mobile || "";
-}
-
-if (state) {
-  state.value = library.state || "";
-}
-
-if (district) {
-  district.value = library.district || "";
-}
-
-if (availableSeats) {
-  availableSeats.value = library.seat_availability ?? "";
-}
-
-if (dailyFee) {
-  dailyFee.value = library.daily_fee ?? "";
-}
-
-if (weeklyFee) {
-  weeklyFee.value = library.weekly_fee ?? "";
-}
-
-if (seatType) {
-  seatType.value = library.seat_type || "";
-}
-  const facilities = library.facilities || [];
-
-  if (document.getElementById("wifi")) {
-    document.getElementById("wifi").checked =
-      facilities.includes("Wi-Fi");
-  }
-
-  if (document.getElementById("ac")) {
-    document.getElementById("ac").checked =
-      facilities.includes("Air Conditioning");
-  }
-
-  if (document.getElementById("cctv")) {
-    document.getElementById("cctv").checked =
-      facilities.includes("CCTV");
-  }
-
-  if (document.getElementById("powerBackup")) {
-    document.getElementById("powerBackup").checked =
-      facilities.includes("Power Backup");
-  }
-
-  if (document.getElementById("silentZone")) {
-    document.getElementById("silentZone").checked =
-      facilities.includes("Silent Zone");
-  }
-
-  const detailsButton = Array.from(
-    document.querySelectorAll(".update-button")
-  ).find(button =>
-    button.textContent.includes("Update Library Details")
-  );
-
-  if (detailsButton) {
-    detailsButton.addEventListener("click", async function () {
-      const { error } = await client
-        .from("libraries")
-        .update({
-          library_name: libraryName?.value.trim() || "",
-          address: address?.value.trim() || "",
-          city: city?.value.trim() || ""
-        })
-        .eq("id", library.id)
-        .eq("owner_id", user.id);
-
-      if (error) {
-        showMessage("detailsMessage", "Update failed: " + error.message);
-      } else {
-        showMessage(
-          "detailsMessage",
-          "Library details updated successfully."
-        );
-      }
-    });
-  }
-
-  const facilitiesButton = Array.from(
-    document.querySelectorAll(".update-button")
-  ).find(button =>
-    button.textContent.includes("Update Price and Facilities")
-  );
-
-  if (facilitiesButton) {
-    facilitiesButton.addEventListener("click", async function () {
-      const selectedFacilities = [];
-
-      if (document.getElementById("wifi")?.checked) {
-        selectedFacilities.push("Wi-Fi");
-      }
-
-      if (document.getElementById("ac")?.checked) {
-        selectedFacilities.push("Air Conditioning");
-      }
-
-      if (document.getElementById("cctv")?.checked) {
-        selectedFacilities.push("CCTV");
-      }
-
-      if (document.getElementById("powerBackup")?.checked) {
-        selectedFacilities.push("Power Backup");
-      }
-
-      if (document.getElementById("silentZone")?.checked) {
-        selectedFacilities.push("Silent Zone");
-      }
-
-      const { error } = await client.from("libraries").update({
-  monthly_fee: monthlyFee?.value || null,
-  facilities: selectedFacilities,
-  other_facilities: document.getElementById("otherFacilities")?.value.trim() || null
-})
-        .eq("id", library.id)
-        .eq("owner_id", user.id);
-
-      if (error) {
-        showMessage(
-          "facilitiesMessage",
-          "Update failed: " + error.message
-        );
-      } else {
-        showMessage(
-          "facilitiesMessage",
-          "Price and facilities updated successfully."
-        );
-      }
-    });
-  }
-
-  const hoursButton = Array.from(
-    document.querySelectorAll(".update-button")
-  ).find(button =>
-    button.textContent.includes("Update Opening Hours")
-  );
-
-  if (hoursButton) {
-    hoursButton.addEventListener("click", async function () {
-      const { error } = await client
-        .from("libraries")
-        .update({
-          opening_time: openingTime?.value || null,
-          closing_time: closingTime?.value || null
-        })
-        .eq("id", library.id)
-        .eq("owner_id", user.id);
-
-      if (error) {
-        showMessage("hoursMessage", "Update failed: " + error.message);
-      } else {
-        showMessage(
-          "hoursMessage",
-          "Opening hours updated successfully."
-        );
-      }
-    });
-  }
-
-  const locationButton = Array.from(
-    document.querySelectorAll(".update-button")
-  ).find(button =>
-    button.textContent.includes("Update Library Location")
-  );
-
-  if (locationButton) {
-    locationButton.addEventListener("click", function () {
-      const locationResult = document.getElementById("locationResult");
-
-      if (!navigator.geolocation) {
-        locationResult.textContent =
-          "Location service is not supported by this browser.";
-        return;
-      }
-
-      locationResult.textContent = "Getting your library location...";
-
-      navigator.geolocation.getCurrentPosition(
-        async function (position) {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-
-          locationResult.textContent =
-            "Latitude: " +
-            latitude +
-            " | Longitude: " +
-            longitude;
-
-          const { error } = await client
-            .from("libraries")
-            .update({
-              latitude: latitude,
-              longitude: longitude
-            })
-            .eq("id", library.id)
-            .eq("owner_id", user.id);
-
-          if (error) {
-            showMessage(
-              "locationMessage",
-              "Location update failed: " + error.message
-            );
-          } else {
-            showMessage(
-              "locationMessage",
-              "Library location updated successfully."
-            );
-          }
-        },
-        function () {
-          locationResult.textContent =
-            "Unable to get location. Please allow location permission and try again.";
-        },
-        {
-          enableHighAccuracy: false,
-          timeout: 20000,
-          maximumAge: 300000
+          return;
         }
-      );
-    });
-  }
 
-  const photoInput = document.getElementById("libraryPhotos");
-const photoPreview = document.getElementById("photoPreview");
 
-if (photoInput) {
-  photoInput.addEventListener("change", function (event) {
-    if (!photoPreview) return;
+        /* ================= LOGIN ================= */
 
-    photoPreview.innerHTML = "";
+        const {
+          data: { user },
+          error: userError
+        } = await client.auth.getUser();
 
-    const files = Array.from(event.target.files).slice(0, 15);
 
-    files.forEach(function (file) {
-      const reader = new FileReader();
+        if (userError || !user) {
 
-      reader.onload = function (event) {
-        const image = document.createElement("img");
+          window.location.href =
+            "owner-login.html";
 
-        image.src = event.target.result;
-        image.alt = "Library photo preview";
-        image.style.width = "110px";
-        image.style.height = "90px";
-        image.style.objectFit = "cover";
-        image.style.borderRadius = "10px";
-        image.style.margin = "5px";
+          return;
+        }
 
-        photoPreview.appendChild(image);
-      };
 
-      reader.readAsDataURL(file);
-    });
-  });
-}
+        /* ================= LOAD LIBRARY ================= */
 
-// Load saved library photos
-const savedPhotos = library.photos || [];
-const savedPhotoPreview = document.getElementById("photoPreview");
-
-if (savedPhotoPreview) {
-  savedPhotos.forEach(function (photoUrl) {
-    const image = document.createElement("img");
-
-    image.src = photoUrl;
-    image.alt = "Library photo";
-    image.style.width = "110px";
-    image.style.height = "90px";
-    image.style.objectFit = "cover";
-    image.style.borderRadius = "10px";
-    image.style.margin = "5px";
-
-    savedPhotoPreview.appendChild(image);
-  });
-}
-  
-// Upload library photos to Supabase Storage
-window.updatePhotos = async function () {
-  const files = Array.from(photoInput?.files || []).slice(0, 15);
-
-  if (files.length === 0) {
-    showMessage(
-      "photosMessage",
-      "Please select at least one library photo."
-    );
-    return;
-  }
-
-  showMessage(
-    "photosMessage",
-    "Uploading photos..."
-  );
-
-  const uploadedUrls = [];
-
-  for (const file of files) {
-    if (!file.type.startsWith("image/")) {
-      continue;
-    }
-
-    const fileName =
-      user.id +
-      "/" +
-      Date.now() +
-      "-" +
-      Math.random().toString(36).substring(2, 10) +
-      "-" +
-      file.name.replace(/\s+/g, "-");
-
-    const { error: uploadError } =
-      await client.storage
-        .from("StudySpot library-photos")
-        .upload(fileName, file);
-
-    if (uploadError) {
-      showMessage(
-        "photosMessage",
-        "Photo upload failed: " + uploadError.message
-      );
-      return;
-    }
-
-    const { data: publicUrlData } =
-      client.storage
-        .from("StudySpot library-photos")
-        .getPublicUrl(fileName);
-
-    uploadedUrls.push(
-      publicUrlData.publicUrl
-    );
-  }
-
-  if (uploadedUrls.length === 0) {
-    showMessage(
-      "photosMessage",
-      "No valid image files were selected."
-    );
-    return;
-  }
-
-  const { error: databaseError } =
-    await client
-      .from("libraries")
-      .update({
-        photos: uploadedUrls
-      })
-      .eq("id", library.id)
-      .eq("owner_id", user.id);
-
-  if (databaseError) {
-    showMessage(
-      "photosMessage",
-      "Photos uploaded, but saving failed: " +
-      databaseError.message
-    );
-    return;
-  }
-
-  showMessage(
-    "photosMessage",
-    uploadedUrls.length +
-    " library photo(s) uploaded successfully."
-  );
-};
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", async function () {
-  const client = window.supabaseClient;
-
-  if (!client) {
-    alert("Supabase connection not found.");
-    return;
-  }
-
-  const {
-    data: { user },
-    error: userError
-  } = await client.auth.getUser();
-
-  if (userError || !user) {
-    alert("Please log in first to view your library.");
-    return;
-  }
-
-  const { data: library, error: libraryError } =
-    await client
-      .from("libraries")
-      .select("*")
-      .eq("owner_id", user.id)
-      .maybeSingle();
-
-  if (libraryError) {
-    alert("Unable to load library information.");
-    return;
-  }
-
-  if (!library) {
-    alert("No library found for this account.");
-    return;
-  }
-
-  const libraryNameEl = document.getElementById("libraryName");
-  const ownerNameEl = document.getElementById("ownerName");
-  const mobileEl = document.getElementById("mobileNumber");
-  const addressEl = document.getElementById("address");
-  const cityEl = document.getElementById("city");
-
-  if (libraryNameEl) {
-    libraryNameEl.value = library.library_name || "";
-  }
-
-  if (addressEl) {
-    addressEl.value = library.address || "";
-  }
-
-  if (cityEl) {
-    cityEl.value = library.city || "";
-  }
-
-  // Owner information
-  const ownerNameValue =
-    library.owner_name ||
-    user.user_metadata?.owner_name ||
-    "";
-
-  const mobileValue =
-    library.mobile ||
-    user.user_metadata?.mobile ||
-    "";
-
-  if (ownerNameEl) {
-    ownerNameEl.value = ownerNameValue;
-  }
-
-  if (mobileEl) {
-    mobileEl.value = mobileValue;
-  }
-
-  // Save owner information to database if it was missing
-  if (
-    (!library.owner_name || !library.mobile) &&
-    (ownerNameValue || mobileValue)
-  ) {
-    await client
-      .from("libraries")
-      .update({
-        owner_name: ownerNameValue || library.owner_name || null,
-        mobile: mobileValue || library.mobile || null
-      })
-      .eq("id", library.id)
-      .eq("owner_id", user.id);
-  }
-
-// Load Owner and Library Information
-const stateEl = document.getElementById("state");
-const districtEl = document.getElementById("district");
-const availableSeatsEl = document.getElementById("availableSeats");
-const dailyFeeEl = document.getElementById("dailyFee");
-const weeklyFeeEl = document.getElementById("weeklyFee");
-const maleSeatsEl = document.getElementById("maleSeats");
-const femaleSeatsEl = document.getElementById("femaleSeats");
-const depositEl = document.getElementById("deposit");
-const registrationFeeEl = document.getElementById("registrationFee");
-
-if (stateEl) {
-  stateEl.value = library.state || "";
-}
-
-if (districtEl) {
-  districtEl.value = library.district || "";
-}
-
-if (availableSeatsEl) {
-  availableSeatsEl.value = library.seat_availability ?? "";
-}
-
-if (dailyFeeEl) {
-  dailyFeeEl.value = library.daily_fee ?? "";
-}
-
-if (weeklyFeeEl) {
-  weeklyFeeEl.value = library.weekly_fee ?? "";
-}
-
-if (maleSeatsEl) {
-    maleSeatsEl.value = library.male_seats ?? "";
-}
-
-if (femaleSeatsEl) {
-    femaleSeatsEl.value = library.female_seats ?? "";
-}
-
-if (depositEl) {
-    depositEl.value = library.security_deposit ?? "";
-}
-
-if (registrationFeeEl) {
-    registrationFeeEl.value = library.registration_fee ?? "";
-}
-  
-  // Monthly fee
-  const monthlyFeeEl = document.getElementById("monthlyFee");
-
-  if (monthlyFeeEl) {
-    monthlyFeeEl.value = library.monthly_fee || "";
-  }
-
-  // Facilities
-  const facilities = library.facilities || [];
-
-  if (document.getElementById("wifi")) {
-    document.getElementById("wifi").checked =
-      facilities.includes("Wi-Fi");
-  }
-
-  if (document.getElementById("ac")) {
-    document.getElementById("ac").checked =
-      facilities.includes("Air Conditioning");
-  }
-
-  if (document.getElementById("cctv")) {
-    document.getElementById("cctv").checked =
-      facilities.includes("CCTV");
-  }
-
-  if (document.getElementById("powerBackup")) {
-    document.getElementById("powerBackup").checked =
-      facilities.includes("Power Backup");
-  }
-
-  if (document.getElementById("silentZone")) {
-    document.getElementById("silentZone").checked =
-      facilities.includes("Silent Zone");
-  }
-
-  const otherFacilitiesEl =
-    document.getElementById("otherFacilities");
-
-  if (otherFacilitiesEl) {
-    otherFacilitiesEl.value =
-      library.other_facilities || "";
-  }
-
-  // Opening hours
-  const openingTimeEl =
-    document.getElementById("openingTime");
-
-  const closingTimeEl =
-    document.getElementById("closingTime");
-
-  if (openingTimeEl) {
-    openingTimeEl.value =
-      library.opening_time || "";
-  }
-
-  if (closingTimeEl) {
-    closingTimeEl.value =
-      library.closing_time || "";
-  }
-const openDaysEl = document.getElementById("openDays");
-
-if (openDaysEl) {
-    openDaysEl.value = library.open_days || "";
-  }
-  
-    // Owner information update button
-  const ownerInfoButton =
-    document.getElementById("updateOwnerInfoButton");
-
-  if (ownerInfoButton) {
-    ownerInfoButton.addEventListener("click", async function () {
-
-      const ownerName =
-        ownerNameEl?.value.trim() || "";
-
-      const mobile =
-        mobileEl?.value.trim() || "";
-
-      if (!ownerName || !mobile) {
-        alert("Please enter Owner Name and Mobile Number.");
-        return;
-      }
-
-      const { error } =
-        await client
+        const {
+          data: library,
+          error: libraryError
+        } = await client
           .from("libraries")
-          .update({
-            owner_name: ownerName,
-            mobile: mobile,
-            state: stateEl?.value.trim() || null,
-            district: districtEl?.value.trim() || null,
-            seat_availability: Number(availableSeatsEl?.value) || 0,
-            daily_fee: dailyFeeEl?.value
-              ? Number(dailyFeeEl.value)
-              : null,
-            weekly_fee: weeklyFeeEl?.value
-              ? Number(weeklyFeeEl.value)
-              : null,
-            male_seats: maleSeatsEl?.value
-              ? Number(maleSeatsEl.value)
-              : null,
-            female_seats: femaleSeatsEl?.value
-              ? Number(femaleSeatsEl.value)
-              : null,
-            security_deposit: depositEl?.value
-              ? Number(depositEl.value)
-              : null,
-            registration_fee: registrationFeeEl?.value
-              ? Number(registrationFeeEl.value)
-              : null,
-            open_days:
-              document.getElementById("openDays")?.value.trim() || null
-          })
-          .eq("id", library.id)
-          .eq("owner_id", user.id);
+          .select("*")
+          .eq("owner_id", user.id)
+          .maybeSingle();
 
-      if (error) {
-        alert(
-          "Unable to update owner information: " +
-          error.message
+
+        if (libraryError) {
+
+          showMessage(
+            "Unable to load library information.",
+            "error"
+          );
+
+          console.error(
+            libraryError
+          );
+
+          return;
+        }
+
+
+        if (!library) {
+
+          showMessage(
+            "No library found for this account.",
+            "error"
+          );
+
+          return;
+        }
+
+
+        /* ================= FILL FORM ================= */
+
+        document.getElementById(
+          "libraryName"
+        ).value =
+          library.library_name || "";
+
+
+        document.getElementById(
+          "address"
+        ).value =
+          library.address || "";
+
+
+        document.getElementById(
+          "state"
+        ).value =
+          library.state || "";
+
+
+        document.getElementById(
+          "district"
+        ).value =
+          library.district || "";
+
+
+        document.getElementById(
+          "city"
+        ).value =
+          library.city || "";
+
+
+        /* ================= SAVED LOCATION ================= */
+
+        updateLocationDisplay(
+          library
         );
-        return;
+
+
+        /* ================= SAVE CHANGES ================= */
+
+        document.getElementById(
+          "saveButton"
+        ).addEventListener(
+          "click",
+          async function () {
+
+            const saveButton =
+              document.getElementById(
+                "saveButton"
+              );
+
+            saveButton.disabled = true;
+
+            saveButton.textContent =
+              "Saving...";
+
+
+            const {
+              error
+            } = await client
+              .from("libraries")
+              .update({
+
+                library_name:
+                  document
+                    .getElementById(
+                      "libraryName"
+                    )
+                    .value
+                    .trim(),
+
+                address:
+                  document
+                    .getElementById(
+                      "address"
+                    )
+                    .value
+                    .trim(),
+
+                state:
+                  document
+                    .getElementById(
+                      "state"
+                    )
+                    .value
+                    .trim(),
+
+                district:
+                  document
+                    .getElementById(
+                      "district"
+                    )
+                    .value
+                    .trim(),
+
+                city:
+                  document
+                    .getElementById(
+                      "city"
+                    )
+                    .value
+                    .trim()
+
+              })
+              .eq(
+                "id",
+                library.id
+              )
+              .eq(
+                "owner_id",
+                user.id
+              );
+
+
+            saveButton.disabled =
+              false;
+
+            saveButton.textContent =
+              "Save Changes";
+
+
+            if (error) {
+
+              console.error(
+                error
+              );
+
+              showMessage(
+                "Unable to save changes: " +
+                error.message,
+                "error"
+              );
+
+              return;
+            }
+
+
+            showMessage(
+              "Library information updated successfully.",
+              "success"
+            );
+
+          }
+        );
+
+
+        /* ================= LOCATION ================= */
+
+        document.getElementById(
+          "locationButton"
+        ).addEventListener(
+          "click",
+          function () {
+
+            const locationResult =
+              document.getElementById(
+                "locationResult"
+              );
+
+
+            if (!navigator.geolocation) {
+
+              locationResult.textContent =
+                "Location services are not supported on this device.";
+
+              return;
+            }
+
+
+            locationResult.textContent =
+              "Getting your current location...";
+
+
+            navigator.geolocation.getCurrentPosition(
+
+              async function (position) {
+
+                const latitude =
+                  position.coords.latitude;
+
+                const longitude =
+                  position.coords.longitude;
+
+
+                const {
+                  error
+                } = await client
+                  .from("libraries")
+                  .update({
+
+                    latitude:
+                      latitude,
+
+                    longitude:
+                      longitude
+
+                  })
+                  .eq(
+                    "id",
+                    library.id
+                  )
+                  .eq(
+                    "owner_id",
+                    user.id
+                  );
+
+
+                if (error) {
+
+                  console.error(
+                    error
+                  );
+
+                  locationResult.textContent =
+                    "Unable to save the location.";
+
+                  return;
+                }
+
+
+                locationResult.innerHTML =
+                  "Location saved successfully.<br>" +
+                  "Latitude: " +
+                  latitude +
+                  "<br>" +
+                  "Longitude: " +
+                  longitude;
+
+              },
+
+
+              function () {
+
+                locationResult.textContent =
+                  "Unable to get location. Please allow location permission and try again.";
+
+              },
+
+
+              {
+                enableHighAccuracy: false,
+                timeout: 20000,
+                maximumAge: 300000
+              }
+
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+    /* ================= LOCATION DISPLAY ================= */
+
+    function updateLocationDisplay(
+      library
+    ) {
+
+      const locationResult =
+        document.getElementById(
+          "locationResult"
+        );
+
+
+      if (
+        library.latitude != null &&
+        library.longitude != null
+      ) {
+
+        locationResult.innerHTML =
+          "Location saved successfully.<br>" +
+          "Latitude: " +
+          library.latitude +
+          "<br>" +
+          "Longitude: " +
+          library.longitude;
+
+      } else {
+
+        locationResult.textContent =
+          "No exact location has been saved yet.";
+
       }
 
-      const successMessage =
-        document.getElementById("additionalDetailsMessage");
+    }
 
-      if (successMessage) {
-        successMessage.textContent =
-          "Owner and library information updated successfully.";
-        successMessage.style.display = "block";
-      }
-    });
-  }
-});
-</script>
 
+    /* ================= MESSAGE ================= */
+
+    function showMessage(
+      message,
+      type
+    ) {
+
+      const element =
+        document.getElementById(
+          "message"
+        );
+
+
+      if (!element) return;
+
+
+      element.textContent =
+        message;
+
+
+      element.className =
+        "message " +
+        type;
+
+
+      setTimeout(
+        function () {
+
+          element.style.display =
+            "none";
+
+        },
+        4000
+      );
+
+    }
+
+  </script>
 
 </body>
 </html>
