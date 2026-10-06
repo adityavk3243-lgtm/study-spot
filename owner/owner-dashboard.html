@@ -897,6 +897,53 @@ document.addEventListener("DOMContentLoaded", async function () {
     const activeStudents =
       activeStudentIds.size;
 
+/* ================= EXPIRING SOON ================= */
+
+const today = new Date();
+
+today.setHours(0, 0, 0, 0);
+
+const threeDaysFromNow = new Date(today);
+
+threeDaysFromNow.setDate(
+  threeDaysFromNow.getDate() + 3
+);
+
+const {
+  data: expiringMemberships,
+  error: expiringError
+} = await client
+  .from("student_memberships")
+  .select("student_id,due_date,status")
+  .eq("library_id", library.id)
+  .eq("status", "active")
+  .gte(
+    "due_date",
+    today.toISOString().split("T")[0]
+  )
+  .lte(
+    "due_date",
+    threeDaysFromNow.toISOString().split("T")[0]
+  );
+
+if (expiringError) {
+
+  console.error(
+    "Expiring students loading error:",
+    expiringError
+  );
+
+}
+
+const expiringSoonCount =
+  expiringMemberships
+    ? new Set(
+        expiringMemberships
+          .map(row => row.student_id)
+          .filter(Boolean)
+      ).size
+    : 0;
+    
 /* ================= RECENT STUDENTS ================= */
 
 const recentStudentsBox =
