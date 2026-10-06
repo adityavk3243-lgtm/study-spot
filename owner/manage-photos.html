@@ -250,6 +250,37 @@ libraryId = library.id;
     });
 
     updateButton.addEventListener("click", function() {
+
+async function loadExistingPhotos() {
+  const { data: library, error } = await client
+    .from("libraries")
+    .select("photos")
+    .eq("id", libraryId)
+    .eq("owner_id", ownerId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Library photos loading error:", error);
+    return;
+  }
+
+  if (!library || !Array.isArray(library.photos)) {
+    return;
+  }
+
+  library.photos.forEach(function(photoUrl) {
+    const image = document.createElement("img");
+
+    image.src = photoUrl;
+    image.alt = "Library photo";
+    image.dataset.saved = "true";
+
+    preview.appendChild(image);
+  });
+}
+
+loadExistingPhotos();
+      
       if (selectedFiles.length === 0) {
         message.style.display = "block";
         message.style.background = "#fee2e2";
