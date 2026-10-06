@@ -1061,17 +1061,20 @@ if (recentStudentsBox) {
     const todayValues =
       document.querySelectorAll(".today-value");
 
-    if (todayValues.length >= 3) {
+   if (todayValues.length >= 4) {
 
-      todayValues[0].textContent =
-        totalStudents;
+  todayValues[0].textContent =
+    totalStudents;
 
-      todayValues[1].textContent =
-        activeStudents;
+  todayValues[1].textContent =
+    activeStudents;
 
-      todayValues[2].textContent =
-        availableSeats;
-    }
+  todayValues[2].textContent =
+    availableSeats;
+
+  todayValues[3].textContent =
+    expiringSoonCount;
+} 
 
 /* ================= THIS MONTH COLLECTION ================= */
 
