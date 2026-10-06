@@ -189,6 +189,32 @@
     let selectedFiles = [];
     let libraryId = null;
     let ownerId = null;
+
+const { data: { user }, error: userError } =
+  await client.auth.getUser();
+
+if (userError || !user) {
+  alert("Please login as a library owner.");
+  window.location.href = "owner-login.html";
+  throw new Error("Owner not logged in");
+}
+
+ownerId = user.id;
+
+const { data: library, error: libraryError } =
+  await client
+    .from("libraries")
+    .select("id")
+    .eq("owner_id", ownerId)
+    .maybeSingle();
+
+if (libraryError || !library) {
+  alert("Library information could not be loaded.");
+  throw new Error("Library not found");
+}
+
+libraryId = library.id;
+    
     function addPhotos(files) {
       const newFiles = Array.from(files);
 
