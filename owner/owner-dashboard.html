@@ -1076,6 +1076,73 @@ if (recentStudentsBox) {
     expiringSoonCount;
 } 
 
+/* ================= TODAY'S ACTIVITY ================= */
+
+const activityCard =
+  document.querySelector(".activity-card");
+
+if (activityCard) {
+
+  const {
+    data: activities,
+    error: activityError
+  } = await client.rpc("get_today_activity");
+
+  if (activityError) {
+
+    console.error(
+      "Today's activity loading error:",
+      activityError
+    );
+
+    activityCard.innerHTML = `
+      <div class="activity-row">
+        <span class="activity-dot"></span>
+        <span class="activity-text">
+          Unable to load today's activity.
+        </span>
+      </div>
+    `;
+
+  } else if (!activities || activities.length === 0) {
+
+    activityCard.innerHTML = `
+      <div class="activity-row">
+        <span class="activity-dot"></span>
+        <span class="activity-text">
+          No activity today.
+        </span>
+      </div>
+    `;
+
+  } else {
+
+    activityCard.innerHTML =
+      activities.map(activity => {
+
+        let text = "Activity updated";
+
+        if (activity.activity_type === "membership") {
+          text = "New membership activity";
+        }
+
+        if (activity.activity_type === "payment") {
+          text = "Payment received";
+        }
+
+        return `
+          <div class="activity-row">
+            <span class="activity-dot"></span>
+            <span class="activity-text">
+              ${text}
+            </span>
+          </div>
+        `;
+
+      }).join("");
+  }
+}
+    
 /* ================= THIS MONTH COLLECTION ================= */
 
 const startOfMonth = new Date();
