@@ -78,7 +78,8 @@ min-height:90px;
 resize:vertical;
 }
 
-input:disabled,select:disabled{
+input:disabled,
+select:disabled{
 background:#f1f5f9;
 }
 
@@ -125,24 +126,24 @@ margin:0;
 }
 
 .photo-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-  margin-top:15px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+margin-top:15px;
 }
 
 .photo-grid img{
-  width:100%;
-  height:150px;
-  object-fit:cover;
-  border-radius:10px;
-  border:2px solid #dbeafe;
+width:100%;
+height:150px;
+object-fit:cover;
+border-radius:10px;
+border:2px solid #dbeafe;
 }
 
 @media(max-width:500px){
-  .photo-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
+.photo-grid{
+grid-template-columns:repeat(2,1fr);
+}
 }
 
 button{
@@ -153,6 +154,12 @@ border-radius:9px;
 font-size:16px;
 font-weight:bold;
 margin-top:15px;
+cursor:pointer;
+}
+
+button:disabled{
+opacity:.65;
+cursor:not-allowed;
 }
 
 .register{
@@ -182,6 +189,15 @@ padding:14px;
 border-radius:9px;
 background:#dcfce7;
 color:#166534;
+}
+
+.error{
+display:none;
+margin-top:15px;
+padding:14px;
+border-radius:9px;
+background:#fee2e2;
+color:#991b1b;
 }
 
 @media(max-width:500px){
@@ -228,12 +244,12 @@ placeholder="Enter mobile number"
 
 <label>Email Address *</label>
 <input
-  id="email"
-  type="email"
-  placeholder="Enter your email address"
-  required
+id="email"
+type="email"
+placeholder="Enter your email address"
+required
 >
-  
+
 <label>Create Password *</label>
 <input
 id="password"
@@ -337,6 +353,7 @@ placeholder="House/Shop No., Road, Area, Landmark..."
 <h3>💰 Pricing & Seats</h3>
 
 <label>Monthly Price (₹) *</label>
+
 <input
 id="price"
 type="number"
@@ -345,22 +362,25 @@ placeholder="Example: 500"
 >
 
 <label>Daily Price (₹)</label>
+
 <input
-  id="dailyFee"
-  type="number"
-  min="0"
-  placeholder="Example: 25"
+id="dailyFee"
+type="number"
+min="0"
+placeholder="Example: 25"
 >
 
 <label>Weekly Price (₹)</label>
+
 <input
-  id="weeklyFee"
-  type="number"
-  min="0"
-  placeholder="Example: 250"
+id="weeklyFee"
+type="number"
+min="0"
+placeholder="Example: 250"
 >
-  
+
 <label>Total Seats *</label>
+
 <input
 id="seats"
 type="number"
@@ -369,6 +389,7 @@ placeholder="Example: 100"
 >
 
 <label>Male Seats</label>
+
 <input
 id="maleSeats"
 type="number"
@@ -377,6 +398,7 @@ placeholder="Example: 50"
 >
 
 <label>Female Seats</label>
+
 <input
 id="femaleSeats"
 type="number"
@@ -385,6 +407,7 @@ placeholder="Example: 50"
 >
 
 <label>Security Deposit (₹)</label>
+
 <input
 id="deposit"
 type="number"
@@ -393,6 +416,7 @@ placeholder="Example: 500"
 >
 
 <label>Admission / Registration Fee (₹)</label>
+
 <input
 id="registrationFee"
 type="number"
@@ -410,6 +434,7 @@ placeholder="Example: 100"
 <input id="closing" type="time">
 
 <label>Open Days</label>
+
 <input
 id="openDays"
 type="text"
@@ -419,9 +444,14 @@ placeholder="Example: Monday - Sunday"
 <label>24×7 Available?</label>
 
 <select id="open247">
-<option value="">Select</option>
+
+<option value="">
+Select
+</option>
+
 <option>Yes</option>
 <option>No</option>
+
 </select>
 
 
@@ -516,7 +546,7 @@ placeholder="Example: Monday - Sunday"
 
 <textarea
 id="otherFacilities"
-placeholder="Jo facility upar nahi hai, yahan likhein..."
+placeholder="Enter any other facilities..."
 ></textarea>
 
 
@@ -525,17 +555,20 @@ placeholder="Jo facility upar nahi hai, yahan likhein..."
 <label>Select Library Photos</label>
 
 <input
-  id="photo"
-  type="file"
-  accept="image/*"
-  multiple
+id="photo"
+type="file"
+accept="image/jpeg,image/png,image/webp"
+multiple
 >
 
 <div class="help">
-  You can select up to 15 photos of your library.
+You can select up to 15 photos of your library.
 </div>
 
-<div id="photoPreviewContainer" class="photo-grid"></div>
+<div
+id="photoPreviewContainer"
+class="photo-grid"
+></div>
 
 
 <h3>📋 Other Information</h3>
@@ -551,43 +584,58 @@ placeholder="Tell us more about your library..."
 
 <textarea
 id="rules"
- placeholder="Example: Maintain silence, carry a valid ID card..."
+placeholder="Example: Maintain silence, carry a valid ID card..."
 ></textarea>
+
 
 <h3>📍 Library Location</h3>
 
 <div class="info">
-  Click the button below to get the exact location of your library.
+Click the button below to get the exact location of your library.
 </div>
 
 <button
-  type="button"
-  class="location"
-  id="locationButton"
+type="button"
+class="location"
+id="locationButton"
 >
-  📍 Get Library Location
+📍 Get Library Location
 </button>
 
-<div id="locationResult" class="info"></div>
+<div
+id="locationResult"
+class="info"
+></div>
+
 
 <button
-  type="button"
-  class="register"
-  id="registerButton"
+type="button"
+class="register"
+id="registerButton"
 >
-  ✅ Register My Library
+✅ Register My Library
 </button>
 
-<div id="success" class="success">
-  ✅ Your library registration form has been submitted successfully.
+
+<div
+id="success"
+class="success"
+>
+✅ Your library registration has been completed successfully.
 </div>
+
+<div
+id="error"
+class="error"
+></div>
+
 
 <button
-  type="button"
-  class="back"
-  onclick="window.location.href='index.html'"
+type="button"
+class="back"
+onclick="window.location.href='index.html'"
 >
-  ⬅️ Back to StudySpot
+⬅️ Back to StudySpot
 </button>
 
 
@@ -595,343 +643,1085 @@ id="rules"
 </div>
 
 
- <script src="india-districts.js"></script>
+<script src="india-districts.js"></script>
+
 
 <script>
-const stateSelect = document.getElementById("state");
-const districtSelect = document.getElementById("district");
-const cityInput = document.getElementById("city");
 
-stateSelect.addEventListener("change", async function () {
+/* =========================================
+   STATE / DISTRICT
+========================================= */
+
+const stateSelect =
+  document.getElementById("state");
+
+const districtSelect =
+  document.getElementById("district");
+
+const cityInput =
+  document.getElementById("city");
+
+
+stateSelect.addEventListener(
+  "change",
+  async function () {
 
     districtSelect.innerHTML =
-        '<option value="">District load ho rahe hain...</option>';
+      '<option value="">Loading districts...</option>';
 
     districtSelect.disabled = true;
+
     cityInput.disabled = true;
 
-    const data = await loadDistrictData();
+    cityInput.value = "";
 
-    const selectedState = stateSelect.value;
-    let districts = data[selectedState] || [];
+    const data =
+      await loadDistrictData();
 
-    // Kuch State/UT names ke possible differences handle karna
-    if (districts.length === 0) {
+    const selectedState =
+      stateSelect.value;
 
-        const aliases = {
-            "Andaman and Nicobar Islands":
-                "Andaman and Nicobar",
-            "Dadra and Nagar Haveli and Daman and Diu":
-                "Dadra and Nagar Haveli and Daman and Diu",
-            "Jammu and Kashmir":
-                "Jammu & Kashmir"
-        };
+    let districts =
+      data[selectedState] || [];
 
-        const alternativeState = aliases[selectedState];
 
-        if (alternativeState && data[alternativeState]) {
-            districts = data[alternativeState];
-        }
-    }
+    const aliases = {
 
-    districtSelect.innerHTML =
-        '<option value="">Apna District select karein</option>';
+      "Andaman and Nicobar Islands":
+        "Andaman and Nicobar",
 
-    if (districts.length === 0) {
+      "Jammu and Kashmir":
+        "Jammu & Kashmir"
 
-        districtSelect.innerHTML =
-            '<option value="">Is State/UT ka data nahi mila</option>';
-
-        return;
-    }
-
-    districts.forEach(function(district) {
-
-        const option = document.createElement("option");
-
-        option.value = district;
-        option.textContent = district;
-
-        districtSelect.appendChild(option);
-    });
-
-    districtSelect.disabled = false;
-});
-
-districtSelect.addEventListener("change", function () {
-
-    if (districtSelect.value) {
-        cityInput.disabled = false;
-        cityInput.focus();
-    } else {
-        cityInput.disabled = true;
-        cityInput.value = "";
-    }
-
-});
-
-const photoInput = document.getElementById("photo");
-const photoPreviewContainer = document.getElementById("photoPreviewContainer");
-
-photoInput.addEventListener("change", function () {
-  photoPreviewContainer.innerHTML = "";
-
-  const selectedPhotos = Array.from(photoInput.files).slice(0, 15);
-
-  if (photoInput.files.length > 15) {
-    alert("You can select a maximum of 15 photos.");
-  }
-
-  selectedPhotos.forEach(function (photo) {
-    if (!photo.type.startsWith("image/")) {
-      return;
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = function (event) {
-      const image = document.createElement("img");
-      image.src = event.target.result;
-      image.alt = "Library Photo";
-      photoPreviewContainer.appendChild(image);
     };
 
-    reader.readAsDataURL(photo);
-  });
-});
-
-
-const locationButton = document.getElementById("locationButton");
-const locationResult = document.getElementById("locationResult");
-
-locationButton.addEventListener("click", function () {
-  if (!navigator.geolocation) {
-    locationResult.textContent =
-      "Location services are not supported by this browser.";
-    return;
-  }
-
-  locationResult.textContent = "Getting your library location...";
-
-  navigator.geolocation.getCurrentPosition(
-    function (position) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-
-      locationResult.innerHTML =
-        "Location captured successfully.<br>" +
-        "Latitude: " + latitude + "<br>" +
-        "Longitude: " + longitude;
-
-      locationButton.textContent = "✅ Location Captured";
-    },
-    function () {
-      locationResult.textContent =
-        "Unable to get location. Please allow location permission and try again.";
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 20000,
-      maximumAge: 0
-    }
-  );
-});
-
-
-
-
-
-
-
-// Get library location
-function getLocation() {
-  if (!navigator.geolocation) {
-    alert("Location services are not supported on this device.");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    function (position) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-
-      window.studySpotLibraryLocation = {
-        latitude: latitude,
-        longitude: longitude
-      };
-
-      alert(
-        "Library location captured successfully.\n\n" +
-        "Latitude: " + latitude + "\n" +
-        "Longitude: " + longitude
-      );
-    },
-    function (error) {
-      alert(
-        "Unable to get library location.\n\n" +
-        "Please allow location permission and try again."
-      );
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 20000,
-      maximumAge: 0
-    }
-  );
-}
-  
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const registerButton = document.getElementById("registerButton");
-
-  if (!registerButton) {
-    return;
-  }
-
-  registerButton.addEventListener("click", async function () {
-    const ownerName = document.getElementById("ownerName")?.value.trim();
-    const mobile = document.getElementById("mobile")?.value.trim();
-    const email = document.getElementById("email")?.value.trim();
-    const password = document.getElementById("password")?.value.trim();
-
-    const libraryName = document.getElementById("libraryName")?.value.trim();
-    const state = document.getElementById("state")?.value;
-    const district = document.getElementById("district")?.value;
-    const city = document.getElementById("city")?.value.trim();
-    const address = document.getElementById("address")?.value.trim();
-
-    const price = document.getElementById("price")?.value;
-    const seats = document.getElementById("seats")?.value;
-    const opening = document.getElementById("opening")?.value;
-    const closing = document.getElementById("closing")?.value;
-    const open247 = document.getElementById("open247")?.value;
-
-    const maleSeats = document.getElementById("maleSeats")?.value;
-    const femaleSeats = document.getElementById("femaleSeats")?.value;
-    const deposit = document.getElementById("deposit")?.value;
-    const registrationFee = document.getElementById("registrationFee")?.value;
-    const dailyFee = document.getElementById("dailyFee")
-    const weeklyFee = document.getElementById("weeklyFee")
-    const openDays = document.getElementById("openDays")
-   
-    const otherFacilities = 
-      document.getElementById("otherFacilities")?.value.trim() || "";
-
-    const extra =
-      document.getElementById("extra")?.value.trim() || "";
-
-    const rules =
-      document.getElementById("rules")?.value.trim() || "";
-
-    const facilities = Array.from(
-      document.querySelectorAll(
-        '.facility input[type="checkbox"]:checked'
-      )
-    ).map(function (checkbox) {
-      return checkbox.value;
-    });
 
     if (
-      !ownerName ||
-      !mobile ||
-      !email ||
-      !password ||
-      !libraryName ||
-      !state ||
-      !district ||
-      !city ||
-      !address ||
-      !price ||
-      !seats
+      districts.length === 0
     ) {
-      alert("Please complete all required details.");
-      return;
-    }
 
-    if (password.length < 6) {
-      alert("Password must contain at least 6 characters.");
-      return;
-    }
+      const alternativeState =
+        aliases[selectedState];
 
-    registerButton.disabled = true;
-    registerButton.textContent = "Creating Account...";
+      if (
+        alternativeState &&
+        data[alternativeState]
+      ) {
 
-    try {
-      const { data: authData, error: authError } =
-        await window.supabaseClient.auth.signUp({
-          email: email,
-          password: password,
-          options: {
-            data: {
-              owner_name: ownerName,
-              mobile: mobile
-            }
-          }
-        });
+        districts =
+          data[alternativeState];
 
-      if (authError) {
-        throw authError;
       }
 
-      const ownerId = authData.user.id;
+    }
 
-      const { error: libraryError } =
-        await window.supabaseClient
-          .from("libraries")
-          .insert({
-  owner_id: ownerId,
-  owner_name: ownerName,
-  mobile: mobile,
-  library_name: libraryName,
-  state: state,
-  district: district,
-  city: city,
-  address: address,
- monthly_fee: Number(price),
-daily_fee: dailyFee.value ? Number(dailyFee.value) : null,
-weekly_fee: weeklyFee.value ? Number(weeklyFee.value) : null,
 
-seat_availability: Number(seats),
-male_seats: maleSeats.value ? Number(maleSeats.value) : null,
-female_seats: femaleSeats.value ? Number(femaleSeats.value) : null,
+    districtSelect.innerHTML =
+      '<option value="">Select District</option>';
 
-security_deposit: deposit.value ? Number(deposit.value) : null,
-registration_fee: registrationFee.value ? Number(registrationFee.value) : null,
 
-opening_time: opening || null,
-closing_time: closing || null,
-open_days: openDays.value.trim() || null,
-open_24_hours: open247 === "Yes",
+    if (
+      districts.length === 0
+    ) {
 
-facilities: facilities,
-other_facilities: otherFacilities || null,
-rules: rules 
-});
+      districtSelect.innerHTML =
+        '<option value="">District data not found</option>';
 
-      if (libraryError) {
-        throw libraryError;
+      return;
+
+    }
+
+
+    districts.forEach(
+      function (district) {
+
+        const option =
+          document.createElement("option");
+
+        option.value =
+          district;
+
+        option.textContent =
+          district;
+
+        districtSelect.appendChild(
+          option
+        );
+
       }
+    );
 
-      alert(
-        "Registration completed successfully. Your library details have been saved."
+
+    districtSelect.disabled =
+      false;
+
+  }
+);
+
+
+districtSelect.addEventListener(
+  "change",
+  function () {
+
+    if (
+      districtSelect.value
+    ) {
+
+      cityInput.disabled =
+        false;
+
+      cityInput.focus();
+
+    } else {
+
+      cityInput.disabled =
+        true;
+
+      cityInput.value =
+        "";
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   PHOTO PREVIEW
+========================================= */
+
+const photoInput =
+  document.getElementById("photo");
+
+const photoPreviewContainer =
+  document.getElementById(
+    "photoPreviewContainer"
+  );
+
+
+photoInput.addEventListener(
+  "change",
+  function () {
+
+    photoPreviewContainer.innerHTML =
+      "";
+
+    const files =
+      Array.from(
+        photoInput.files
       );
 
-      window.location.href = "owner-login.html";
 
-    } catch (error) {
-      alert("Registration error: " + error.message);
+    if (
+      files.length > 15
+    ) {
 
-    } finally {
-      registerButton.disabled = false;
-      registerButton.textContent = "✅ Register My Library";
+      alert(
+        "You can select a maximum of 15 photos."
+      );
+
     }
-  });
-});
+
+
+    const selectedPhotos =
+      files.slice(0, 15);
+
+
+    selectedPhotos.forEach(
+      function (photo) {
+
+        if (
+          !photo.type.startsWith("image/")
+        ) {
+
+          return;
+
+        }
+
+
+        const reader =
+          new FileReader();
+
+
+        reader.onload =
+          function (event) {
+
+            const image =
+              document.createElement("img");
+
+            image.src =
+              event.target.result;
+
+            image.alt =
+              "Library Photo";
+
+            photoPreviewContainer.appendChild(
+              image
+            );
+
+          };
+
+
+        reader.readAsDataURL(
+          photo
+        );
+
+      }
+    );
+
+  }
+);
+
+
+/* =========================================
+   LOCATION
+========================================= */
+
+const locationButton =
+  document.getElementById(
+    "locationButton"
+  );
+
+const locationResult =
+  document.getElementById(
+    "locationResult"
+  );
+
+
+locationButton.addEventListener(
+  "click",
+  function () {
+
+    if (
+      !navigator.geolocation
+    ) {
+
+      locationResult.textContent =
+        "Location services are not supported by this browser.";
+
+      return;
+
+    }
+
+
+    locationResult.textContent =
+      "Getting your library location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+      function (position) {
+
+        const latitude =
+          position.coords.latitude;
+
+        const longitude =
+          position.coords.longitude;
+
+
+        window.studySpotLibraryLocation = {
+
+          latitude:
+            latitude,
+
+          longitude:
+            longitude
+
+        };
+
+
+        locationResult.innerHTML =
+          "Location captured successfully.<br>" +
+          "Latitude: " +
+          latitude +
+          "<br>" +
+          "Longitude: " +
+          longitude;
+
+
+        locationButton.textContent =
+          "✅ Location Captured";
+
+      },
+
+
+      function () {
+
+        locationResult.textContent =
+          "Unable to get location. Please allow location permission and try again.";
+
+      },
+
+
+      {
+
+        enableHighAccuracy:
+          true,
+
+        timeout:
+          20000,
+
+        maximumAge:
+          0
+
+      }
+
+    );
+
+  }
+);
+
 </script>
 
 
-  
+<script>
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+
+    const registerButton =
+      document.getElementById(
+        "registerButton"
+      );
+
+
+    if (!registerButton) {
+      return;
+    }
+
+
+    registerButton.addEventListener(
+      "click",
+      async function () {
+
+        const ownerName =
+          document.getElementById(
+            "ownerName"
+          )?.value.trim();
+
+
+        const mobile =
+          document.getElementById(
+            "mobile"
+          )?.value.trim();
+
+
+        const email =
+          document.getElementById(
+            "email"
+          )?.value.trim();
+
+
+        const password =
+          document.getElementById(
+            "password"
+          )?.value.trim();
+
+
+        const libraryName =
+          document.getElementById(
+            "libraryName"
+          )?.value.trim();
+
+
+        const state =
+          document.getElementById(
+            "state"
+          )?.value;
+
+
+        const district =
+          document.getElementById(
+            "district"
+          )?.value;
+
+
+        const city =
+          document.getElementById(
+            "city"
+          )?.value.trim();
+
+
+        const address =
+          document.getElementById(
+            "address"
+          )?.value.trim();
+
+
+        const price =
+          document.getElementById(
+            "price"
+          )?.value;
+
+
+        const seats =
+          document.getElementById(
+            "seats"
+          )?.value;
+
+
+        const opening =
+          document.getElementById(
+            "opening"
+          )?.value;
+
+
+        const closing =
+          document.getElementById(
+            "closing"
+          )?.value;
+
+
+        const open247 =
+          document.getElementById(
+            "open247"
+          )?.value;
+
+
+        const maleSeats =
+          document.getElementById(
+            "maleSeats"
+          )?.value;
+
+
+        const femaleSeats =
+          document.getElementById(
+            "femaleSeats"
+          )?.value;
+
+
+        const deposit =
+          document.getElementById(
+            "deposit"
+          )?.value;
+
+
+        const registrationFee =
+          document.getElementById(
+            "registrationFee"
+          )?.value;
+
+
+        const dailyFee =
+          document.getElementById(
+            "dailyFee"
+          )?.value;
+
+
+        const weeklyFee =
+          document.getElementById(
+            "weeklyFee"
+          )?.value;
+
+
+        const openDays =
+          document.getElementById(
+            "openDays"
+          )?.value.trim();
+
+
+        const otherFacilities =
+          document.getElementById(
+            "otherFacilities"
+          )?.value.trim() || "";
+
+
+        const extra =
+          document.getElementById(
+            "extra"
+          )?.value.trim() || "";
+
+
+        const rules =
+          document.getElementById(
+            "rules"
+          )?.value.trim() || "";
+
+
+        const selectedPhotoFiles =
+          Array.from(
+            photoInput.files || []
+          ).slice(0, 15);
+
+
+        const facilities =
+          Array.from(
+            document.querySelectorAll(
+              '.facility input[type="checkbox"]:checked'
+            )
+          ).map(
+            function (checkbox) {
+              return checkbox.value;
+            }
+          );
+
+
+        /* =========================================
+           VALIDATION
+        ========================================= */
+
+        if (
+          !ownerName ||
+          !mobile ||
+          !email ||
+          !password ||
+          !libraryName ||
+          !state ||
+          !district ||
+          !city ||
+          !address ||
+          !price ||
+          !seats
+        ) {
+
+          alert(
+            "Please complete all required details."
+          );
+
+          return;
+
+        }
+
+
+        if (
+          password.length < 6
+        ) {
+
+          alert(
+            "Password must contain at least 6 characters."
+          );
+
+          return;
+
+        }
+
+
+        if (
+          selectedPhotoFiles.length > 15
+        ) {
+
+          alert(
+            "You can upload a maximum of 15 photos."
+          );
+
+          return;
+
+        }
+
+
+        registerButton.disabled =
+          true;
+
+        registerButton.textContent =
+          "Creating Account...";
+
+
+        try {
+
+          /* =========================================
+             SUPABASE CLIENT
+          ========================================= */
+
+          const client =
+            window.supabaseClient;
+
+
+          if (!client) {
+
+            throw new Error(
+              "Supabase client could not be loaded."
+            );
+
+          }
+
+
+          /* =========================================
+             CREATE OWNER ACCOUNT
+          ========================================= */
+
+          const {
+            data: authData,
+            error: authError
+          } =
+            await client.auth.signUp({
+
+              email:
+                email,
+
+              password:
+                password,
+
+              options: {
+
+                data: {
+
+                  owner_name:
+                    ownerName,
+
+                  mobile:
+                    mobile
+
+                }
+
+              }
+
+            });
+
+
+          if (authError) {
+
+            throw authError;
+
+          }
+
+
+          if (
+            !authData ||
+            !authData.user
+          ) {
+
+            throw new Error(
+              "Owner account could not be created."
+            );
+
+          }
+
+
+          const ownerId =
+            authData.user.id;
+
+
+          /* =========================================
+             LOCATION DATA
+          ========================================= */
+
+          const latitude =
+            window.studySpotLibraryLocation?.latitude ||
+            null;
+
+
+          const longitude =
+            window.studySpotLibraryLocation?.longitude ||
+            null;
+
+
+          /* =========================================
+             CREATE LIBRARY
+          ========================================= */
+
+          const {
+            data: libraryData,
+            error: libraryError
+          } =
+            await client
+              .from("libraries")
+              .insert({
+
+                owner_id:
+                  ownerId,
+
+                owner_name:
+                  ownerName,
+
+                mobile:
+                  mobile,
+
+                library_name:
+                  libraryName,
+
+                state:
+                  state,
+
+                district:
+                  district,
+
+                city:
+                  city,
+
+                address:
+                  address,
+
+                monthly_fee:
+                  Number(price),
+
+                daily_fee:
+                  dailyFee
+                    ? Number(dailyFee)
+                    : null,
+
+                weekly_fee:
+                  weeklyFee
+                    ? Number(weeklyFee)
+                    : null,
+
+                seat_availability:
+                  Number(seats),
+
+                male_seats:
+                  maleSeats
+                    ? Number(maleSeats)
+                    : null,
+
+                female_seats:
+                  femaleSeats
+                    ? Number(femaleSeats)
+                    : null,
+
+                security_deposit:
+                  deposit
+                    ? Number(deposit)
+                    : null,
+
+                registration_fee:
+                  registrationFee
+                    ? Number(registrationFee)
+                    : null,
+
+                opening_time:
+                  opening || null,
+
+                closing_time:
+                  closing || null,
+
+                open_days:
+                  openDays || null,
+
+                open_24_hours:
+                  open247 === "Yes",
+
+                facilities:
+                  facilities,
+
+                other_facilities:
+                  otherFacilities || null,
+
+                rules:
+                  rules || null,
+
+                latitude:
+                  latitude,
+
+                longitude:
+                  longitude,
+
+                photos:
+                  []
+
+              })
+              .select("id")
+              .single();
+
+
+          if (libraryError) {
+
+            throw libraryError;
+
+          }
+
+
+          if (
+            !libraryData ||
+            !libraryData.id
+          ) {
+
+            throw new Error(
+              "Library record was not created."
+            );
+
+          }
+
+
+          const libraryId =
+            libraryData.id;
+
+
+          /* =========================================
+             UPLOAD REGISTRATION PHOTOS
+             
+             IMPORTANT:
+             Every owner's photos are stored
+             inside that owner's own folder.
+             
+             Example:
+             owner-id/photo.jpg
+             
+             Therefore different libraries
+             cannot mix their files.
+          ========================================= */
+
+          const uploadedPhotoUrls =
+            [];
+
+
+          if (
+            selectedPhotoFiles.length > 0
+          ) {
+
+            registerButton.textContent =
+              "Uploading Library Photos...";
+
+
+            for (
+              let i = 0;
+              i < selectedPhotoFiles.length;
+              i++
+            ) {
+
+              const file =
+                selectedPhotoFiles[i];
+
+
+              if (
+                !file.type.startsWith("image/")
+              ) {
+
+                continue;
+
+              }
+
+
+              const originalName =
+                file.name || "photo";
+
+
+              const parts =
+                originalName.split(".");
+
+
+              const extension =
+                parts.length > 1
+                  ? parts.pop().toLowerCase()
+                  : "jpg";
+
+
+              const uniqueId =
+                typeof crypto !== "undefined" &&
+                crypto.randomUUID
+                  ? crypto.randomUUID()
+                  : Date.now() +
+                    "-" +
+                    Math.random()
+                      .toString(36)
+                      .substring(2);
+
+
+              const fileName =
+                Date.now() +
+                "-" +
+                uniqueId +
+                "." +
+                extension;
+
+
+              /*
+                OWNER-SPECIFIC STORAGE PATH
+              */
+
+              const filePath =
+                ownerId +
+                "/" +
+                fileName;
+
+
+              const {
+                error: uploadError
+              } =
+                await client.storage
+                  .from(
+                    "StudySpot library-photos"
+                  )
+                  .upload(
+                    filePath,
+                    file,
+                    {
+
+                      cacheControl:
+                        "3600",
+
+                      upsert:
+                        false,
+
+                      contentType:
+                        file.type
+
+                    }
+                  );
+
+
+              if (uploadError) {
+
+                throw new Error(
+                  "Photo upload failed: " +
+                  uploadError.message
+                );
+
+              }
+
+
+              const {
+                data: publicUrlData
+              } =
+                client.storage
+                  .from(
+                    "StudySpot library-photos"
+                  )
+                  .getPublicUrl(
+                    filePath
+                  );
+
+
+              if (
+                !publicUrlData ||
+                !publicUrlData.publicUrl
+              ) {
+
+                throw new Error(
+                  "Could not create photo URL."
+                );
+
+              }
+
+
+              uploadedPhotoUrls.push(
+                publicUrlData.publicUrl
+              );
+
+            }
+
+          }
+
+
+          /* =========================================
+             SAVE PHOTO URLS TO LIBRARIES TABLE
+          ========================================= */
+
+          if (
+            uploadedPhotoUrls.length > 0
+          ) {
+
+            registerButton.textContent =
+              "Saving Library Photos...";
+
+
+            const {
+              error: photoUpdateError
+            } =
+              await client
+                .from("libraries")
+                .update({
+
+                  photos:
+                    uploadedPhotoUrls
+
+                })
+                .eq(
+                  "id",
+                  libraryId
+                )
+                .eq(
+                  "owner_id",
+                  ownerId
+                );
+
+
+            if (
+              photoUpdateError
+            ) {
+
+              throw new Error(
+                "Photos were uploaded but could not be linked to the library: " +
+                photoUpdateError.message
+              );
+
+            }
+
+          }
+
+
+          /* =========================================
+             SUCCESS
+          ========================================= */
+
+          const success =
+            document.getElementById(
+              "success"
+            );
+
+
+          success.style.display =
+            "block";
+
+
+          success.textContent =
+            uploadedPhotoUrls.length > 0
+              ? "✅ Registration completed successfully. Your library and photos have been saved."
+              : "✅ Registration completed successfully. Your library details have been saved.";
+
+
+          alert(
+            uploadedPhotoUrls.length > 0
+              ? "Registration completed successfully. Your library and photos have been saved."
+              : "Registration completed successfully. Your library details have been saved."
+          );
+
+
+          window.location.href =
+            "owner-login.html";
+
+
+        } catch (error) {
+
+          console.error(
+            "Registration error:",
+            error
+          );
+
+
+          const errorBox =
+            document.getElementById(
+              "error"
+            );
+
+
+          errorBox.style.display =
+            "block";
+
+
+          errorBox.textContent =
+            "Registration error: " +
+            (
+              error.message ||
+              "Something went wrong."
+            );
+
+
+          alert(
+            "Registration error: " +
+            (
+              error.message ||
+              "Something went wrong."
+            )
+          );
+
+
+        } finally {
+
+          registerButton.disabled =
+            false;
+
+          registerButton.textContent =
+            "✅ Register My Library";
+
+        }
+
+      }
+    );
+
+  }
+);
+
+</script>
+
 </body>
 </html>
