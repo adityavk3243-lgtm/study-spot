@@ -19,8 +19,6 @@
       padding-bottom: 78px;
     }
 
-    /* HEADER */
-
     header {
       height: 62px;
       background: #ffffff;
@@ -50,8 +48,6 @@
       margin-right: 55px;
     }
 
-    /* MAIN */
-
     .container {
       max-width: 650px;
       margin: 0 auto;
@@ -68,7 +64,6 @@
     .title-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       margin-bottom: 16px;
     }
 
@@ -83,8 +78,6 @@
       font-size: 15px;
       font-weight: 600;
     }
-
-    /* PHOTO GRID */
 
     .photo-grid {
       display: grid;
@@ -153,16 +146,12 @@
       margin-top: 4px;
     }
 
-    /* INFO */
-
     .info {
       margin-top: 14px;
       color: #64748b;
       font-size: 12px;
       line-height: 1.5;
     }
-
-    /* BUTTONS */
 
     .button {
       width: 100%;
@@ -194,8 +183,6 @@
       display: none;
     }
 
-    /* MESSAGE */
-
     .message {
       display: none;
       margin-top: 14px;
@@ -206,16 +193,12 @@
       line-height: 1.4;
     }
 
-    /* LOADING */
-
     .loading {
       grid-column: 1 / -1;
       text-align: center;
       color: #64748b;
       padding: 35px 10px;
     }
-
-    /* BOTTOM NAV */
 
     .bottom-nav {
       position: fixed;
@@ -276,1078 +259,764 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js"></script>
 
-<script>
-  const client = supabaseClient;
-</script>
-  
+  <script>
+    const client = supabaseClient;
+  </script>
+
 </head>
 
 <body>
 
-  <!-- HEADER -->
+<header>
+  <button
+    class="back-btn"
+    type="button"
+    onclick="history.back()"
+  >
+    ‹
+  </button>
 
-  <header>
-    <button
-      class="back-btn"
-      type="button"
-      onclick="history.back()"
+  <div class="header-title">
+    Manage Photos
+  </div>
+</header>
+
+
+<main class="container">
+
+  <section class="card">
+
+    <div class="title-row">
+      <h2>
+        Library Photos
+        <span id="photoCount">(0/15)</span>
+      </h2>
+    </div>
+
+
+    <input
+      type="file"
+      id="galleryInput"
+      accept="image/jpeg,image/png,image/webp"
+      multiple
     >
-      ‹
+
+    <input
+      type="file"
+      id="cameraInput"
+      accept="image/*"
+      capture="environment"
+    >
+
+
+    <div
+      class="photo-grid"
+      id="photoGrid"
+    >
+      <div class="loading">
+        Loading library photos...
+      </div>
+    </div>
+
+
+    <div class="info">
+      You can upload up to 15 photos. Supported formats:
+      JPG, PNG and WEBP. Each photo should be clear and
+      related to your library.
+    </div>
+
+
+    <button
+      type="button"
+      class="button camera-button"
+      id="cameraButton"
+    >
+      📷 Take Photo
     </button>
 
-    <div class="header-title">
-      Manage Photos
-    </div>
-  </header>
 
-
-  <!-- MAIN -->
-
-  <main class="container">
-
-    <section class="card">
-
-      <div class="title-row">
-        <h2>
-          Library Photos
-          <span id="photoCount">(0/15)</span>
-        </h2>
-      </div>
-
-
-      <!-- Gallery -->
-
-      <input
-        type="file"
-        id="galleryInput"
-        accept="image/jpeg,image/png,image/webp"
-        multiple
-      >
-
-
-      <!-- Camera -->
-
-      <input
-        type="file"
-        id="cameraInput"
-        accept="image/*"
-        capture="environment"
-      >
-
-
-      <!-- PHOTO GRID -->
-
-      <div
-        class="photo-grid"
-        id="photoGrid"
-      >
-        <div class="loading">
-          Loading library photos...
-        </div>
-      </div>
-
-
-      <div class="info">
-        You can upload up to 15 photos. Supported formats:
-        JPG, PNG and WEBP. Each photo should be clear and
-        related to your library.
-      </div>
-
-
-      <!-- CAMERA -->
-
-      <button
-        type="button"
-        class="button camera-button"
-        id="cameraButton"
-      >
-        📷 Take Photo
-      </button>
-
-
-      <!-- SAVE -->
-
-      <button
-        type="button"
-        class="button save-button"
-        id="saveButton"
-        disabled
-      >
-        Save Changes
-      </button>
-
-
-      <div
-        class="message"
-        id="message"
-      ></div>
-
-    </section>
-
-  </main>
-
-
-  <!-- BOTTOM NAV -->
-
-  <nav class="bottom-nav">
-
-    <a
-      class="nav-item"
-      href="owner-dashboard.html"
+    <button
+      type="button"
+      class="button save-button"
+      id="saveButton"
+      disabled
     >
-      <span class="nav-icon">⌂</span>
-      Home
-    </a>
-
-    <a
-      class="nav-item"
-      href="owner-dashboard.html"
-    >
-      <span class="nav-icon">♟</span>
-      Students
-    </a>
-
-    <a
-      class="nav-item active"
-      href="edit-library.html"
-    >
-      <span class="nav-icon">▣</span>
-      Library
-    </a>
-
-    <a
-      class="nav-item"
-      href="owner-dashboard.html"
-    >
-      <span class="nav-icon">♙</span>
-      Profile
-    </a>
-
-  </nav>
+      Save Changes
+    </button>
 
 
-  <script>
+    <div
+      class="message"
+      id="message"
+    ></div>
 
-    /* =========================================
-       ELEMENTS
-    ========================================= */
+  </section>
 
-    const galleryInput =
-      document.getElementById("galleryInput");
-
-    const cameraInput =
-      document.getElementById("cameraInput");
-
-    const cameraButton =
-      document.getElementById("cameraButton");
-
-    const photoGrid =
-      document.getElementById("photoGrid");
-
-    const photoCount =
-      document.getElementById("photoCount");
-
-    const saveButton =
-      document.getElementById("saveButton");
-
-    const message =
-      document.getElementById("message");
+</main>
 
 
-    /* =========================================
-       IMPORTANT
-       Exact bucket name from Supabase
-    ========================================= */
+<nav class="bottom-nav">
 
-    const PHOTO_BUCKET =
-      "StudySpot library-photos";
+  <a
+    class="nav-item"
+    href="owner-dashboard.html"
+  >
+    <span class="nav-icon">⌂</span>
+    Home
+  </a>
 
+  <a
+    class="nav-item"
+    href="owner-dashboard.html"
+  >
+    <span class="nav-icon">♟</span>
+    Students
+  </a>
 
-    /* =========================================
-       STATE
-    ========================================= */
+  <a
+    class="nav-item active"
+    href="edit-library.html"
+  >
+    <span class="nav-icon">▣</span>
+    Library
+  </a>
 
-    let ownerId = null;
+  <a
+    class="nav-item"
+    href="owner-dashboard.html"
+  >
+    <span class="nav-icon">♙</span>
+    Profile
+  </a>
 
-    let libraryId = null;
-
-    let savedPhotos = [];
-
-    let newFiles = [];
-
-    let photosChanged = false;
-
-
-    /* =========================================
-       MESSAGE
-    ========================================= */
-
-    function showMessage(
-      text,
-      success = true
-    ) {
-
-      message.style.display =
-        "block";
-
-      message.textContent =
-        text;
-
-      if (success) {
-
-        message.style.background =
-          "#dcfce7";
-
-        message.style.color =
-          "#166534";
-
-      } else {
-
-        message.style.background =
-          "#fee2e2";
-
-        message.style.color =
-          "#991b1b";
-      }
-    }
+</nav>
 
 
-    /* =========================================
-       HIDE MESSAGE
-    ========================================= */
+<script>
 
-    function hideMessage() {
+const galleryInput =
+  document.getElementById("galleryInput");
 
-      message.style.display =
-        "none";
+const cameraInput =
+  document.getElementById("cameraInput");
+
+const cameraButton =
+  document.getElementById("cameraButton");
+
+const photoGrid =
+  document.getElementById("photoGrid");
+
+const photoCount =
+  document.getElementById("photoCount");
+
+const saveButton =
+  document.getElementById("saveButton");
+
+const message =
+  document.getElementById("message");
+
+
+const PHOTO_BUCKET =
+  "StudySpot library-photos";
+
+
+let ownerId = null;
+
+let libraryId = null;
+
+let savedPhotos = [];
+
+let newFiles = [];
+
+let photosChanged = false;
+
+
+function showMessage(text, success = true) {
+
+  message.style.display = "block";
+
+  message.textContent = text;
+
+  if (success) {
+
+    message.style.background = "#dcfce7";
+    message.style.color = "#166534";
+
+  } else {
+
+    message.style.background = "#fee2e2";
+    message.style.color = "#991b1b";
+
+  }
+}
+
+
+function hideMessage() {
+
+  message.style.display = "none";
+
+}
+
+
+function updateCount() {
+
+  const total =
+    savedPhotos.length +
+    newFiles.length;
+
+  photoCount.textContent =
+    `(${total}/15)`;
+
+  saveButton.disabled =
+    !photosChanged;
+
+}
+
+
+function renderPhotos() {
+
+  photoGrid.innerHTML = "";
+
+  const total =
+    savedPhotos.length +
+    newFiles.length;
+
+
+  savedPhotos.forEach(
+    function(photo, index) {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "photo-card";
+
+
+      const image =
+        document.createElement("img");
+
+      image.src =
+        photo.url;
+
+      image.alt =
+        "Library photo";
+
+
+      const deleteButton =
+        document.createElement("button");
+
+      deleteButton.type =
+        "button";
+
+      deleteButton.className =
+        "delete-btn";
+
+      deleteButton.textContent =
+        "×";
+
+
+      deleteButton.addEventListener(
+        "click",
+        function() {
+
+          savedPhotos.splice(index, 1);
+
+          photosChanged = true;
+
+          renderPhotos();
+
+        }
+      );
+
+
+      card.appendChild(image);
+
+      card.appendChild(deleteButton);
+
+      photoGrid.appendChild(card);
 
     }
+  );
 
 
-    /* =========================================
-       COUNT
-    ========================================= */
+  newFiles.forEach(
+    function(file, index) {
 
-    function updateCount() {
+      const card =
+        document.createElement("div");
 
-      const total =
-        savedPhotos.length +
-        newFiles.length;
-
-      photoCount.textContent =
-        `(${total}/15)`;
-
-      saveButton.disabled =
-        !photosChanged;
-
-    }
+      card.className =
+        "photo-card";
 
 
-    /* =========================================
-       RENDER
-    ========================================= */
+      const image =
+        document.createElement("img");
 
-    function renderPhotos() {
-
-      photoGrid.innerHTML =
-        "";
-
-      const total =
-        savedPhotos.length +
-        newFiles.length;
+      image.alt =
+        "New library photo";
 
 
-      /* SAVED PHOTOS */
+      const reader =
+        new FileReader();
 
-      savedPhotos.forEach(
-        function(photo, index) {
-
-          const card =
-            document.createElement("div");
-
-          card.className =
-            "photo-card";
-
-
-          const image =
-            document.createElement("img");
+      reader.onload =
+        function(event) {
 
           image.src =
-            photo.url;
+            event.target.result;
 
-          image.alt =
-            "Library photo";
+        };
 
-
-          const deleteButton =
-            document.createElement("button");
-
-          deleteButton.type =
-            "button";
-
-          deleteButton.className =
-            "delete-btn";
-
-          deleteButton.textContent =
-            "×";
+      reader.readAsDataURL(file);
 
 
-          deleteButton.addEventListener(
-            "click",
-            function() {
+      const deleteButton =
+        document.createElement("button");
 
-              savedPhotos.splice(
-                index,
-                1
-              );
+      deleteButton.type =
+        "button";
 
-              photosChanged =
-                true;
+      deleteButton.className =
+        "delete-btn";
 
-              renderPhotos();
-
-            }
-          );
+      deleteButton.textContent =
+        "×";
 
 
-          card.appendChild(
-            image
-          );
+      deleteButton.addEventListener(
+        "click",
+        function() {
 
-          card.appendChild(
-            deleteButton
-          );
+          newFiles.splice(index, 1);
 
-          photoGrid.appendChild(
-            card
-          );
+          photosChanged = true;
+
+          renderPhotos();
 
         }
       );
 
 
-      /* NEW PHOTOS */
+      card.appendChild(image);
 
-      newFiles.forEach(
-        function(file, index) {
+      card.appendChild(deleteButton);
 
-          const card =
-            document.createElement("div");
+      photoGrid.appendChild(card);
 
-          card.className =
-            "photo-card";
+    }
+  );
 
 
-          const image =
-            document.createElement("img");
+  if (total < 15) {
 
-          image.alt =
-            "New library photo";
+    const addTile =
+      document.createElement("label");
 
+    addTile.className =
+      "add-tile";
 
-          const reader =
-            new FileReader();
+    addTile.setAttribute(
+      "for",
+      "galleryInput"
+    );
 
+    addTile.innerHTML = `
+      <div>
+        <span class="add-plus">＋</span>
+        <div class="add-text">
+          Add Photos
+        </div>
+      </div>
+    `;
 
-          reader.onload =
-            function(event) {
+    photoGrid.appendChild(addTile);
 
-              image.src =
-                event.target.result;
+  }
 
-            };
+  updateCount();
 
-
-          reader.readAsDataURL(
-            file
-          );
-
-
-          const deleteButton =
-            document.createElement("button");
-
-          deleteButton.type =
-            "button";
-
-          deleteButton.className =
-            "delete-btn";
-
-          deleteButton.textContent =
-            "×";
+}
 
 
-          deleteButton.addEventListener(
-            "click",
-            function() {
+async function loadLibrary() {
 
-              newFiles.splice(
-                index,
-                1
+  try {
+
+    const {
+      data: {
+        user
+      },
+      error: userError
+    } =
+      await client.auth.getUser();
+
+
+    if (userError || !user) {
+
+      window.location.href =
+        "owner-login.html";
+
+      return;
+
+    }
+
+
+    ownerId =
+      user.id;
+
+
+    const {
+      data: library,
+      error: libraryError
+    } =
+      await client
+        .from("libraries")
+        .select("id,photos")
+        .eq("owner_id", ownerId)
+        .maybeSingle();
+
+
+    if (libraryError) {
+
+      throw libraryError;
+
+    }
+
+
+    if (!library) {
+
+      throw new Error(
+        "Your library could not be found."
+      );
+
+    }
+
+
+    libraryId =
+      library.id;
+
+
+    /*
+      IMPORTANT:
+      Database photos are now the
+      ONLY source for existing photos.
+      We do NOT list random Storage files.
+    */
+
+    if (Array.isArray(library.photos)) {
+
+      savedPhotos =
+        library.photos
+          .filter(
+            function(url) {
+              return (
+                typeof url === "string" &&
+                url.trim() !== ""
               );
-
-              photosChanged =
-                true;
-
-              renderPhotos();
-
             }
-          );
+          )
+          .map(
+            function(url) {
+              return {
+                url: url
+              };
+            }
+          )
+          .slice(0, 15);
+
+    } else {
+
+      savedPhotos = [];
+
+    }
 
 
-          card.appendChild(
-            image
-          );
+    renderPhotos();
 
-          card.appendChild(
-            deleteButton
-          );
+    hideMessage();
 
-          photoGrid.appendChild(
-            card
-          );
 
+  } catch (error) {
+
+    console.error(
+      "Manage Photos loading error:",
+      error
+    );
+
+    photoGrid.innerHTML = "";
+
+    updateCount();
+
+    showMessage(
+      "Something went wrong while loading photos: " +
+      (error.message || "Unknown error"),
+      false
+    );
+
+  }
+
+}
+
+
+function addPhotos(files) {
+
+  const incoming =
+    Array.from(files);
+
+  const currentTotal =
+    savedPhotos.length +
+    newFiles.length;
+
+  const remaining =
+    15 - currentTotal;
+
+
+  if (remaining <= 0) {
+
+    showMessage(
+      "You can upload a maximum of 15 photos.",
+      false
+    );
+
+    return;
+
+  }
+
+
+  const selected =
+    incoming.slice(0, remaining);
+
+
+  newFiles =
+    newFiles.concat(selected);
+
+
+  photosChanged = true;
+
+  hideMessage();
+
+  renderPhotos();
+
+}
+
+
+galleryInput.addEventListener(
+  "change",
+  function() {
+
+    addPhotos(
+      galleryInput.files
+    );
+
+    galleryInput.value = "";
+
+  }
+);
+
+
+cameraButton.addEventListener(
+  "click",
+  function() {
+
+    cameraInput.click();
+
+  }
+);
+
+
+cameraInput.addEventListener(
+  "change",
+  function() {
+
+    addPhotos(
+      cameraInput.files
+    );
+
+    cameraInput.value = "";
+
+  }
+);
+
+
+async function uploadPhoto(file) {
+
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
+
+
+  const fileName =
+    `${Date.now()}-${crypto.randomUUID()}.${extension}`;
+
+
+  const filePath =
+    `${ownerId}/${fileName}`;
+
+
+  const {
+    error
+  } =
+    await client.storage
+      .from(PHOTO_BUCKET)
+      .upload(
+        filePath,
+        file,
+        {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.type
         }
       );
 
 
-      /* ADD PHOTOS TILE */
+  if (error) {
 
-      if (total < 15) {
+    throw error;
 
-        const addTile =
-          document.createElement("label");
+  }
 
-        addTile.className =
-          "add-tile";
 
-        addTile.setAttribute(
-          "for",
-          "galleryInput"
-        );
+  const {
+    data
+  } =
+    client.storage
+      .from(PHOTO_BUCKET)
+      .getPublicUrl(filePath);
 
-        addTile.innerHTML = `
-          <div>
-            <span class="add-plus">＋</span>
-            <div class="add-text">
-              Add Photos
-            </div>
-          </div>
-        `;
 
-        photoGrid.appendChild(
-          addTile
+  return {
+    url: data.publicUrl,
+    path: filePath,
+    name: fileName
+  };
+
+}
+
+
+saveButton.addEventListener(
+  "click",
+  async function() {
+
+    const total =
+      savedPhotos.length +
+      newFiles.length;
+
+
+    if (total > 15) {
+
+      showMessage(
+        "You can save a maximum of 15 photos.",
+        false
+      );
+
+      return;
+
+    }
+
+
+    saveButton.disabled = true;
+
+    saveButton.textContent =
+      "Saving Photos...";
+
+
+    try {
+
+      const uploadedPhotos = [];
+
+
+      for (
+        const file of newFiles
+      ) {
+
+        const uploaded =
+          await uploadPhoto(file);
+
+        uploadedPhotos.push(
+          uploaded
         );
 
       }
 
+
+      const finalPhotos =
+        savedPhotos.concat(
+          uploadedPhotos
+        );
+
+
+      const photoUrls =
+        finalPhotos.map(
+          function(photo) {
+            return photo.url;
+          }
+        );
+
+
+      const {
+        error: updateError
+      } =
+        await client
+          .from("libraries")
+          .update({
+            photos: photoUrls
+          })
+          .eq("id", libraryId)
+          .eq("owner_id", ownerId);
+
+
+      if (updateError) {
+
+        throw updateError;
+
+      }
+
+
+      savedPhotos =
+        finalPhotos;
+
+      newFiles = [];
+
+      photosChanged = false;
+
+      renderPhotos();
+
+      showMessage(
+        "Library photos saved successfully."
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Photo save error:",
+        error
+      );
+
+      showMessage(
+        "Photos could not be saved: " +
+        (error.message || "Unknown error"),
+        false
+      );
+
+    } finally {
+
+      saveButton.textContent =
+        "Save Changes";
 
       updateCount();
 
     }
 
+  }
+);
 
-    /* =========================================
-       LOAD PHOTOS FROM STORAGE
-    ========================================= */
 
-    async function loadPhotosFromStorage() {
+loadLibrary();
 
-      try {
-
-        const {
-          data: files,
-          error
-        } =
-          await client.storage
-            .from(
-              PHOTO_BUCKET
-            )
-            .list(
-              ownerId,
-              {
-                limit: 100,
-                offset: 0,
-                sortBy: {
-                  column: "created_at",
-                  order: "asc"
-                }
-              }
-            );
-
-
-        if (error) {
-
-          console.error(
-            "Storage photo loading error:",
-            error
-          );
-
-          showMessage(
-            "Photos could not be loaded: " +
-            error.message,
-            false
-          );
-
-          photoGrid.innerHTML = "";
-
-          updateCount();
-
-          return;
-
-        }
-
-
-        savedPhotos =
-          [];
-
-
-        if (
-          Array.isArray(files)
-        ) {
-
-          files
-            .filter(
-              function(file) {
-
-                return (
-                  file.name &&
-                  file.name !== ".emptyFolderPlaceholder"
-                );
-
-              }
-            )
-            .slice(0, 15)
-            .forEach(
-              function(file) {
-
-                const filePath =
-                  `${ownerId}/${file.name}`;
-
-                const {
-                  data
-                } =
-                  client.storage
-                    .from(
-                      PHOTO_BUCKET
-                    )
-                    .getPublicUrl(
-                      filePath
-                    );
-
-
-                savedPhotos.push({
-                  name:
-                    file.name,
-
-                  path:
-                    filePath,
-
-                  url:
-                    data.publicUrl
-                });
-
-              }
-            );
-
-        }
-
-
-        renderPhotos();
-
-
-        if (
-          savedPhotos.length > 0
-        ) {
-
-          showMessage(
-            "Photos loaded successfully."
-          );
-
-        } else {
-
-          hideMessage();
-
-        }
-
-
-      } catch (error) {
-
-        console.error(
-          "Photo loading exception:",
-          error
-        );
-
-        showMessage(
-          "Photos could not be loaded.",
-          false
-        );
-
-      }
-
-    }
-
-
-    /* =========================================
-       LOAD OWNER + LIBRARY
-    ========================================= */
-
-    async function loadLibrary() {
-
-      try {
-
-        const {
-          data: {
-            user
-          },
-          error: userError
-        } =
-          await client.auth.getUser();
-
-
-        if (
-          userError ||
-          !user
-        ) {
-
-          alert(
-            "Please login as a library owner."
-          );
-
-          window.location.href =
-            "owner-login.html";
-
-          return;
-
-        }
-
-
-        ownerId =
-          user.id;
-
-
-        const {
-          data: library,
-          error: libraryError
-        } =
-          await client
-            .from("libraries")
-            .select("id")
-            .eq(
-              "owner_id",
-              ownerId
-            )
-            .maybeSingle();
-
-
-        if (libraryError) {
-
-          console.error(
-            "Library loading error:",
-            libraryError
-          );
-
-          showMessage(
-            "Library could not be loaded: " +
-            libraryError.message,
-            false
-          );
-
-          return;
-
-        }
-
-
-        if (!library) {
-
-          showMessage(
-            "Your library could not be found.",
-            false
-          );
-
-          return;
-
-        }
-
-
-        libraryId =
-          library.id;
-
-
-        await loadPhotosFromStorage();
-
-
-      } catch (error) {
-
-        console.error(
-          "Manage Photos error:",
-          error
-        );
-
-        showMessage(
-          "Something went wrong while loading photos: " +
-          (error.message || "Unknown error"),
-          false
-        );
-
-      }
-
-    }
-
-
-    /* =========================================
-       ADD PHOTOS
-    ========================================= */
-
-    function addPhotos(files) {
-
-      const incoming =
-        Array.from(files);
-
-      const currentTotal =
-        savedPhotos.length +
-        newFiles.length;
-
-      const remaining =
-        15 - currentTotal;
-
-
-      if (
-        remaining <= 0
-      ) {
-
-        showMessage(
-          "You can upload a maximum of 15 photos.",
-          false
-        );
-
-        return;
-
-      }
-
-
-      const selected =
-        incoming.slice(
-          0,
-          remaining
-        );
-
-
-      newFiles =
-        newFiles.concat(
-          selected
-        );
-
-
-      photosChanged =
-        true;
-
-
-      if (
-        incoming.length >
-        remaining
-      ) {
-
-        showMessage(
-          "Only 15 photos can be added in total.",
-          false
-        );
-
-      } else {
-
-        hideMessage();
-
-      }
-
-
-      renderPhotos();
-
-    }
-
-
-    /* =========================================
-       GALLERY
-    ========================================= */
-
-    galleryInput.addEventListener(
-      "change",
-      function() {
-
-        addPhotos(
-          galleryInput.files
-        );
-
-        galleryInput.value =
-          "";
-
-      }
-    );
-
-
-    /* =========================================
-       CAMERA
-    ========================================= */
-
-    cameraButton.addEventListener(
-      "click",
-      function() {
-
-        cameraInput.click();
-
-      }
-    );
-
-
-    cameraInput.addEventListener(
-      "change",
-      function() {
-
-        addPhotos(
-          cameraInput.files
-        );
-
-        cameraInput.value =
-          "";
-
-      }
-    );
-
-
-    /* =========================================
-       UPLOAD ONE PHOTO
-    ========================================= */
-
-    async function uploadPhoto(
-      file
-    ) {
-
-      const extension =
-        file.name
-          .split(".")
-          .pop()
-          .toLowerCase();
-
-
-      const fileName =
-        `${Date.now()}-${crypto.randomUUID()}.${extension}`;
-
-
-      const filePath =
-        `${ownerId}/${fileName}`;
-
-
-      const {
-        error
-      } =
-        await client.storage
-          .from(
-            PHOTO_BUCKET
-          )
-          .upload(
-            filePath,
-            file,
-            {
-              cacheControl:
-                "3600",
-
-              upsert:
-                false,
-
-              contentType:
-                file.type
-            }
-          );
-
-
-      if (error) {
-
-        throw error;
-
-      }
-
-
-      const {
-        data
-      } =
-        client.storage
-          .from(
-            PHOTO_BUCKET
-          )
-          .getPublicUrl(
-            filePath
-          );
-
-
-      return {
-        name:
-          fileName,
-
-        path:
-          filePath,
-
-        url:
-          data.publicUrl
-      };
-
-    }
-
-
-    /* =========================================
-       SAVE CHANGES
-    ========================================= */
-
-    saveButton.addEventListener(
-      "click",
-      async function() {
-
-        const total =
-          savedPhotos.length +
-          newFiles.length;
-
-
-        if (
-          total > 15
-        ) {
-
-          showMessage(
-            "You can save a maximum of 15 photos.",
-            false
-          );
-
-          return;
-
-        }
-
-
-        saveButton.disabled =
-          true;
-
-        saveButton.textContent =
-          "Saving Photos...";
-
-
-        try {
-
-          const uploadedPhotos =
-            [];
-
-
-          /* Upload new photos */
-
-          for (
-            const file
-            of newFiles
-          ) {
-
-            const uploaded =
-              await uploadPhoto(
-                file
-              );
-
-            uploadedPhotos.push(
-              uploaded
-            );
-
-          }
-
-
-          const finalPhotos =
-            savedPhotos.concat(
-              uploadedPhotos
-            );
-
-
-          /*
-             Save URLs to libraries.photos
-             if the column exists.
-          */
-
-          const photoUrls =
-            finalPhotos.map(
-              function(photo) {
-                return photo.url;
-              }
-            );
-
-
-          const {
-            error: updateError
-          } =
-            await client
-              .from("libraries")
-              .update({
-                photos:
-                  photoUrls
-              })
-              .eq(
-                "id",
-                libraryId
-              )
-              .eq(
-                "owner_id",
-                ownerId
-              );
-
-
-          if (updateError) {
-
-            throw updateError;
-
-          }
-
-
-          savedPhotos =
-            finalPhotos;
-
-          newFiles =
-            [];
-
-          photosChanged =
-            false;
-
-
-          renderPhotos();
-
-
-          showMessage(
-            "Library photos saved successfully."
-          );
-
-
-        } catch (error) {
-
-          console.error(
-            "Photo save error:",
-            error
-          );
-
-
-          showMessage(
-            "Photos could not be saved: " +
-            (error.message || "Unknown error"),
-            false
-          );
-
-
-        } finally {
-
-          saveButton.textContent =
-            "Save Changes";
-
-          updateCount();
-
-        }
-
-      }
-    );
-
-
-    /* =========================================
-       START
-    ========================================= */
-
-    loadLibrary();
-
-  </script>
+</script>
 
 </body>
 </html>
