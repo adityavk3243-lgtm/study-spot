@@ -262,7 +262,6 @@
   <script>
     const client = supabaseClient;
   </script>
-
 </head>
 
 <body>
@@ -281,7 +280,6 @@
   </div>
 </header>
 
-
 <main class="container">
 
   <section class="card">
@@ -292,7 +290,6 @@
         <span id="photoCount">(0/15)</span>
       </h2>
     </div>
-
 
     <input
       type="file"
@@ -308,7 +305,6 @@
       capture="environment"
     >
 
-
     <div
       class="photo-grid"
       id="photoGrid"
@@ -318,13 +314,11 @@
       </div>
     </div>
 
-
     <div class="info">
       You can upload up to 15 photos. Supported formats:
       JPG, PNG and WEBP. Each photo should be clear and
       related to your library.
     </div>
-
 
     <button
       type="button"
@@ -333,7 +327,6 @@
     >
       📷 Take Photo
     </button>
-
 
     <button
       type="button"
@@ -344,7 +337,6 @@
       Save Changes
     </button>
 
-
     <div
       class="message"
       id="message"
@@ -353,7 +345,6 @@
   </section>
 
 </main>
-
 
 <nav class="bottom-nav">
 
@@ -391,7 +382,6 @@
 
 </nav>
 
-
 <script>
 
 const galleryInput =
@@ -419,44 +409,45 @@ const message =
 const PHOTO_BUCKET =
   "StudySpot library-photos";
 
+const MAX_PHOTOS = 15;
+
 
 let ownerId = null;
-
 let libraryId = null;
 
 let savedPhotos = [];
-
 let newFiles = [];
 
 let photosChanged = false;
 
 
+/* =========================
+   MESSAGE
+========================= */
+
 function showMessage(text, success = true) {
 
   message.style.display = "block";
-
   message.textContent = text;
 
   if (success) {
-
     message.style.background = "#dcfce7";
     message.style.color = "#166534";
-
   } else {
-
     message.style.background = "#fee2e2";
     message.style.color = "#991b1b";
-
   }
 }
 
 
 function hideMessage() {
-
   message.style.display = "none";
-
 }
 
+
+/* =========================
+   COUNT
+========================= */
 
 function updateCount() {
 
@@ -465,13 +456,16 @@ function updateCount() {
     newFiles.length;
 
   photoCount.textContent =
-    `(${total}/15)`;
+    `(${total}/${MAX_PHOTOS})`;
 
   saveButton.disabled =
     !photosChanged;
-
 }
 
+
+/* =========================
+   RENDER
+========================= */
 
 function renderPhotos() {
 
@@ -502,6 +496,12 @@ function renderPhotos() {
         "Library photo";
 
 
+      image.onerror =
+        function() {
+          card.style.background = "#e2e8f0";
+        };
+
+
       const deleteButton =
         document.createElement("button");
 
@@ -530,7 +530,6 @@ function renderPhotos() {
 
 
       card.appendChild(image);
-
       card.appendChild(deleteButton);
 
       photoGrid.appendChild(card);
@@ -559,6 +558,7 @@ function renderPhotos() {
       const reader =
         new FileReader();
 
+
       reader.onload =
         function(event) {
 
@@ -566,6 +566,7 @@ function renderPhotos() {
             event.target.result;
 
         };
+
 
       reader.readAsDataURL(file);
 
@@ -598,7 +599,6 @@ function renderPhotos() {
 
 
       card.appendChild(image);
-
       card.appendChild(deleteButton);
 
       photoGrid.appendChild(card);
@@ -607,7 +607,7 @@ function renderPhotos() {
   );
 
 
-  if (total < 15) {
+  if (total < MAX_PHOTOS) {
 
     const addTile =
       document.createElement("label");
@@ -630,13 +630,225 @@ function renderPhotos() {
     `;
 
     photoGrid.appendChild(addTile);
+  }
+
+
+  updateCount();
+}
+
+
+/* =========================
+   GET PUBLIC URL
+========================= */
+
+function getPublicUrl(path) {
+
+  const {
+    data
+  } =
+    client.storage
+      .from(PHOTO_BUCKET)
+      .getPublicUrl(path);
+
+  return data.publicUrl;
+}
+
+
+/* =========================
+   LOAD DATABASE PHOTOS
+========================= */
+
+function loadDatabasePhotos(photoArray) {
+
+  if (!Array.isArray(photoArray)) {
+    return [];
+  }
+
+
+  return photoArray
+    .filter(
+      function(url) {
+
+        return (
+          typeof url === "string" &&
+          url.trim() !== ""
+        );
+
+      }
+    )
+    .map(
+      function(url) {
+
+        return {
+          url: url,
+          source: "database"
+        };
+
+      }
+    );
+}
+
+
+/* =========================
+   RECOVER OLD STORAGE PHOTOS
+========================= */
+
+async function recoverOldStoragePhotos() {
+
+  /*
+    Old system stored photos inside:
+
+    ownerId/fileName
+
+    We temporarily read that folder only
+    to recover existing photos.
+
+    New uploads will NOT use this folder.
+  */
+
+  const {
+    data: files,
+    error
+  } =
+    await client.storage
+      .from(PHOTO_BUCKET)
+      .list(
+        ownerId,
+        {
+          limit: 100,
+          offset: 0,
+          sortBy: {
+            column: "name",
+            order: "asc"
+          }
+        }
+      );
+
+
+  if (error) {
+    console.error(
+      "Old photo recovery error:",
+      error
+    );
+
+    return [];
+  }
+
+
+  if (!Array.isArray(files)) {
+    return [];
+  }
+
+
+  return files
+    .filter(
+      function(file) {
+
+        return (
+          file &&
+          file.name &&
+          file.name !== ".emptyFolderPlaceholder"
+        );
+
+      }
+    )
+    .map(
+      function(file) {
+
+        const path =
+          `${ownerId}/${file.name}`;
+
+        return {
+          url: getPublicUrl(path),
+          path: path,
+          source: "legacy-storage"
+        };
+
+      }
+    );
+}
+
+
+/* =========================
+   REMOVE DUPLICATES
+========================= */
+
+function mergePhotos(
+  databasePhotos,
+  storagePhotos
+) {
+
+  const result = [];
+  const seen = new Set();
+
+
+  function addPhoto(photo) {
+
+    if (
+      !photo ||
+      !photo.url
+    ) {
+      return;
+    }
+
+
+    const key =
+      photo.url.trim();
+
+
+    if (
+      !key ||
+      seen.has(key)
+    ) {
+      return;
+    }
+
+
+    seen.add(key);
+
+    result.push(photo);
+  }
+
+
+  /*
+    Database photos get priority.
+  */
+
+  databasePhotos.forEach(
+    addPhoto
+  );
+
+
+  /*
+    Then recover old Storage photos
+    only until 15 photos are reached.
+  */
+
+  for (
+    const photo of storagePhotos
+  ) {
+
+    if (
+      result.length >= MAX_PHOTOS
+    ) {
+      break;
+    }
+
+    addPhoto(photo);
 
   }
 
-  updateCount();
 
+  return result.slice(
+    0,
+    MAX_PHOTOS
+  );
 }
 
+
+/* =========================
+   LOAD LIBRARY
+========================= */
 
 async function loadLibrary() {
 
@@ -651,7 +863,10 @@ async function loadLibrary() {
       await client.auth.getUser();
 
 
-    if (userError || !user) {
+    if (
+      userError ||
+      !user
+    ) {
 
       window.location.href =
         "owner-login.html";
@@ -677,9 +892,7 @@ async function loadLibrary() {
 
 
     if (libraryError) {
-
       throw libraryError;
-
     }
 
 
@@ -697,36 +910,89 @@ async function loadLibrary() {
 
 
     /*
-      IMPORTANT:
-      Database photos are now the
-      ONLY source for existing photos.
-      We do NOT list random Storage files.
+      Step 1:
+      Load photos already saved in database.
     */
 
-    if (Array.isArray(library.photos)) {
-
-      savedPhotos =
+    const databasePhotos =
+      loadDatabasePhotos(
         library.photos
-          .filter(
-            function(url) {
-              return (
-                typeof url === "string" &&
-                url.trim() !== ""
-              );
-            }
-          )
-          .map(
-            function(url) {
-              return {
-                url: url
-              };
-            }
-          )
-          .slice(0, 15);
+      );
 
-    } else {
 
-      savedPhotos = [];
+    /*
+      Step 2:
+      Look at the old owner folder.
+
+      This is ONLY for recovery of existing
+      registration/legacy photos.
+    */
+
+    const oldStoragePhotos =
+      await recoverOldStoragePhotos();
+
+
+    /*
+      Step 3:
+      Combine them without duplicates.
+    */
+
+    const mergedPhotos =
+      mergePhotos(
+        databasePhotos,
+        oldStoragePhotos
+      );
+
+
+    savedPhotos =
+      mergedPhotos;
+
+
+    /*
+      If Storage contained old photos that
+      were missing from libraries.photos,
+      save the recovered list into database.
+    */
+
+    const oldCount =
+      databasePhotos.length;
+
+    const newCount =
+      mergedPhotos.length;
+
+
+    if (
+      newCount > oldCount
+    ) {
+
+      const recoveredUrls =
+        mergedPhotos.map(
+          function(photo) {
+            return photo.url;
+          }
+        );
+
+
+      const {
+        error: recoveryUpdateError
+      } =
+        await client
+          .from("libraries")
+          .update({
+            photos: recoveredUrls
+          })
+          .eq("id", libraryId)
+          .eq("owner_id", ownerId);
+
+
+      if (recoveryUpdateError) {
+
+        console.error(
+          "Photo recovery database update error:",
+          recoveryUpdateError
+        );
+
+      }
 
     }
 
@@ -743,13 +1009,19 @@ async function loadLibrary() {
       error
     );
 
+
     photoGrid.innerHTML = "";
+
 
     updateCount();
 
+
     showMessage(
       "Something went wrong while loading photos: " +
-      (error.message || "Unknown error"),
+      (
+        error.message ||
+        "Unknown error"
+      ),
       false
     );
 
@@ -758,17 +1030,24 @@ async function loadLibrary() {
 }
 
 
+/* =========================
+   ADD NEW PHOTOS
+========================= */
+
 function addPhotos(files) {
 
   const incoming =
-    Array.from(files);
+    Array.from(files || []);
+
 
   const currentTotal =
     savedPhotos.length +
     newFiles.length;
 
+
   const remaining =
-    15 - currentTotal;
+    MAX_PHOTOS -
+    currentTotal;
 
 
   if (remaining <= 0) {
@@ -784,14 +1063,33 @@ function addPhotos(files) {
 
 
   const selected =
-    incoming.slice(0, remaining);
+    incoming
+      .filter(
+        function(file) {
+
+          return (
+            file.type === "image/jpeg" ||
+            file.type === "image/png" ||
+            file.type === "image/webp"
+          );
+
+        }
+      )
+      .slice(
+        0,
+        remaining
+      );
 
 
   newFiles =
-    newFiles.concat(selected);
+    newFiles.concat(
+      selected
+    );
 
 
-  photosChanged = true;
+  photosChanged =
+    true;
+
 
   hideMessage();
 
@@ -799,6 +1097,10 @@ function addPhotos(files) {
 
 }
 
+
+/* =========================
+   GALLERY
+========================= */
 
 galleryInput.addEventListener(
   "change",
@@ -813,6 +1115,10 @@ galleryInput.addEventListener(
   }
 );
 
+
+/* =========================
+   CAMERA
+========================= */
 
 cameraButton.addEventListener(
   "click",
@@ -838,6 +1144,10 @@ cameraInput.addEventListener(
 );
 
 
+/* =========================
+   UPLOAD NEW PHOTO
+========================= */
+
 async function uploadPhoto(file) {
 
   const extension =
@@ -851,8 +1161,16 @@ async function uploadPhoto(file) {
     `${Date.now()}-${crypto.randomUUID()}.${extension}`;
 
 
+  /*
+    NEW SYSTEM:
+
+    libraryId/fileName
+
+    This keeps every library separate.
+  */
+
   const filePath =
-    `${ownerId}/${fileName}`;
+    `${libraryId}/${fileName}`;
 
 
   const {
@@ -872,9 +1190,7 @@ async function uploadPhoto(file) {
 
 
   if (error) {
-
     throw error;
-
   }
 
 
@@ -883,17 +1199,24 @@ async function uploadPhoto(file) {
   } =
     client.storage
       .from(PHOTO_BUCKET)
-      .getPublicUrl(filePath);
+      .getPublicUrl(
+        filePath
+      );
 
 
   return {
     url: data.publicUrl,
     path: filePath,
-    name: fileName
+    name: fileName,
+    source: "library-storage"
   };
 
 }
 
+
+/* =========================
+   SAVE CHANGES
+========================= */
 
 saveButton.addEventListener(
   "click",
@@ -904,7 +1227,9 @@ saveButton.addEventListener(
       newFiles.length;
 
 
-    if (total > 15) {
+    if (
+      total > MAX_PHOTOS
+    ) {
 
       showMessage(
         "You can save a maximum of 15 photos.",
@@ -916,7 +1241,8 @@ saveButton.addEventListener(
     }
 
 
-    saveButton.disabled = true;
+    saveButton.disabled =
+      true;
 
     saveButton.textContent =
       "Saving Photos...";
@@ -927,6 +1253,10 @@ saveButton.addEventListener(
       const uploadedPhotos = [];
 
 
+      /*
+        Upload new photos one by one.
+      */
+
       for (
         const file of newFiles
       ) {
@@ -934,12 +1264,17 @@ saveButton.addEventListener(
         const uploaded =
           await uploadPhoto(file);
 
+
         uploadedPhotos.push(
           uploaded
         );
 
       }
 
+
+      /*
+        Final photo list.
+      */
 
       const finalPhotos =
         savedPhotos.concat(
@@ -955,6 +1290,10 @@ saveButton.addEventListener(
         );
 
 
+      /*
+        Save URLs to the exact library.
+      */
+
       const {
         error: updateError
       } =
@@ -968,9 +1307,7 @@ saveButton.addEventListener(
 
 
       if (updateError) {
-
         throw updateError;
-
       }
 
 
@@ -979,9 +1316,12 @@ saveButton.addEventListener(
 
       newFiles = [];
 
-      photosChanged = false;
+      photosChanged =
+        false;
+
 
       renderPhotos();
+
 
       showMessage(
         "Library photos saved successfully."
@@ -995,9 +1335,13 @@ saveButton.addEventListener(
         error
       );
 
+
       showMessage(
         "Photos could not be saved: " +
-        (error.message || "Unknown error"),
+        (
+          error.message ||
+          "Unknown error"
+        ),
         false
       );
 
@@ -1013,6 +1357,10 @@ saveButton.addEventListener(
   }
 );
 
+
+/* =========================
+   START
+========================= */
 
 loadLibrary();
 
