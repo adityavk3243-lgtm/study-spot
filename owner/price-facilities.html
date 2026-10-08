@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,8 +54,54 @@
       font-size: 21px;
     }
 
+    .section-description {
+      margin-top: -8px;
+      margin-bottom: 18px;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .plan-card {
+      border: 1px solid #dbe3ef;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 12px;
+      background: #f8fafc;
+    }
+
+    .plan-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .plan-name {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .plan-name input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+    }
+
+    .plan-fee label {
+      margin-bottom: 7px;
+    }
+
     .field {
       margin-bottom: 16px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
     }
 
     label {
@@ -74,11 +119,102 @@
       border: 1px solid #cbd5e1;
       border-radius: 8px;
       font-size: 15px;
+      background: white;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
     }
 
     textarea {
       min-height: 90px;
       resize: vertical;
+    }
+
+    .seat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .info-box {
+      padding: 12px 14px;
+      background: #eff6ff;
+      border-radius: 10px;
+      color: #1e40af;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px;
+      background: #f8fafc;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .toggle-text {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .toggle-text small {
+      display: block;
+      margin-top: 4px;
+      color: #64748b;
+      font-weight: normal;
+      line-height: 1.4;
+    }
+
+    .switch {
+      position: relative;
+      width: 48px;
+      min-width: 48px;
+      height: 26px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #cbd5e1;
+      border-radius: 30px;
+      transition: 0.2s;
+    }
+
+    .slider:before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .switch input:checked + .slider {
+      background: #2563eb;
+    }
+
+    .switch input:checked + .slider:before {
+      transform: translateX(22px);
     }
 
     .facility-grid {
@@ -95,10 +231,13 @@
       background: #f8fafc;
       border-radius: 8px;
       font-size: 14px;
+      font-weight: normal;
+      margin: 0;
     }
 
     .facility input {
       width: auto;
+      margin: 0;
     }
 
     .update-button {
@@ -111,10 +250,16 @@
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
+      margin-top: 18px;
     }
 
     .update-button:hover {
       background: #1d4ed8;
+    }
+
+    .update-button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
 
     .back-button {
@@ -134,102 +279,265 @@
       margin-top: 14px;
       padding: 12px;
       border-radius: 8px;
-      background: #dcfce7;
-      color: #166534;
       font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .female-fields {
+      display: none;
+    }
+
+    .female-fields.show {
+      display: block;
     }
 
     @media (max-width: 500px) {
-      .facility-grid {
+      .facility-grid,
+      .seat-grid {
         grid-template-columns: 1fr;
       }
 
       .section {
         padding: 18px;
       }
+
+      .plan-header {
+        align-items: flex-start;
+      }
     }
   </style>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../supabase-config.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
 </head>
 
 <body>
 
   <div class="header">
     <h1>Price & Facilities</h1>
-    <p>Update your library pricing and available facilities</p>
+    <p>Manage membership plans, seats and library facilities</p>
   </div>
 
   <div class="container">
 
+    <!-- MEMBERSHIP PLANS -->
     <div class="section">
-      <h2>Pricing Details</h2>
+      <h2>Membership Plans</h2>
 
-<div class="field">
-  <label>Membership Plans</label>
+      <p class="section-description">
+        Enable the plans you offer and enter the membership fee for each plan.
+      </p>
 
-  <div class="facility-grid">
+      <!-- 1 DAY -->
+      <div class="plan-card">
+        <div class="plan-header">
+          <div class="plan-name">
+            <input type="checkbox" id="oneDayEnabled">
+            <span>1 Day</span>
+          </div>
+        </div>
 
-    <label class="facility">
-      <input
-        type="checkbox"
-        id="oneDayEnabled"
-      >
-      One Day
-    </label>
-
-    <label class="facility">
-      <input
-        type="checkbox"
-        id="weeklyEnabled"
-      >
-      Weekly
-    </label>
-
-    <label class="facility">
-      <input
-        type="checkbox"
-        id="monthlyEnabled"
-      >
-      Monthly
-    </label>
-
-  </div>
-</div>
-      
-      <div class="field">
-        <label for="monthlyFee">Monthly Fee (₹)</label>
-        <input type="number" id="monthlyFee" placeholder="Enter monthly fee">
+        <div class="plan-fee">
+          <label for="dailyFee">Fee (₹)</label>
+          <input
+            type="number"
+            id="dailyFee"
+            min="0"
+            placeholder="Enter 1 day fee"
+          >
+        </div>
       </div>
 
-      <div class="field">
-        <label for="dailyFee">Daily Fee (₹)</label>
-        <input type="number" id="dailyFee" placeholder="Enter daily fee">
+      <!-- WEEKLY -->
+      <div class="plan-card">
+        <div class="plan-header">
+          <div class="plan-name">
+            <input type="checkbox" id="weeklyEnabled">
+            <span>Weekly</span>
+          </div>
+        </div>
+
+        <div class="plan-fee">
+          <label for="weeklyFee">Fee (₹)</label>
+          <input
+            type="number"
+            id="weeklyFee"
+            min="0"
+            placeholder="Enter weekly fee"
+          >
+        </div>
       </div>
 
-      <div class="field">
-        <label for="weeklyFee">Weekly Fee (₹)</label>
-        <input type="number" id="weeklyFee" placeholder="Enter weekly fee">
+      <!-- MONTHLY -->
+      <div class="plan-card">
+        <div class="plan-header">
+          <div class="plan-name">
+            <input type="checkbox" id="monthlyEnabled">
+            <span>Monthly</span>
+          </div>
+        </div>
+
+        <div class="plan-fee">
+          <label for="monthlyFee">Fee (₹)</label>
+          <input
+            type="number"
+            id="monthlyFee"
+            min="0"
+            placeholder="Enter monthly fee"
+          >
+        </div>
       </div>
 
-      <div class="field">
-        <label for="seatType">Seat Type</label>
-        <select id="seatType">
-          <option value="">Select seat type</option>
-          <option>Single Seat</option>
-          <option>Shared Seat</option>
-          <option>Both Single and Shared</option>
-        </select>
+      <!-- 3 MONTHS -->
+      <div class="plan-card">
+        <div class="plan-header">
+          <div class="plan-name">
+            <input type="checkbox" id="threeMonthEnabled">
+            <span>3 Months</span>
+          </div>
+        </div>
+
+        <div class="plan-fee">
+          <label for="threeMonthFee">Fee (₹)</label>
+          <input
+            type="number"
+            id="threeMonthFee"
+            min="0"
+            placeholder="Enter 3 month fee"
+          >
+        </div>
       </div>
 
-      <div class="field">
-        <label for="seatAvailability">Available Seats</label>
-        <input type="number" id="seatAvailability" placeholder="Enter available seats">
+      <!-- 6 MONTHS -->
+      <div class="plan-card">
+        <div class="plan-header">
+          <div class="plan-name">
+            <input type="checkbox" id="sixMonthEnabled">
+            <span>6 Months</span>
+          </div>
+        </div>
+
+        <div class="plan-fee">
+          <label for="sixMonthFee">Fee (₹)</label>
+          <input
+            type="number"
+            id="sixMonthFee"
+            min="0"
+            placeholder="Enter 6 month fee"
+          >
+        </div>
       </div>
     </div>
 
+
+    <!-- SEAT MANAGEMENT -->
+    <div class="section">
+      <h2>Seat Management</h2>
+
+      <p class="section-description">
+        Set your library's total seats, gender-based seat capacity and automatic seat numbering preferences.
+      </p>
+
+      <div class="seat-grid">
+
+        <div class="field">
+          <label for="totalSeats">Total Seats</label>
+          <input
+            type="number"
+            id="totalSeats"
+            min="0"
+            placeholder="Enter total seats"
+          >
+        </div>
+
+        <div class="field">
+          <label for="maleSeats">Male Seats</label>
+          <input
+            type="number"
+            id="maleSeats"
+            min="0"
+            placeholder="Enter male seats"
+          >
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label for="femaleSeats">Female Seats</label>
+        <input
+          type="number"
+          id="femaleSeats"
+          min="0"
+          placeholder="Enter female seats"
+        >
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle-text">
+          Separate Female Section
+          <small>
+            Enable this if female members have a separate seating section.
+          </small>
+        </div>
+
+        <label class="switch">
+          <input type="checkbox" id="separateFemaleSection">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="seatNumberingMode">Seat Numbering</label>
+
+        <select id="seatNumberingMode">
+          <option value="automatic">Automatic</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+
+      <div class="seat-grid">
+
+        <div class="field">
+          <label for="maleSeatPrefix">Male Seat Prefix</label>
+          <input
+            type="text"
+            id="maleSeatPrefix"
+            maxlength="10"
+            placeholder="M"
+          >
+        </div>
+
+        <div class="field">
+          <label for="femaleSeatPrefix">Female Seat Prefix</label>
+          <input
+            type="text"
+            id="femaleSeatPrefix"
+            maxlength="10"
+            placeholder="F"
+          >
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label for="seatAlertNumber">Seat Alert Number</label>
+
+        <input
+          type="number"
+          id="seatAlertNumber"
+          min="0"
+          placeholder="Example: 5"
+        >
+
+        <div class="info-box" style="margin-top: 10px; margin-bottom: 0;">
+          If available seats become equal to or lower than this number,
+          StudySpot can show a low-seat alert.
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FACILITIES -->
     <div class="section">
       <h2>Library Facilities</h2>
 
@@ -314,17 +622,20 @@
 
       <div class="field" style="margin-top: 18px;">
         <label for="otherFacilities">Other Facilities</label>
-        <textarea id="otherFacilities" placeholder="Enter any other facilities"></textarea>
+
+        <textarea
+          id="otherFacilities"
+          placeholder="Enter any other facilities"
+        ></textarea>
       </div>
 
       <button class="update-button" id="updateButton">
-        Update Price & Facilities
+        Save Changes
       </button>
 
-      <div class="message" id="message">
-        Price and facilities updated successfully in this demo.
-      </div>
+      <div class="message" id="message"></div>
     </div>
+
 
     <a class="back-button" href="owner-dashboard.html">
       Back to Dashboard
@@ -332,157 +643,233 @@
 
   </div>
 
+
   <script>
 
-      const updateButton =
-    document.getElementById("updateButton");
+    const updateButton =
+      document.getElementById("updateButton");
 
-  const message =
-    document.getElementById("message");
+    const message =
+      document.getElementById("message");
 
-  let currentLibrary = null;
-
-
-  async function getOwnerLibrary() {
-
-    const {
-      data,
-      error
-    } = await window.supabaseClient.auth.getSession();
-
-    if (error || !data.session) {
-
-      window.location.href =
-        "owner-login.html";
-
-      return null;
-    }
-
-    const user =
-      data.session.user;
+    let currentLibrary = null;
 
 
-    const {
-      data: library,
-      error: libraryError
-    } = await window.supabaseClient
-      .from("libraries")
-      .select("*")
-      .eq("owner_id", user.id)
-      .maybeSingle();
+    function showMessage(text, success = true) {
 
+      message.textContent = text;
 
-    if (libraryError || !library) {
+      message.style.display = "block";
 
-      message.textContent =
-        "Your library could not be found.";
-
-      message.style.display =
-        "block";
-
-      return null;
+      if (success) {
+        message.style.background = "#dcfce7";
+        message.style.color = "#166534";
+      } else {
+        message.style.background = "#fee2e2";
+        message.style.color = "#991b1b";
+      }
     }
 
 
-    return library;
-  }
+    async function getOwnerLibrary() {
+
+      const {
+        data,
+        error
+      } = await window.supabaseClient.auth.getSession();
 
 
-  async function loadLibrary() {
+      if (error || !data.session) {
 
-    const library =
-      await getOwnerLibrary();
+        window.location.href =
+          "owner-login.html";
 
-    if (!library) {
-      return;
+        return null;
+      }
+
+
+      const user =
+        data.session.user;
+
+
+      const {
+        data: library,
+        error: libraryError
+      } = await window.supabaseClient
+        .from("libraries")
+        .select("*")
+        .eq("owner_id", user.id)
+        .maybeSingle();
+
+
+      if (libraryError || !library) {
+
+        showMessage(
+          "Your library could not be found.",
+          false
+        );
+
+        return null;
+      }
+
+
+      return library;
     }
 
-    currentLibrary =
-      library;
+
+    function setValue(id, value) {
+
+      const element =
+        document.getElementById(id);
+
+      if (element) {
+        element.value =
+          value ?? "";
+      }
+    }
 
 
-    document.getElementById("oneDayEnabled").checked =
-      library.daily_plan_enabled === true;
+    async function loadLibrary() {
 
-    document.getElementById("weeklyEnabled").checked =
-      library.weekly_plan_enabled === true;
-
-    document.getElementById("monthlyEnabled").checked =
-      library.monthly_plan_enabled === true;
+      const library =
+        await getOwnerLibrary();
 
 
-    document.getElementById("dailyFee").value =
-      library.daily_fee ?? "";
-
-    document.getElementById("weeklyFee").value =
-      library.weekly_fee ?? "";
-
-    document.getElementById("monthlyFee").value =
-      library.monthly_fee ?? "";
-
-
-    document.getElementById("seatType").value =
-      library.seat_type ?? "";
-
-    document.getElementById("seatAvailability").value =
-      library.seat_availability ?? "";
-
-
-    document.getElementById("otherFacilities").value =
-      library.other_facilities ?? "";
-
-
-    const facilities =
-      Array.isArray(library.facilities)
-        ? library.facilities
-        : [];
-
-
-    document
-      .querySelectorAll(
-        '.facility-grid input[type="checkbox"]'
-      )
-      .forEach(function (checkbox) {
-
-        if (
-          checkbox.id === "oneDayEnabled" ||
-          checkbox.id === "weeklyEnabled" ||
-          checkbox.id === "monthlyEnabled"
-        ) {
-          return;
-        }
-
-        checkbox.checked =
-          facilities.includes(checkbox.value);
-
-      });
-  }
-
-
-  updateButton.addEventListener(
-    "click",
-    async function () {
-
-      if (!currentLibrary) {
-
-        message.textContent =
-          "Library information is not ready. Please refresh the page.";
-
-        message.style.display =
-          "block";
-
+      if (!library) {
         return;
       }
 
 
-      updateButton.disabled =
-        true;
-
-      updateButton.textContent =
-        "Saving...";
+      currentLibrary =
+        library;
 
 
-      const facilities = [];
+      /* MEMBERSHIP PLANS */
+
+      document.getElementById(
+        "oneDayEnabled"
+      ).checked =
+        library.daily_plan_enabled === true;
+
+
+      document.getElementById(
+        "weeklyEnabled"
+      ).checked =
+        library.weekly_plan_enabled === true;
+
+
+      document.getElementById(
+        "monthlyEnabled"
+      ).checked =
+        library.monthly_plan_enabled === true;
+
+
+      document.getElementById(
+        "threeMonthEnabled"
+      ).checked =
+        library.three_month_plan_enabled === true;
+
+
+      document.getElementById(
+        "sixMonthEnabled"
+      ).checked =
+        library.six_month_plan_enabled === true;
+
+
+      setValue(
+        "dailyFee",
+        library.daily_fee
+      );
+
+
+      setValue(
+        "weeklyFee",
+        library.weekly_fee
+      );
+
+
+      setValue(
+        "monthlyFee",
+        library.monthly_fee
+      );
+
+
+      setValue(
+        "threeMonthFee",
+        library.three_month_fee
+      );
+
+
+      setValue(
+        "sixMonthFee",
+        library.six_month_fee
+      );
+
+
+      /* SEATS */
+
+      setValue(
+        "totalSeats",
+        library.total_seats
+      );
+
+
+      setValue(
+        "maleSeats",
+        library.male_seats
+      );
+
+
+      setValue(
+        "femaleSeats",
+        library.female_seats
+      );
+
+
+      document.getElementById(
+        "separateFemaleSection"
+      ).checked =
+        library.separate_female_section === true;
+
+
+      document.getElementById(
+        "seatNumberingMode"
+      ).value =
+        library.seat_numbering_mode || "automatic";
+
+
+      setValue(
+        "maleSeatPrefix",
+        library.male_seat_prefix || "M"
+      );
+
+
+      setValue(
+        "femaleSeatPrefix",
+        library.female_seat_prefix || "F"
+      );
+
+
+      setValue(
+        "seatAlertNumber",
+        library.seat_alert_number ?? 5
+      );
+
+
+      /* OTHER DATA */
+
+      setValue(
+        "otherFacilities",
+        library.other_facilities
+      );
+
+
+      /* FACILITIES */
+
+      const facilities =
+        Array.isArray(library.facilities)
+          ? library.facilities
+          : [];
 
 
       document
@@ -494,133 +881,336 @@
           if (
             checkbox.id === "oneDayEnabled" ||
             checkbox.id === "weeklyEnabled" ||
-            checkbox.id === "monthlyEnabled"
+            checkbox.id === "monthlyEnabled" ||
+            checkbox.id === "threeMonthEnabled" ||
+            checkbox.id === "sixMonthEnabled"
           ) {
             return;
           }
 
-          if (checkbox.checked) {
-            facilities.push(checkbox.value);
-          }
+
+          checkbox.checked =
+            facilities.includes(
+              checkbox.value
+            );
 
         });
 
-
-      const dailyFee =
-        document.getElementById("dailyFee").value;
-
-      const weeklyFee =
-        document.getElementById("weeklyFee").value;
-
-      const monthlyFee =
-        document.getElementById("monthlyFee").value;
+    }
 
 
-      const seatAvailability =
-        document.getElementById("seatAvailability").value;
+    updateButton.addEventListener(
+      "click",
+      async function () {
+
+        if (!currentLibrary) {
+
+          showMessage(
+            "Library information is not ready. Please refresh the page.",
+            false
+          );
+
+          return;
+        }
 
 
-      const {
-        error
-      } = await window.supabaseClient
-        .from("libraries")
-        .update({
+        /* BASIC VALIDATION */
 
-          daily_plan_enabled:
-            document.getElementById("oneDayEnabled").checked,
-
-          weekly_plan_enabled:
-            document.getElementById("weeklyEnabled").checked,
-
-          monthly_plan_enabled:
-            document.getElementById("monthlyEnabled").checked,
-
-          daily_fee:
-            dailyFee
-              ? Number(dailyFee)
-              : null,
-
-          weekly_fee:
-            weeklyFee
-              ? Number(weeklyFee)
-              : null,
-
-          monthly_fee:
-            monthlyFee
-              ? Number(monthlyFee)
-              : null,
-
-          seat_type:
-            document.getElementById("seatType").value || null,
-
-          seat_availability:
-            seatAvailability
-              ? Number(seatAvailability)
-              : null,
-
-          facilities:
-            facilities,
-
-          other_facilities:
-            document
-              .getElementById("otherFacilities")
-              .value
-              .trim() || null
-
-        })
-        .eq("id", currentLibrary.id);
+        const totalSeats =
+          document.getElementById(
+            "totalSeats"
+          ).value;
 
 
-      if (error) {
+        const maleSeats =
+          document.getElementById(
+            "maleSeats"
+          ).value;
 
-        message.textContent =
-          "Update failed: " + error.message;
 
-        message.style.display =
-          "block";
+        const femaleSeats =
+          document.getElementById(
+            "femaleSeats"
+          ).value;
 
-        message.style.background =
-          "#fee2e2";
 
-        message.style.color =
-          "#991b1b";
+        if (
+          totalSeats !== "" &&
+          maleSeats !== "" &&
+          femaleSeats !== ""
+        ) {
+
+          if (
+            Number(maleSeats) +
+            Number(femaleSeats) >
+            Number(totalSeats)
+          ) {
+
+            showMessage(
+              "Male seats + Female seats cannot be greater than Total Seats.",
+              false
+            );
+
+            return;
+          }
+
+        }
+
+
+        updateButton.disabled =
+          true;
+
+        updateButton.textContent =
+          "Saving...";
+
+
+        /* FACILITIES */
+
+        const facilities = [];
+
+
+        document
+          .querySelectorAll(
+            '.facility-grid input[type="checkbox"]'
+          )
+          .forEach(function (checkbox) {
+
+            if (
+              checkbox.id === "oneDayEnabled" ||
+              checkbox.id === "weeklyEnabled" ||
+              checkbox.id === "monthlyEnabled" ||
+              checkbox.id === "threeMonthEnabled" ||
+              checkbox.id === "sixMonthEnabled"
+            ) {
+              return;
+            }
+
+
+            if (checkbox.checked) {
+
+              facilities.push(
+                checkbox.value
+              );
+
+            }
+
+          });
+
+
+        /* PLAN FEES */
+
+        const dailyFee =
+          document.getElementById(
+            "dailyFee"
+          ).value;
+
+
+        const weeklyFee =
+          document.getElementById(
+            "weeklyFee"
+          ).value;
+
+
+        const monthlyFee =
+          document.getElementById(
+            "monthlyFee"
+          ).value;
+
+
+        const threeMonthFee =
+          document.getElementById(
+            "threeMonthFee"
+          ).value;
+
+
+        const sixMonthFee =
+          document.getElementById(
+            "sixMonthFee"
+          ).value;
+
+
+        /* SEATS */
+
+        const totalSeatsValue =
+          document.getElementById(
+            "totalSeats"
+          ).value;
+
+
+        const maleSeatsValue =
+          document.getElementById(
+            "maleSeats"
+          ).value;
+
+
+        const femaleSeatsValue =
+          document.getElementById(
+            "femaleSeats"
+          ).value;
+
+
+        const seatAlertNumber =
+          document.getElementById(
+            "seatAlertNumber"
+          ).value;
+
+
+        const {
+          error
+        } = await window.supabaseClient
+          .from("libraries")
+          .update({
+
+            /* PLANS */
+
+            daily_plan_enabled:
+              document.getElementById(
+                "oneDayEnabled"
+              ).checked,
+
+            weekly_plan_enabled:
+              document.getElementById(
+                "weeklyEnabled"
+              ).checked,
+
+            monthly_plan_enabled:
+              document.getElementById(
+                "monthlyEnabled"
+              ).checked,
+
+            three_month_plan_enabled:
+              document.getElementById(
+                "threeMonthEnabled"
+              ).checked,
+
+            six_month_plan_enabled:
+              document.getElementById(
+                "sixMonthEnabled"
+              ).checked,
+
+
+            daily_fee:
+              dailyFee !== ""
+                ? Number(dailyFee)
+                : null,
+
+            weekly_fee:
+              weeklyFee !== ""
+                ? Number(weeklyFee)
+                : null,
+
+            monthly_fee:
+              monthlyFee !== ""
+                ? Number(monthlyFee)
+                : null,
+
+            three_month_fee:
+              threeMonthFee !== ""
+                ? Number(threeMonthFee)
+                : null,
+
+            six_month_fee:
+              sixMonthFee !== ""
+                ? Number(sixMonthFee)
+                : null,
+
+
+            /* SEATS */
+
+            total_seats:
+              totalSeatsValue !== ""
+                ? Number(totalSeatsValue)
+                : null,
+
+            male_seats:
+              maleSeatsValue !== ""
+                ? Number(maleSeatsValue)
+                : null,
+
+            female_seats:
+              femaleSeatsValue !== ""
+                ? Number(femaleSeatsValue)
+                : null,
+
+            separate_female_section:
+              document.getElementById(
+                "separateFemaleSection"
+              ).checked,
+
+            seat_numbering_mode:
+              document.getElementById(
+                "seatNumberingMode"
+              ).value,
+
+            male_seat_prefix:
+              document.getElementById(
+                "maleSeatPrefix"
+              ).value.trim() || "M",
+
+            female_seat_prefix:
+              document.getElementById(
+                "femaleSeatPrefix"
+              ).value.trim() || "F",
+
+            seat_alert_number:
+              seatAlertNumber !== ""
+                ? Number(seatAlertNumber)
+                : 5,
+
+
+            /* FACILITIES */
+
+            facilities:
+              facilities,
+
+            other_facilities:
+              document.getElementById(
+                "otherFacilities"
+              ).value.trim() || null
+
+          })
+          .eq(
+            "id",
+            currentLibrary.id
+          );
+
+
+        if (error) {
+
+          showMessage(
+            "Update failed: " +
+            error.message,
+            false
+          );
+
+          updateButton.disabled =
+            false;
+
+          updateButton.textContent =
+            "Save Changes";
+
+          return;
+        }
+
+
+        showMessage(
+          "Price, seat settings and facilities updated successfully."
+        );
+
 
         updateButton.disabled =
           false;
 
         updateButton.textContent =
-          "Update Price & Facilities";
+          "Save Changes";
 
-        return;
       }
+    );
 
 
-      message.textContent =
-        "Price, membership plans and facilities updated successfully.";
+    loadLibrary();
 
-      message.style.display =
-        "block";
-
-      message.style.background =
-        "#dcfce7";
-
-      message.style.color =
-        "#166534";
-
-
-      updateButton.disabled =
-        false;
-
-      updateButton.textContent =
-        "Update Price & Facilities";
-
-    }
-  );
-
-
-  loadLibrary();
-
-</script>
+  </script>
 
 </body>
 </html>
