@@ -1,229 +1,372 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Library Rules - StudySpot</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Library Rules - StudySpot</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #1f2937;
-    }
-
-    .header {
-      background: linear-gradient(135deg, #2563eb, #4f46e5);
-      color: white;
-      text-align: center;
-      padding: 28px 16px;
-    }
-
-    .header h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-    }
-
-    .header p {
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .container {
-      width: 92%;
-      max-width: 650px;
-      margin: 24px auto;
-    }
-
-    .section {
-      background: white;
-      padding: 22px;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    }
-
-    h2 {
-      margin-top: 0;
-      color: #2563eb;
-      font-size: 21px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 220px;
-      padding: 13px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 15px;
-      resize: vertical;
-    }
-
-    .update-button,
-    .back-button {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      border-radius: 8px;
-      text-align: center;
-      font-size: 16px;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .update-button {
-      border: none;
-      background: #2563eb;
-      color: white;
-      cursor: pointer;
-      margin-top: 18px;
-    }
-
-    .update-button:hover {
-      background: #1d4ed8;
-    }
-
-    .back-button {
-      background: #e2e8f0;
-      color: #1e293b;
-      margin-top: 20px;
-    }
-
-    .message {
-      display: none;
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 8px;
-      background: #dcfce7;
-      color: #166534;
-      font-size: 14px;
-    }
-  </style>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f6fc;color:#172033;padding-bottom:30px}
+.header{background:linear-gradient(135deg,#1769e0,#5546e8);color:white;padding:18px 16px 28px;border-radius:0 0 25px 25px}
+.top-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.back{width:42px;height:42px;border:0;border-radius:12px;background:#ffffff30;color:white;font-size:26px;cursor:pointer}
+.brand{font-size:19px;font-weight:bold}
+.header h1{margin:0;font-size:27px}
+.header p{margin:8px 0 0;font-size:14px;line-height:1.5;opacity:.92}
+.container{width:92%;max-width:650px;margin:20px auto}
+.card{background:white;padding:18px;margin-bottom:16px;border-radius:17px;box-shadow:0 4px 16px #0f172a0f}
+.card h2{margin:0 0 7px;font-size:20px}
+.description{margin:0 0 16px;color:#64748b;font-size:13px;line-height:1.5}
+input,textarea{width:100%;padding:13px;border:1px solid #d7deea;border-radius:10px;font-size:15px;font-family:Arial,sans-serif}
+textarea{min-height:95px;resize:vertical}
+button{cursor:pointer}
+.primary{border:0;background:#2563eb;color:white;border-radius:10px;padding:13px;font-size:15px;font-weight:bold}
+.add-button{width:100%;margin-top:10px}
+.primary:disabled{opacity:.6;cursor:not-allowed}
+.rule-item{border:1px solid #e2e8f0;border-radius:12px;padding:13px;margin-top:11px}
+.rule-top{display:flex;align-items:flex-start;gap:10px}
+.rule-number{width:30px;height:30px;flex-shrink:0;border-radius:50%;background:#e8f1ff;color:#2563eb;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.rule-text{flex:1;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5;padding-top:5px}
+.rule-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px}
+.toggle-label{display:flex;align-items:center;gap:7px;margin-right:auto;font-size:13px;color:#475569}
+.toggle-label input{width:19px;height:19px;accent-color:#2563eb}
+.small-button{border:1px solid #cbd5e1;background:white;color:#1d4ed8;border-radius:8px;padding:8px 11px;font-weight:bold}
+.delete-button{color:#dc2626;border-color:#fecaca}
+.edit-box{display:none;margin-top:12px}
+.edit-box textarea{min-height:75px}
+.edit-actions{display:flex;gap:8px;margin-top:8px}
+.edit-actions button{flex:1}
+.empty{padding:18px;text-align:center;color:#64748b;background:#f8fafc;border-radius:10px;font-size:14px}
+.message{display:none;margin-top:13px;padding:13px;border-radius:10px;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+.message.success{display:block;background:#dcfce7;color:#166534}
+.message.error{display:block;background:#fee2e2;color:#991b1b}
+.message.info{display:block;background:#eff6ff;color:#1d4ed8}
+.tips{padding:14px;background:#eff6ff;border-radius:12px;margin-top:16px;color:#1e40af;font-size:13px;line-height:1.7}
+.back-dashboard{display:block;margin-top:14px;padding:13px;text-align:center;text-decoration:none;border-radius:10px;background:#e2e8f0;color:#1e293b;font-weight:bold;font-size:14px}
+@media(max-width:380px){.card{padding:14px}.header h1{font-size:24px}}
+</style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../supabase-config.js"></script>
-
 </head>
 
 <body>
-
-  <div class="header">
-    <h1>Library Rules</h1>
-    <p>Add or update the rules of your library</p>
+<header class="header">
+  <div class="top-row">
+    <button class="back" type="button" onclick="location.href='owner-dashboard.html'">‹</button>
+    <div class="brand">📚 StudySpot</div>
   </div>
+  <h1>Library Rules</h1>
+  <p>Set the rules for your library so students know what to follow.</p>
+</header>
 
-  <div class="container">
+<main class="container">
+  <section class="card">
+    <h2>📝 Add New Rule</h2>
+    <p class="description">Write a clear rule and add it to your library.</p>
+    <textarea id="newRule" maxlength="500" placeholder="Example: Keep the library clean and maintain silence."></textarea>
+    <button class="primary add-button" id="addButton" type="button">＋ Add Rule</button>
+    <div class="message" id="message" role="status" aria-live="polite"></div>
+  </section>
 
-    <div class="section">
-      <h2>Library Rules and Guidelines</h2>
+  <section class="card">
+    <h2>📋 Your Library Rules</h2>
+    <p class="description">Turn rules on or off, edit them, or delete them. Only enabled rules should be shown to students.</p>
+    <div id="rulesList"><div class="empty">Loading your library rules...</div></div>
 
-      <label for="libraryRules">
-        Enter Library Rules
-      </label>
-
-      <textarea id="libraryRules" placeholder="Example:
-1. Maintain silence inside the library.
-2. Keep your mobile phone on silent mode.
-3. Do not damage library property.
-4. Keep your seat clean.
-5. Follow the library timings."></textarea>
-
-      <button class="update-button" id="updateButton">
-        Update Library Rules
-      </button>
-
-      <div class="message" id="message">
-        Library rules updated successfully in this demo.
-      </div>
+    <div class="tips">
+      <strong>💡 Tips</strong><br>
+      • Keep rules clear and easy to understand.<br>
+      • Turn off a rule if you want to hide it temporarily.<br>
+      • Remember to save your changes.
     </div>
+  </section>
 
-    <a class="back-button" href="owner-dashboard.html">
-      Back to Dashboard
-    </a>
+  <a class="back-dashboard" href="owner-dashboard.html">← Back to Dashboard</a>
+</main>
 
-  </div>
-
- 
 <script>
-document.addEventListener("DOMContentLoaded", async function () {
-  const client = window.supabaseClient;
+const client = window.supabaseClient;
+const newRuleInput = document.getElementById("newRule");
+const addButton = document.getElementById("addButton");
+const rulesList = document.getElementById("rulesList");
+const message = document.getElementById("message");
 
-  const rulesInput = document.getElementById("libraryRules");
-  const updateButton = document.querySelector(".update-button");
-  const message = document.getElementById("message");
+let currentUser = null;
+let currentLibrary = null;
+let rules = [];
+let saving = false;
 
-  if (!client) {
-    message.textContent = "Supabase connection not found.";
-    message.style.display = "block";
+function showMessage(text,type){
+  message.textContent = text;
+  message.className = "message " + type;
+  message.style.display = "block";
+}
+function hideMessage(){
+  message.textContent = "";
+  message.className = "message";
+  message.style.display = "none";
+}
+function makeId(){
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,9);
+}
+function normalizeRules(value){
+  if(!Array.isArray(value)) return [];
+  return value.filter(r => r && typeof r.text === "string").map(r => ({
+    id: String(r.id || makeId()),
+    text: r.text,
+    enabled: r.enabled !== false
+  }));
+}
+
+function renderRules(){
+  rulesList.innerHTML = "";
+
+  if(!rules.length){
+    rulesList.innerHTML = '<div class="empty">No rules added yet. Add your first library rule above.</div>';
     return;
   }
 
-  const { data: userData, error: userError } =
-    await client.auth.getUser();
+  rules.forEach((rule,index)=>{
+    const item = document.createElement("div");
+    item.className = "rule-item";
 
-  if (userError || !userData.user) {
-    message.textContent = "Please log in first.";
-    message.style.display = "block";
-    return;
+    const top = document.createElement("div");
+    top.className = "rule-top";
+
+    const number = document.createElement("div");
+    number.className = "rule-number";
+    number.textContent = index + 1;
+
+    const text = document.createElement("div");
+    text.className = "rule-text";
+    text.textContent = rule.text;
+
+    top.append(number,text);
+
+    const actions = document.createElement("div");
+    actions.className = "rule-actions";
+
+    const toggleLabel = document.createElement("label");
+    toggleLabel.className = "toggle-label";
+
+    const toggle = document.createElement("input");
+    toggle.type = "checkbox";
+    toggle.checked = rule.enabled;
+    toggle.setAttribute("aria-label","Enable rule " + (index + 1));
+
+    const status = document.createElement("span");
+    status.textContent = rule.enabled ? "Enabled" : "Disabled";
+
+    toggle.addEventListener("change",async()=>{
+      const previous = rule.enabled;
+      rule.enabled = toggle.checked;
+      status.textContent = rule.enabled ? "Enabled" : "Disabled";
+      toggle.disabled = true;
+      const ok = await saveRules("Rule status updated.");
+      if(!ok){
+        rule.enabled = previous;
+        toggle.checked = previous;
+        status.textContent = previous ? "Enabled" : "Disabled";
+      }
+      toggle.disabled = false;
+    });
+
+    toggleLabel.append(toggle,status);
+
+    const editButton = document.createElement("button");
+    editButton.className = "small-button";
+    editButton.type = "button";
+    editButton.textContent = "Edit";
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "small-button delete-button";
+    deleteButton.type = "button";
+    deleteButton.textContent = "Delete";
+
+    const editBox = document.createElement("div");
+    editBox.className = "edit-box";
+
+    const editArea = document.createElement("textarea");
+    editArea.maxLength = 500;
+    editArea.value = rule.text;
+
+    const editActions = document.createElement("div");
+    editActions.className = "edit-actions";
+
+    const saveEdit = document.createElement("button");
+    saveEdit.className = "primary";
+    saveEdit.type = "button";
+    saveEdit.textContent = "Save Edit";
+
+    const cancelEdit = document.createElement("button");
+    cancelEdit.className = "small-button";
+    cancelEdit.type = "button";
+    cancelEdit.textContent = "Cancel";
+
+    editButton.addEventListener("click",()=>{
+      editBox.style.display = editBox.style.display === "block" ? "none" : "block";
+    });
+
+    cancelEdit.addEventListener("click",()=>{
+      editArea.value = rule.text;
+      editBox.style.display = "none";
+    });
+
+    saveEdit.addEventListener("click",async()=>{
+      const updatedText = editArea.value.trim();
+      if(!updatedText){
+        showMessage("Please enter the rule text before saving.","error");
+        return;
+      }
+
+      const previous = rule.text;
+      rule.text = updatedText;
+      saveEdit.disabled = true;
+
+      const ok = await saveRules("Rule updated successfully.");
+      saveEdit.disabled = false;
+
+      if(ok){
+        renderRules();
+      }else{
+        rule.text = previous;
+      }
+    });
+
+    deleteButton.addEventListener("click",async()=>{
+      if(!confirm("Delete this library rule?")) return;
+
+      const oldRules = [...rules];
+      rules = rules.filter(r=>r.id !== rule.id);
+      deleteButton.disabled = true;
+
+      const ok = await saveRules("Rule deleted successfully.");
+      if(ok){
+        renderRules();
+      }else{
+        rules = oldRules;
+        renderRules();
+      }
+    });
+
+    editActions.append(saveEdit,cancelEdit);
+    editBox.append(editArea,editActions);
+    actions.append(toggleLabel,editButton,deleteButton);
+    item.append(top,actions,editBox);
+    rulesList.appendChild(item);
+  });
+}
+
+async function saveRules(successText){
+  if(!currentLibrary || !currentUser){
+    showMessage("Your library is not loaded. Refresh and log in again.","error");
+    return false;
+  }
+  if(saving){
+    showMessage("Please wait for the current save to finish.","info");
+    return false;
   }
 
-  const user = userData.user;
+  saving = true;
+  addButton.disabled = true;
+  addButton.textContent = "Saving...";
 
-  const { data: library, error: libraryError } = await client
+  const {data:updatedRows,error} = await client
     .from("libraries")
-    .select("id, rules")
-    .eq("owner_id", user.id)
+    .update({library_rules:rules})
+    .eq("id",currentLibrary.id)
+    .eq("owner_id",currentUser.id)
+    .select("id");
+
+  saving = false;
+  addButton.disabled = false;
+  addButton.textContent = "＋ Add Rule";
+
+  if(error){
+    showMessage("Could not save rules: " + error.message,"error");
+    return false;
+  }
+  if(!updatedRows || updatedRows.length === 0){
+    showMessage("No library row was updated. Check your login and database permissions.","error");
+    return false;
+  }
+
+  currentLibrary.library_rules = rules;
+  showMessage(successText,"success");
+  return true;
+}
+
+addButton.addEventListener("click",async()=>{
+  const text = newRuleInput.value.trim();
+  if(!text){
+    showMessage("Please enter a rule before adding it.","error");
+    return;
+  }
+  if(text.length > 500){
+    showMessage("A rule can contain up to 500 characters.","error");
+    return;
+  }
+
+  const newItem = {id:makeId(),text,enabled:true};
+  rules.push(newItem);
+  addButton.disabled = true;
+
+  const ok = await saveRules("New rule added successfully.");
+  addButton.disabled = false;
+
+  if(ok){
+    newRuleInput.value = "";
+    renderRules();
+  }else{
+    rules = rules.filter(r=>r.id !== newItem.id);
+    renderRules();
+  }
+});
+
+async function loadLibraryRules(){
+  if(!client){
+    showMessage("Supabase connection could not be loaded. Check supabase-config.js.","error");
+    rulesList.innerHTML = '<div class="empty">Unable to load rules.</div>';
+    return;
+  }
+
+  const {data:sessionData,error:sessionError} = await client.auth.getSession();
+
+  if(sessionError || !sessionData.session){
+    location.href = "owner-login.html";
+    return;
+  }
+
+  currentUser = sessionData.session.user;
+
+  const {data:library,error} = await client
+    .from("libraries")
+    .select("id,owner_id,library_rules")
+    .eq("owner_id",currentUser.id)
     .maybeSingle();
 
-  if (libraryError) {
-    message.textContent =
-      "Unable to load library rules: " + libraryError.message;
-    message.style.display = "block";
+  if(error){
+    showMessage("Unable to load library rules: " + error.message,"error");
+    rulesList.innerHTML = '<div class="empty">Unable to load rules.</div>';
+    return;
+  }
+  if(!library){
+    showMessage("No registered library was found for this owner account.","error");
+    rulesList.innerHTML = '<div class="empty">No library found.</div>';
     return;
   }
 
-  if (!library) {
-    message.textContent = "No registered library found.";
-    message.style.display = "block";
-    return;
-  }
+  currentLibrary = library;
+  rules = normalizeRules(library.library_rules);
+  renderRules();
+  showMessage("Your saved library rules have been loaded.","info");
+}
 
-  rulesInput.value = library.rules || "";
-
-  updateButton.addEventListener("click", async function () {
-    updateButton.disabled = true;
-    updateButton.textContent = "Updating...";
-
-    const { error } = await client
-      .from("libraries")
-      .update({
-        rules: rulesInput.value.trim()
-      })
-      .eq("id", library.id)
-      .eq("owner_id", user.id);
-
-    if (error) {
-      message.textContent = "Update failed: " + error.message;
-    } else {
-      message.textContent = "Library rules updated successfully.";
-    }
-
-    message.style.display = "block";
-    updateButton.disabled = false;
-    updateButton.textContent = "Update Library Rules";
-  });
+loadLibraryRules().catch(error=>{
+  console.error("Library Rules error:",error);
+  showMessage("Unexpected error: " + (error.message || "Please try again."),"error");
 });
 </script>
 </body>
