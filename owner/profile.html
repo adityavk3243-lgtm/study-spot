@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - StudySpot</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6fc;
+      color: #172033;
+      padding-bottom: 30px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1769e0, #5546e8);
+      color: white;
+      padding: 18px 16px 28px;
+      border-radius: 0 0 25px 25px;
+    }
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .back {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 12px;
+      background: #ffffff30;
+      color: white;
+      font-size: 25px;
+      cursor: pointer;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 27px;
+    }
+
+    .header p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 600px;
+      margin: 22px auto;
+    }
+
+    .profile-card {
+      background: white;
+      border-radius: 18px;
+      padding: 24px 18px;
+      text-align: center;
+      box-shadow: 0 4px 16px #0f172a0f;
+    }
+
+    .avatar {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      margin: 0 auto 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e8efff;
+      font-size: 38px;
+    }
+
+    .profile-card h2 {
+      margin: 0;
+      font-size: 21px;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-card p {
+      margin: 8px 0 0;
+      color: #64748b;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 13px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .section-title {
+      margin: 23px 2px 12px;
+      font-size: 19px;
+    }
+
+    .details-card {
+      background: white;
+      border-radius: 17px;
+      padding: 6px 17px;
+      box-shadow: 0 4px 16px #0f172a0f;
+    }
+
+    .detail-row {
+      padding: 15px 0;
+      border-bottom: 1px solid #edf0f5;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      color: #64748b;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .detail-value {
+      font-size: 15px;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+      line-height: 1.5;
+    }
+
+    .message {
+      display: none;
+      margin-top: 14px;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .message.info {
+      display: block;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .message.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .logout-button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 15px;
+      border: none;
+      border-radius: 11px;
+      background: #dc2626;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .logout-button:disabled {
+      opacity: 0.6;
+    }
+
+    .back-dashboard {
+      display: block;
+      margin-top: 13px;
+      padding: 14px;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 11px;
+      background: #e2e8f0;
+      color: #1e293b;
+      font-weight: bold;
+      font-size: 14px;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="top-row">
+      <button class="back" type="button"
+        onclick="location.href='owner-dashboard.html'">‹</button>
+
+      <div class="brand">📚 StudySpot</div>
+    </div>
+
+    <h1>My Profile</h1>
+    <p>View your account and library information.</p>
+  </header>
+
+  <main class="container">
+
+    <section class="profile-card">
+      <div class="avatar">👤</div>
+      <h2 id="ownerName">Library Owner</h2>
+      <p id="ownerEmail">Loading email...</p>
+      <span class="status">● Registered Account</span>
+    </section>
+
+    <h2 class="section-title">🏫 Library Information</h2>
+
+    <section class="details-card">
+
+      <div class="detail-row">
+        <div class="detail-label">Library Name</div>
+        <div class="detail-value" id="libraryName">Loading...</div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">Location</div>
+        <div class="detail-value" id="libraryLocation">Loading...</div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">Account Email</div>
+        <div class="detail-value" id="accountEmail">Loading...</div>
+      </div>
+
+    </section>
+
+    <div class="message" id="message" role="status"></div>
+
+    <button class="logout-button" id="logoutButton" type="button">
+      🚪 Logout
+    </button>
+
+    <a class="back-dashboard" href="owner-dashboard.html">
+      ← Back to Dashboard
+    </a>
+
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+
+      const client = window.supabaseClient;
+      const message = document.getElementById("message");
+      const logoutButton = document.getElementById("logoutButton");
+
+      function showError(text) {
+        message.textContent = text;
+        message.className = "message error";
+      }
+
+      if (!client) {
+        showError("Supabase connection could not be loaded.");
+        return;
+      }
+
+      try {
+        const {
+          data: sessionData,
+          error: sessionError
+        } = await client.auth.getSession();
+
+        if (sessionError || !sessionData.session) {
+          location.href = "owner-login.html";
+          return;
+        }
+
+        const user = sessionData.session.user;
+        const email = user.email || "Email not available";
+
+        document.getElementById("ownerEmail").textContent = email;
+        document.getElementById("accountEmail").textContent = email;
+
+        const {
+          data: library,
+          error: libraryError
+        } = await client
+          .from("libraries")
+          .select("library_name,city,district,state")
+          .eq("owner_id", user.id)
+          .maybeSingle();
+
+        if (libraryError) {
+          console.error("Library loading error:", libraryError);
+          document.getElementById("libraryName").textContent =
+            "Unable to load library details";
+          document.getElementById("libraryLocation").textContent =
+            "Please try again later";
+        } else if (library) {
+
+          const name = library.library_name || "Your Library";
+
+          document.getElementById("ownerName").textContent = name;
+          document.getElementById("libraryName").textContent = name;
+
+          const locationParts = [
+            library.city,
+            library.district,
+            library.state
+          ].filter(Boolean);
+
+          document.getElementById("libraryLocation").textContent =
+            locationParts.length
+              ? locationParts.join(", ")
+              : "Location not added";
+
+        } else {
+          document.getElementById("libraryName").textContent =
+            "No library registered";
+          document.getElementById("libraryLocation").textContent =
+            "Location not available";
+        }
+
+      } catch (error) {
+        console.error("Profile loading error:", error);
+        showError("Unable to load profile. Please refresh the page.");
+      }
+
+      logoutButton.addEventListener("click", async function () {
+
+        if (!confirm("Are you sure you want to log out?")) {
+          return;
+        }
+
+        logoutButton.disabled = true;
+        logoutButton.textContent = "Logging out...";
+
+        const { error } = await client.auth.signOut();
+
+        if (error) {
+          showError("Logout failed: " + error.message);
+          logoutButton.disabled = false;
+          logoutButton.textContent = "🚪 Logout";
+          return;
+        }
+
+        location.href = "owner-login.html";
+      });
+
+    });
+  </script>
+
+</body>
+  </html>
