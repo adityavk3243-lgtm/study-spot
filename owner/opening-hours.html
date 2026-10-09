@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,200 +6,760 @@
   <title>Opening Hours - StudySpot</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #1f2937;
+      background: #f3f6fc;
+      color: #172033;
+      padding-bottom: 30px;
     }
 
     .header {
-      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      background: linear-gradient(135deg, #1769e0, #5546e8);
       color: white;
-      text-align: center;
-      padding: 28px 16px;
+      padding: 18px 16px 28px;
+      border-radius: 0 0 25px 25px;
+    }
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .back {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 12px;
+      background: rgba(255,255,255,.18);
+      color: white;
+      font-size: 23px;
+      cursor: pointer;
+    }
+
+    .brand {
+      font-size: 19px;
+      font-weight: bold;
     }
 
     .header h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
+      margin: 0;
+      font-size: 27px;
     }
 
     .header p {
-      margin: 0;
+      margin: 8px 0 0;
       font-size: 14px;
+      line-height: 1.5;
+      opacity: .92;
     }
 
     .container {
       width: 92%;
-      max-width: 600px;
-      margin: 24px auto;
+      max-width: 650px;
+      margin: 20px auto;
     }
 
-    .section {
+    .card {
       background: white;
-      padding: 22px;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      padding: 18px;
+      margin-bottom: 16px;
+      border-radius: 17px;
+      box-shadow: 0 4px 16px rgba(15,23,42,.06);
     }
 
-    .section h2 {
-      margin-top: 0;
-      color: #2563eb;
-      font-size: 21px;
+    .card h2 {
+      margin: 0 0 7px;
+      font-size: 19px;
     }
 
-    .field {
-      margin-bottom: 18px;
+    .description {
+      margin: 0 0 16px;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
     }
 
-    label {
-      display: block;
-      margin-bottom: 8px;
+    .day-row {
+      padding: 15px 0;
+      border-bottom: 1px solid #edf0f5;
+    }
+
+    .day-row:last-child {
+      border-bottom: 0;
+    }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 13px;
+    }
+
+    .day-name {
+      font-size: 15px;
       font-weight: bold;
+    }
+
+    .switch-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 43px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+      background: #cbd5e1;
+      border-radius: 30px;
+      transition: .2s;
+    }
+
+    .slider:before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background: white;
+      transition: .2s;
+    }
+
+    .switch input:checked + .slider {
+      background: #2563eb;
+    }
+
+    .switch input:checked + .slider:before {
+      transform: translateX(19px);
+    }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .time-field label,
+    .select-label {
+      display: block;
+      margin-bottom: 7px;
+      color: #475569;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .time-field input,
+    select {
+      width: 100%;
+      min-width: 0;
+      padding: 11px 8px;
+      border: 1px solid #d7deea;
+      border-radius: 9px;
+      background: white;
+      color: #172033;
       font-size: 14px;
     }
 
-    input[type="time"] {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 16px;
+    .closed-label {
+      display: none;
+      padding: 12px;
+      border-radius: 9px;
+      background: #fff1f2;
+      color: #be123c;
+      font-size: 13px;
+      font-weight: bold;
     }
 
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 18px 0;
-      font-size: 15px;
+    .day-row.closed .time-grid {
+      display: none;
     }
 
-    .checkbox-row input {
-      width: 18px;
-      height: 18px;
+    .day-row.closed .closed-label {
+      display: block;
     }
 
-    .update-button {
-      width: 100%;
-      border: none;
+    .day-row.closed {
+      background: #fafbfc;
+    }
+
+    .quick-option {
       padding: 14px;
-      border-radius: 8px;
+      border-radius: 12px;
+      background: #eff6ff;
+      margin-bottom: 14px;
+    }
+
+    .quick-option p {
+      margin: 0 0 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #1e40af;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .secondary-button {
+      width: 100%;
+      border: 1px solid #bfdbfe;
+      border-radius: 9px;
+      padding: 11px 8px;
+      background: white;
+      color: #1d4ed8;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .apply-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 13px;
+    }
+
+    .apply-row select {
+      min-height: 42px;
+    }
+
+    .save-button {
+      width: 100%;
+      padding: 15px;
+      border: 0;
+      border-radius: 11px;
       background: #2563eb;
       color: white;
       font-size: 16px;
       font-weight: bold;
-      cursor: pointer;
     }
 
-    .update-button:hover {
-      background: #1d4ed8;
-    }
-
-    .back-button {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      background: #e2e8f0;
-      color: #1e293b;
-      padding: 13px;
-      border-radius: 8px;
-      font-weight: bold;
-      margin-top: 20px;
+    .save-button:disabled {
+      opacity: .65;
+      cursor: not-allowed;
     }
 
     .message {
       display: none;
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 8px;
+      margin-top: 13px;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .message.success {
+      display: block;
       background: #dcfce7;
       color: #166534;
+    }
+
+    .message.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .message.info {
+      display: block;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .back-dashboard {
+      display: block;
+      margin-top: 14px;
+      padding: 13px;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 10px;
+      background: #e2e8f0;
+      color: #1e293b;
+      font-weight: bold;
       font-size: 14px;
     }
 
-    .disabled {
-      opacity: 0.5;
+    @media (max-width: 380px) {
+      .card { padding: 14px; }
+      .time-grid { gap: 8px; }
+      .time-field input { font-size: 12px; }
+      .day-name { font-size: 14px; }
     }
   </style>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../supabase-config.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
 </head>
 
 <body>
 
-  <div class="header">
-    <h1>Opening Hours</h1>
-    <p>Update your library opening and closing time</p>
-  </div>
-
-  <div class="container">
-
-    <div class="section">
-      <h2>Library Timings</h2>
-
-      <div class="field">
-        <label for="openingTime">Opening Time</label>
-        <input type="time" id="openingTime">
-      </div>
-
-      <div class="field">
-        <label for="closingTime">Closing Time</label>
-        <input type="time" id="closingTime">
-      </div>
-
-      <label class="checkbox-row">
-        <input type="checkbox" id="open24Hours">
-        Open 24 Hours
-      </label>
-
-      <button class="update-button" id="updateButton">
-        Update Opening Hours
-      </button>
-
-      <div class="message" id="message">
-        Opening hours updated successfully in this demo.
-      </div>
+  <header class="header">
+    <div class="top-row">
+      <button class="back" type="button"
+        onclick="window.location.href='owner-dashboard.html'">‹</button>
+      <div class="brand">📚 StudySpot</div>
     </div>
 
-    <a class="back-button" href="owner-dashboard.html">
-      Back to Dashboard
+    <h1>Opening Hours</h1>
+    <p>Set your library's opening days and daily timings.</p>
+  </header>
+
+  <main class="container">
+
+    <section class="card">
+      <h2>📅 Weekly Schedule</h2>
+      <p class="description">
+        Turn each day on or off and set its opening and closing time.
+      </p>
+
+      <div id="daysContainer"></div>
+    </section>
+
+    <section class="card">
+      <h2>⚡ Quick Options</h2>
+      <p class="description">
+        Copy timings to another day or apply the same schedule to all days.
+      </p>
+
+      <div class="quick-option">
+        <p><strong>📋 Apply one day's timing to other days</strong><br>
+          Select a source day and copy its status and timings.
+        </p>
+
+        <label class="select-label" for="sourceDay">Copy timing from</label>
+        <select id="sourceDay"></select>
+
+        <div class="apply-row">
+          <div>
+            <label class="select-label" for="targetDay">Copy to day</label>
+            <select id="targetDay"></select>
+          </div>
+
+          <div style="display:flex;align-items:end">
+            <button class="secondary-button" id="copyButton" type="button">
+              Copy Timing
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button class="secondary-button" id="applyAllButton" type="button">
+        Apply Selected Day's Timing to All Days
+      </button>
+    </section>
+
+    <section class="card">
+      <h2>💾 Save Schedule</h2>
+      <p class="description">
+        Save your schedule to your library. Saved timings will load again when you revisit this page.
+      </p>
+
+      <button class="save-button" id="saveButton" type="button">
+        Save Opening Hours
+      </button>
+
+      <div class="message" id="message" role="status" aria-live="polite"></div>
+    </section>
+
+    <a class="back-dashboard" href="owner-dashboard.html">
+      ← Back to Dashboard
     </a>
 
-  </div>
+  </main>
 
   <script>
-    const openingTime = document.getElementById("openingTime");
-    const closingTime = document.getElementById("closingTime");
-    const open24Hours = document.getElementById("open24Hours");
-    const updateButton = document.getElementById("updateButton");
+    const DAYS = [
+      ["monday", "Monday"],
+      ["tuesday", "Tuesday"],
+      ["wednesday", "Wednesday"],
+      ["thursday", "Thursday"],
+      ["friday", "Friday"],
+      ["saturday", "Saturday"],
+      ["sunday", "Sunday"]
+    ];
+
+    const DEFAULT_DAY = {
+      enabled: true,
+      opening: "08:00",
+      closing: "22:00"
+    };
+
+    let currentLibrary = null;
+    let isLoading = false;
+
+    const daysContainer = document.getElementById("daysContainer");
+    const sourceDay = document.getElementById("sourceDay");
+    const targetDay = document.getElementById("targetDay");
+    const saveButton = document.getElementById("saveButton");
     const message = document.getElementById("message");
 
-    function updateTimeFields() {
-      const is24Hours = open24Hours.checked;
-
-      openingTime.disabled = is24Hours;
-      closingTime.disabled = is24Hours;
-
-      openingTime.classList.toggle("disabled", is24Hours);
-      closingTime.classList.toggle("disabled", is24Hours);
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "message " + type;
+      message.style.display = "block";
     }
 
-    open24Hours.addEventListener("change", updateTimeFields);
+    function hideMessage() {
+      message.textContent = "";
+      message.className = "message";
+      message.style.display = "none";
+    }
 
-    updateButton.addEventListener("click", function () {
-      message.style.display = "block";
-      message.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
+    function buildPage() {
+      daysContainer.innerHTML = "";
+
+      DAYS.forEach(([key, label]) => {
+        const row = document.createElement("div");
+        row.className = "day-row";
+        row.id = "row-" + key;
+
+        row.innerHTML = `
+          <div class="day-header">
+            <span class="day-name">${label}</span>
+            <div class="switch-wrap">
+              <span class="day-status" id="status-${key}">Open</span>
+              <label class="switch">
+                <input type="checkbox" id="enabled-${key}" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="time-grid">
+            <div class="time-field">
+              <label for="opening-${key}">Opening Time</label>
+              <input type="time" id="opening-${key}" value="08:00">
+            </div>
+            <div class="time-field">
+              <label for="closing-${key}">Closing Time</label>
+              <input type="time" id="closing-${key}" value="22:00">
+            </div>
+          </div>
+
+          <div class="closed-label">🔴 Closed on this day</div>
+        `;
+
+        daysContainer.appendChild(row);
+
+        const enabled = document.getElementById("enabled-" + key);
+
+        enabled.addEventListener("change", () => {
+          updateDayUI(key);
+          if (!isLoading) hideMessage();
+        });
+
+        ["opening-", "closing-"].forEach(prefix => {
+          document.getElementById(prefix + key)
+            .addEventListener("change", () => {
+              if (!isLoading) hideMessage();
+            });
+        });
       });
+
+      DAYS.forEach(([key, label]) => {
+        const sourceOption = new Option(label, key);
+        const targetOption = new Option(label, key);
+        sourceDay.add(sourceOption);
+        targetDay.add(targetOption);
+      });
+
+      sourceDay.value = "monday";
+      targetDay.value = "tuesday";
+
+      updateAllDayUIs();
+    }
+
+    function updateDayUI(key) {
+      const enabled = document.getElementById("enabled-" + key).checked;
+      const row = document.getElementById("row-" + key);
+      const status = document.getElementById("status-" + key);
+
+      row.classList.toggle("closed", !enabled);
+      status.textContent = enabled ? "Open" : "Closed";
+    }
+
+    function updateAllDayUIs() {
+      DAYS.forEach(([key]) => updateDayUI(key));
+    }
+
+    function readScheduleFromForm() {
+      const schedule = {};
+
+      DAYS.forEach(([key]) => {
+        schedule[key] = {
+          enabled: document.getElementById("enabled-" + key).checked,
+          opening: document.getElementById("opening-" + key).value || "08:00",
+          closing: document.getElementById("closing-" + key).value || "22:00"
+        };
+      });
+
+      return schedule;
+    }
+
+    function normalizeSchedule(rawSchedule, library) {
+      let schedule = {};
+
+      if (rawSchedule && typeof rawSchedule === "object" && !Array.isArray(rawSchedule)) {
+        schedule = rawSchedule;
+      }
+
+      const oldOpenDays = String(library.open_days || "")
+        .toLowerCase()
+        .split(/[,;|]/)
+        .map(day => day.trim());
+
+      DAYS.forEach(([key, label]) => {
+        const existing = schedule[key];
+
+        if (existing && typeof existing === "object") {
+          schedule[key] = {
+            enabled: existing.enabled !== false,
+            opening: validTime(existing.opening) ? existing.opening : (library.opening_time || DEFAULT_DAY.opening),
+            closing: validTime(existing.closing) ? existing.closing : (library.closing_time || DEFAULT_DAY.closing)
+          };
+        } else {
+          let enabled = true;
+
+          if (oldOpenDays.length && oldOpenDays[0] !== "") {
+            enabled = oldOpenDays.some(day =>
+              day === key || day === label.toLowerCase() || day.startsWith(label.toLowerCase().slice(0, 3))
+            );
+          }
+
+          schedule[key] = {
+            enabled: library.open_24_hours === true ? true : enabled,
+            opening: library.opening_time || DEFAULT_DAY.opening,
+            closing: library.closing_time || DEFAULT_DAY.closing
+          };
+        }
+      });
+
+      return schedule;
+    }
+
+    function validTime(value) {
+      return typeof value === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+    }
+
+    function fillForm(schedule) {
+      isLoading = true;
+
+      DAYS.forEach(([key]) => {
+        const day = schedule[key] || DEFAULT_DAY;
+
+        document.getElementById("enabled-" + key).checked = day.enabled !== false;
+        document.getElementById("opening-" + key).value = validTime(day.opening) ? day.opening : DEFAULT_DAY.opening;
+        document.getElementById("closing-" + key).value = validTime(day.closing) ? day.closing : DEFAULT_DAY.closing;
+      });
+
+      updateAllDayUIs();
+      isLoading = false;
+    }
+
+    async function loadLibrary() {
+      const client = window.supabaseClient;
+
+      if (!client) {
+        showMessage("Supabase connection could not be loaded. Check supabase-config.js.", "error");
+        return;
+      }
+
+      const { data: sessionData, error: sessionError } = await client.auth.getSession();
+
+      if (sessionError || !sessionData.session) {
+        window.location.href = "owner-login.html";
+        return;
+      }
+
+      const user = sessionData.session.user;
+
+      const { data: library, error: libraryError } = await client
+        .from("libraries")
+        .select("id, owner_id, opening_time, closing_time, open_24_hours, open_days, opening_schedule")
+        .eq("owner_id", user.id)
+        .maybeSingle();
+
+      if (libraryError) {
+        showMessage("Unable to load your library: " + libraryError.message, "error");
+        return;
+      }
+
+      if (!library) {
+        showMessage("No library was found for this owner account.", "error");
+        return;
+      }
+
+      currentLibrary = library;
+
+      const schedule = normalizeSchedule(library.opening_schedule, library);
+      fillForm(schedule);
+      showMessage("Your saved opening hours have been loaded.", "info");
+    }
+
+    function copyDay(sourceKey, targetKey) {
+      if (sourceKey === targetKey) {
+        showMessage("Choose two different days to copy timings.", "error");
+        return;
+      }
+
+      const source = {
+        enabled: document.getElementById("enabled-" + sourceKey).checked,
+        opening: document.getElementById("opening-" + sourceKey).value || "08:00",
+        closing: document.getElementById("closing-" + sourceKey).value || "22:00"
+      };
+
+      document.getElementById("enabled-" + targetKey).checked = source.enabled;
+      document.getElementById("opening-" + targetKey).value = source.opening;
+      document.getElementById("closing-" + targetKey).value = source.closing;
+
+      updateDayUI(targetKey);
+      hideMessage();
+    }
+
+    document.getElementById("copyButton").addEventListener("click", () => {
+      copyDay(sourceDay.value, targetDay.value);
+    });
+
+    document.getElementById("applyAllButton").addEventListener("click", () => {
+      const key = sourceDay.value;
+
+      const source = {
+        enabled: document.getElementById("enabled-" + key).checked,
+        opening: document.getElementById("opening-" + key).value || "08:00",
+        closing: document.getElementById("closing-" + key).value || "22:00"
+      };
+
+      DAYS.forEach(([dayKey]) => {
+        document.getElementById("enabled-" + dayKey).checked = source.enabled;
+        document.getElementById("opening-" + dayKey).value = source.opening;
+        document.getElementById("closing-" + dayKey).value = source.closing;
+        updateDayUI(dayKey);
+      });
+
+      hideMessage();
+      showMessage("Timing applied to all seven days. Press Save Opening Hours to save.", "info");
+    });
+
+    saveButton.addEventListener("click", async () => {
+      if (!currentLibrary) {
+        showMessage("Library data is not ready. Refresh the page and try again.", "error");
+        return;
+      }
+
+      const client = window.supabaseClient;
+      const schedule = readScheduleFromForm();
+
+      for (const [key, label] of DAYS) {
+        const day = schedule[key];
+
+        if (day.enabled && (!validTime(day.opening) || !validTime(day.closing))) {
+          showMessage("Please set valid opening and closing times for " + label + ".", "error");
+          return;
+        }
+
+        if (day.enabled && day.opening === day.closing) {
+          showMessage(label + ": opening and closing times cannot be the same. For a 24-hour library, use the 24-hour option when available.", "error");
+          return;
+        }
+      }
+
+      const enabledDays = DAYS.filter(([key]) => schedule[key].enabled);
+      const allEnabled = enabledDays.length === 7;
+      const allSameTimes = allEnabled && DAYS.every(([key]) =>
+        schedule[key].opening === schedule.monday.opening &&
+        schedule[key].closing === schedule.monday.closing
+      );
+
+      const openDaysText = DAYS
+        .filter(([key]) => schedule[key].enabled)
+        .map(([, label]) => label)
+        .join(", ");
+
+      const commonOpening = allSameTimes ? schedule.monday.opening : schedule[DAYS.find(([key]) => schedule[key].enabled)?.[0]]?.opening || null;
+      const commonClosing = allSameTimes ? schedule.monday.closing : schedule[DAYS.find(([key]) => schedule[key].enabled)?.[0]]?.closing || null;
+
+      saveButton.disabled = true;
+      saveButton.textContent = "Saving...";
+      hideMessage();
+
+      const { data: sessionData, error: sessionError } = await client.auth.getSession();
+
+      if (sessionError || !sessionData.session) {
+        window.location.href = "owner-login.html";
+        return;
+      }
+
+      const user = sessionData.session.user;
+
+      const { data: updatedRows, error } = await client
+        .from("libraries")
+        .update({
+          opening_schedule: schedule,
+          opening_time: commonOpening,
+          closing_time: commonClosing,
+          open_24_hours: false,
+          open_days: openDaysText
+        })
+        .eq("id", currentLibrary.id)
+        .eq("owner_id", user.id)
+        .select("id");
+
+      saveButton.disabled = false;
+      saveButton.textContent = "Save Opening Hours";
+
+      if (error) {
+        showMessage("Could not save opening hours: " + error.message, "error");
+        return;
+      }
+
+      if (!updatedRows || updatedRows.length === 0) {
+        showMessage("No library row was updated. Check the owner account and Supabase permissions.", "error");
+        return;
+      }
+
+      currentLibrary.opening_schedule = schedule;
+      currentLibrary.opening_time = commonOpening;
+      currentLibrary.closing_time = commonClosing;
+      currentLibrary.open_24_hours = false;
+      currentLibrary.open_days = openDaysText;
+
+      showMessage("Opening hours saved successfully. Refresh the page to verify your schedule.", "success");
+    });
+
+    buildPage();
+    loadLibrary().catch(error => {
+      console.error("Opening Hours error:", error);
+      showMessage("Unexpected error: " + (error.message || "Please try again."), "error");
     });
   </script>
 
