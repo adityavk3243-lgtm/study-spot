@@ -3,279 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>StudySpot - Owner Registration</title>
-
-<style>
-*{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f4f7ff;
-color:#222;
-}
-
-.header{
-background:linear-gradient(135deg,#2563eb,#7c3aed);
-color:white;
-text-align:center;
-padding:25px 15px;
-}
-
-.header h1{
-margin:0;
-font-size:28px;
-}
-
-.header p{
-margin:8px 0 0;
-}
-
-.container{
-max-width:700px;
-margin:20px auto;
-padding:0 15px;
-}
-
-.card{
-background:white;
-padding:20px;
-border-radius:16px;
-box-shadow:0 4px 18px rgba(0,0,0,.08);
-}
-
-h2{
-color:#2563eb;
-margin-top:0;
-}
-
-h3{
-margin-top:28px;
-padding-bottom:8px;
-border-bottom:2px solid #e5e7eb;
-color:#374151;
-}
-
-label{
-display:block;
-margin-top:15px;
-margin-bottom:6px;
-font-weight:bold;
-}
-
-input,select,textarea{
-width:100%;
-padding:12px;
-border:1px solid #cbd5e1;
-border-radius:9px;
-font-size:15px;
-background:white;
-}
-
-textarea{
-min-height:90px;
-resize:vertical;
-}
-
-input:disabled,
-select:disabled{
-background:#f1f5f9;
-}
-
-.help{
-font-size:13px;
-color:#64748b;
-margin-top:5px;
-}
-
-.info{
-background:#eff6ff;
-color:#1e40af;
-padding:12px;
-border-radius:9px;
-margin-top:10px;
-font-size:14px;
-}
-
-.facilities{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-margin-top:10px;
-}
-
-.facility{
-border:1px solid #e2e8f0;
-border-radius:9px;
-padding:10px;
-background:#f8fafc;
-}
-
-.facility label{
-margin:0;
-font-weight:normal;
-display:flex;
-align-items:center;
-gap:8px;
-}
-
-.facility input{
-width:auto;
-margin:0;
-}
-
-.photo-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-margin-top:15px;
-}
-
-.photo-grid img{
-width:100%;
-height:150px;
-object-fit:cover;
-border-radius:10px;
-border:2px solid #dbeafe;
-}
-
-@media(max-width:500px){
-.photo-grid{
-grid-template-columns:repeat(2,1fr);
-}
-}
-
-button{
-width:100%;
-padding:14px;
-border:0;
-border-radius:9px;
-font-size:16px;
-font-weight:bold;
-margin-top:15px;
-cursor:pointer;
-}
-
-button:disabled{
-opacity:.65;
-cursor:not-allowed;
-}
-
-.register{
-background:#2563eb;
-color:white;
-}
-
-.location{
-background:#16a34a;
-color:white;
-}
-
-.manage{
-background:#7c3aed;
-color:white;
-}
-
-.back{
-background:#e5e7eb;
-color:#222;
-}
-
-.success{
-display:none;
-margin-top:15px;
-padding:14px;
-border-radius:9px;
-background:#dcfce7;
-color:#166534;
-}
-
-.error{
-display:none;
-margin-top:15px;
-padding:14px;
-border-radius:9px;
-background:#fee2e2;
-color:#991b1b;
-}
-
-@media(max-width:500px){
-.facilities{
-grid-template-columns:1fr;
-}
-}
-</style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../supabase-config.js"></script>
+<script src="../india-districts.js"></script>
 
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f4fb;color:#252b3b}
+.header{background:linear-gradient(135deg,#2563eb,#7042d8);color:#fff;text-align:center;padding:28px 15px}
+.header h1{margin:0;font-size:28px}
+.header p{margin:8px 0 0}
+.container{max-width:760px;margin:22px auto;padding:0 14px 30px}
+.card{background:#fff;padding:22px;border-radius:18px;box-shadow:0 5px 20px #17255412}
+h2{margin:0;color:#30334a;font-size:23px}
+h3{font-size:19px;margin:30px 0 14px;padding-bottom:10px;border-bottom:1px solid #e4e7ef;color:#30334a}
+label{display:block;font-size:15px;font-weight:700;margin:16px 0 7px}
+input,select,textarea{display:block;width:100%;padding:13px;border:1px solid #d6dbe6;border-radius:10px;font-size:16px;background:#fff;color:#252b3b;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#6b55dc;box-shadow:0 0 0 3px #6b55dc18}
+textarea{min-height:90px;resize:vertical}
+input:disabled,select:disabled{background:#f0f2f7;color:#777}
+.help{font-size:13px;color:#697386;line-height:1.6;margin-top:7px}
+.info{background:#f1efff;color:#5140b7;padding:13px;border-radius:10px;margin-top:12px;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.plan-card{border:1px solid #dfe3eb;border-radius:14px;padding:16px;margin-top:14px;background:#f8f9fd}
+.plan-card h4{margin:0 0 6px;font-size:18px}
+.plan-card p{margin:0;color:#6b7280;font-size:14px}
+.plan-card label{margin-top:17px}
+.facilities{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.facility{border:1px solid #e2e6ef;border-radius:10px;padding:12px;background:#fafbfe}
+.facility label{margin:0;display:flex;align-items:center;gap:9px;font-weight:400;line-height:1.4}
+.facility input{width:18px;height:18px;margin:0;flex-shrink:0;accent-color:#5b4bd8}
+.photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.photo-grid img{width:100%;height:145px;object-fit:cover;border-radius:10px;border:1px solid #dbe1ef}
+button{width:100%;padding:14px;border:0;border-radius:11px;font-size:16px;font-weight:700;margin-top:15px;cursor:pointer}
+button:disabled{opacity:.65;cursor:not-allowed}
+.register{background:linear-gradient(135deg,#2563eb,#7042d8);color:#fff}
+.location{background:#f1efff;color:#5744c4;border:1px solid #d9d2ff}
+.back{background:#e8ebf2;color:#303747}
+.success,.error{display:none;margin-top:15px;padding:13px;border-radius:10px;line-height:1.5;overflow-wrap:anywhere}
+.success{background:#dcfce7;color:#166534}
+.error{background:#fee2e2;color:#991b1b}
+@media(max-width:500px){.card{padding:17px}.facilities{grid-template-columns:1fr}.header h1{font-size:25px}.plan-card{padding:14px}}
+</style>
 </head>
 
 <body>
+<header class="header">
+  <h1>📚 StudySpot</h1>
+  <p>Register Your Study Library</p>
+</header>
 
-<div class="header">
-<h1>📚 StudySpot</h1>
-<p>Register Your Study Library</p>
-</div>
-
-<div class="container">
-
+<main class="container">
 <div class="card">
-
 <h2>🏫 Library Owner Registration</h2>
+<p class="help">Enter your owner and library details to get started.</p>
 
+<form id="registrationForm">
 
-<h3>👤 Owner Details</h3>
+<h3>01 · Owner Details</h3>
 
-<label>Owner Name *</label>
-<input
-id="ownerName"
-type="text"
-placeholder="Enter owner name"
->
+<label for="ownerName">Owner Name *</label>
+<input id="ownerName" type="text" placeholder="Enter owner name" required>
 
-<label>Mobile Number *</label>
-<input
-id="mobile"
-type="tel"
-placeholder="Enter mobile number"
->
+<label for="mobile">Mobile Number *</label>
+<input id="mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="Enter 10-digit mobile number" required>
 
-<label>Email Address *</label>
-<input
-id="email"
-type="email"
-placeholder="Enter your email address"
-required
->
+<label for="email">Email Address *</label>
+<input id="email" type="email" placeholder="Enter email address" required>
 
-<label>Create Password *</label>
-<input
-id="password"
-type="password"
-placeholder="Create password"
->
+<label for="password">Create Password *</label>
+<input id="password" type="password" minlength="6" placeholder="Minimum 6 characters" required>
 
+<h3>02 · Library Details</h3>
 
-<h3>🏫 Library Details</h3>
+<label for="libraryName">Library Name *</label>
+<input id="libraryName" type="text" placeholder="Enter library name" required>
 
-<label>Library Name *</label>
-<input
-id="libraryName"
-type="text"
-placeholder="Enter library name"
->
-
-
-<label>State / Union Territory *</label>
-
-<select id="state">
-
-<option value="">
-Select State / UT
-</option>
-
+<label for="state">State / Union Territory *</label>
+<select id="state" required>
+<option value="">Select State / UT</option>
 <option>Andhra Pradesh</option>
 <option>Arunachal Pradesh</option>
 <option>Assam</option>
@@ -304,7 +111,6 @@ Select State / UT
 <option>Uttar Pradesh</option>
 <option>Uttarakhand</option>
 <option>West Bengal</option>
-
 <option>Andaman and Nicobar Islands</option>
 <option>Chandigarh</option>
 <option>Dadra and Nagar Haveli and Daman and Diu</option>
@@ -313,1417 +119,447 @@ Select State / UT
 <option>Ladakh</option>
 <option>Lakshadweep</option>
 <option>Puducherry</option>
-
 </select>
 
-
-<label>District *</label>
-
-<select id="district" disabled>
-
-<option value="">
-Please select a State / Union Territory first
-</option>
-
+<label for="district">District *</label>
+<select id="district" disabled required>
+<option value="">Select State / UT first</option>
 </select>
+<div class="help">Choose a district belonging to the selected State / UT.</div>
 
-<div class="help">
-📍 Please select a district from the list of the selected State / Union Territory.
+<label for="city">City / Town *</label>
+<input id="city" type="text" placeholder="Enter city or town" disabled required>
+
+<label for="address">Library Address *</label>
+<textarea id="address" placeholder="House/shop number, street, area, landmark" required></textarea>
+
+<h3>03 · Study Plans & Pricing</h3>
+<p class="help">Set the initial prices for your library. You can configure additional plans later from your Owner Dashboard.</p>
+
+<div class="plan-card">
+<h4>Daily Plan</h4>
+<p>1 Day</p>
+<label for="dailyFee">Daily Plan Fee (₹)</label>
+<input id="dailyFee" type="number" min="0" step="0.01" placeholder="Enter daily fee">
 </div>
 
-
-<label>City / Town *</label>
-
-<input
-id="city"
-type="text"
-placeholder="Enter your city or town"
-disabled
->
-
-
-<label>Library Address *</label>
-
-<textarea
-id="address"
-placeholder="House/Shop No., Road, Area, Landmark..."
-></textarea>
-
-
-<h3>💰 Pricing & Seats</h3>
-
-<label>Monthly Price (₹) *</label>
-
-<input
-id="price"
-type="number"
-min="0"
-placeholder="Example: 500"
->
-
-<label>Daily Price (₹)</label>
-
-<input
-id="dailyFee"
-type="number"
-min="0"
-placeholder="Example: 25"
->
-
-<label>Weekly Price (₹)</label>
-
-<input
-id="weeklyFee"
-type="number"
-min="0"
-placeholder="Example: 250"
->
-
-<label>Total Seats *</label>
-
-<input
-id="seats"
-type="number"
-min="1"
-placeholder="Example: 100"
->
-
-<label>Male Seats</label>
-
-<input
-id="maleSeats"
-type="number"
-min="0"
-placeholder="Example: 50"
->
-
-<label>Female Seats</label>
-
-<input
-id="femaleSeats"
-type="number"
-min="0"
-placeholder="Example: 50"
->
-
-<label>Security Deposit (₹)</label>
-
-<input
-id="deposit"
-type="number"
-min="0"
-placeholder="Example: 500"
->
-
-<label>Admission / Registration Fee (₹)</label>
-
-<input
-id="registrationFee"
-type="number"
-min="0"
-placeholder="Example: 100"
->
-
-
-<h3>⏰ Library Timing</h3>
-
-<label>Opening Time</label>
-<input id="opening" type="time">
-
-<label>Closing Time</label>
-<input id="closing" type="time">
-
-<label>Open Days</label>
-
-<input
-id="openDays"
-type="text"
-placeholder="Example: Monday - Sunday"
->
-
-<label>24×7 Available?</label>
-
-<select id="open247">
-
-<option value="">
-Select
-</option>
-
-<option>Yes</option>
-<option>No</option>
-
-</select>
-
-
-<h3>✨ Facilities</h3>
-
-<div class="facilities">
-
-<div class="facility">
-<label><input type="checkbox" value="Wi-Fi"> 📶 Wi-Fi</label>
+<div class="plan-card">
+<h4>Weekly Plan</h4>
+<p>7 Days</p>
+<label for="weeklyFee">Weekly Plan Fee (₹)</label>
+<input id="weeklyFee" type="number" min="0" step="0.01" placeholder="Enter weekly fee">
 </div>
 
-<div class="facility">
-<label><input type="checkbox" value="AC"> ❄️ AC</label>
+<div class="plan-card">
+<h4>Monthly Plan</h4>
+<p>1 Month</p>
+<label for="price">Monthly Plan Fee (₹) *</label>
+<input id="price" type="number" min="1" step="0.01" placeholder="e.g. 500" required>
 </div>
-
-<div class="facility">
-<label><input type="checkbox" value="Cooler"> 🌀 Cooler</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Fan"> 💨 Fan</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="CCTV"> 📹 CCTV</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Power Backup"> ⚡ Power Backup</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Drinking Water"> 💧 Drinking Water</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="RO Water"> 🚰 RO Water</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Washroom"> 🚻 Washroom</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Parking"> 🅿️ Parking</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Charging Point"> 🔌 Charging Point</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Silent Zone"> 🤫 Silent Zone</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Personal Locker"> 🔐 Personal Locker</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Comfortable Seats"> 🪑 Comfortable Seats</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Good Lighting"> 💡 Good Lighting</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Newspaper"> 📰 Newspaper</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Refreshment"> ☕ Refreshment</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Lift"> 🛗 Lift</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Disabled Friendly"> ♿ Disabled Friendly</label>
-</div>
-
-<div class="facility">
-<label><input type="checkbox" value="Reading Material"> 📚 Reading Material</label>
-</div>
-
-</div>
-
-
-<label>Other Facilities</label>
-
-<textarea
-id="otherFacilities"
-placeholder="Enter any other facilities..."
-></textarea>
-
-
-<h3>📷 Library Photos</h3>
-
-<label>Select Library Photos</label>
-
-<input
-id="photo"
-type="file"
-accept="image/jpeg,image/png,image/webp"
-multiple
->
-
-<div class="help">
-You can select up to 15 photos of your library.
-</div>
-
-<div
-id="photoPreviewContainer"
-class="photo-grid"
-></div>
-
-
-<h3>📋 Other Information</h3>
-
-<label>About Library</label>
-
-<textarea
-id="extra"
-placeholder="Tell us more about your library..."
-></textarea>
-
-<label>Library Rules</label>
-
-<textarea
-id="rules"
-placeholder="Example: Maintain silence, carry a valid ID card..."
-></textarea>
-
-
-<h3>📍 Library Location</h3>
 
 <div class="info">
-Click the button below to get the exact location of your library.
+You can configure 3 Months and 6 Months plans later from your Owner Dashboard.
 </div>
 
-<button
-type="button"
-class="location"
-id="locationButton"
->
-📍 Get Library Location
-</button>
+<h3>04 · Seating Information</h3>
 
-<div
-id="locationResult"
-class="info"
-></div>
+<label for="seats">Total Seats *</label>
+<input id="seats" type="number" min="1" step="1" placeholder="Enter total seats" required>
 
+<label for="maleSeats">Male Seats</label>
+<input id="maleSeats" type="number" min="0" step="1" placeholder="Enter male seats">
 
-<button
-type="button"
-class="register"
-id="registerButton"
->
-✅ Register My Library
-</button>
+<label for="femaleSeats">Female Seats</label>
+<input id="femaleSeats" type="number" min="0" step="1" placeholder="Enter female seats">
 
+<h3>05 · Library Timing</h3>
 
-<div
-id="success"
-class="success"
->
-✅ Your library registration has been completed successfully.
+<label for="opening">Opening Time</label>
+<input id="opening" type="time">
+
+<label for="closing">Closing Time</label>
+<input id="closing" type="time">
+
+<label for="openDays">Open Days</label>
+<input id="openDays" type="text" placeholder="e.g. Monday - Sunday">
+
+<label for="open247">24×7 Available?</label>
+<select id="open247">
+<option value="">Select</option>
+<option value="Yes">Yes</option>
+<option value="No">No</option>
+</select>
+
+<h3>06 · Facilities</h3>
+
+<div class="facilities">
+<div class="facility"><label><input type="checkbox" value="Wi-Fi"> 📶 Wi-Fi</label></div>
+<div class="facility"><label><input type="checkbox" value="AC"> ❄️ AC</label></div>
+<div class="facility"><label><input type="checkbox" value="Cooler"> 🌀 Cooler</label></div>
+<div class="facility"><label><input type="checkbox" value="Fan"> 💨 Fan</label></div>
+<div class="facility"><label><input type="checkbox" value="CCTV"> 📹 CCTV</label></div>
+<div class="facility"><label><input type="checkbox" value="Power Backup"> ⚡ Power Backup</label></div>
+<div class="facility"><label><input type="checkbox" value="Drinking Water"> 💧 Drinking Water</label></div>
+<div class="facility"><label><input type="checkbox" value="RO Water"> 🚰 RO Water</label></div>
+<div class="facility"><label><input type="checkbox" value="Washroom"> 🚻 Washroom</label></div>
+<div class="facility"><label><input type="checkbox" value="Parking"> 🅿️ Parking</label></div>
+<div class="facility"><label><input type="checkbox" value="Charging Point"> 🔌 Charging Point</label></div>
+<div class="facility"><label><input type="checkbox" value="Silent Zone"> 🤫 Silent Zone</label></div>
+<div class="facility"><label><input type="checkbox" value="Personal Locker"> 🔐 Personal Locker</label></div>
+<div class="facility"><label><input type="checkbox" value="Comfortable Seats"> 🪑 Comfortable Seats</label></div>
+<div class="facility"><label><input type="checkbox" value="Good Lighting"> 💡 Good Lighting</label></div>
+<div class="facility"><label><input type="checkbox" value="Newspaper"> 📰 Newspaper</label></div>
+<div class="facility"><label><input type="checkbox" value="Refreshment"> ☕ Refreshment</label></div>
+<div class="facility"><label><input type="checkbox" value="Lift"> 🛗 Lift</label></div>
+<div class="facility"><label><input type="checkbox" value="Disabled Friendly"> ♿ Disabled Friendly</label></div>
+<div class="facility"><label><input type="checkbox" value="Reading Material"> 📚 Reading Material</label></div>
 </div>
 
-<div
-id="error"
-class="error"
-></div>
+<label for="otherFacilities">Other Facilities</label>
+<textarea id="otherFacilities" placeholder="Enter any additional facilities"></textarea>
 
+<h3>07 · Library Photos</h3>
+<label for="photo">Select Library Photos</label>
+<input id="photo" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+<div class="help">Select up to 15 photos. Supported formats: JPG, PNG and WebP.</div>
+<div id="photoPreviewContainer" class="photo-grid"></div>
 
-<button
-type="button"
-class="back"
-onclick="window.location.href='index.html'"
->
-⬅️ Back to StudySpot
-</button>
+<h3>08 · Library Rules</h3>
+<label for="rules">Library Rules</label>
+<textarea id="rules" placeholder="e.g. Maintain silence, carry a valid ID card"></textarea>
 
+<h3>09 · Library Location</h3>
+<div class="info">For accurate nearby-library searches, capture the library's location while you are at the library.</div>
+<button type="button" class="location" id="locationButton">📍 Get My Library Location</button>
+<div id="locationResult" class="info" style="display:none"></div>
 
+<button type="submit" class="register" id="registerButton">✅ Register My Library</button>
+
+<div id="success" class="success"></div>
+<div id="error" class="error"></div>
+</form>
+
+<button type="button" class="back" onclick="window.location.href='index.html'">⬅️ Back to StudySpot</button>
 </div>
-</div>
-
-
-<script src="india-districts.js"></script>
-
+</main>
 
 <script>
+const stateSelect = document.getElementById("state");
+const districtSelect = document.getElementById("district");
+const cityInput = document.getElementById("city");
+const photoInput = document.getElementById("photo");
+const photoPreview = document.getElementById("photoPreviewContainer");
+const registerButton = document.getElementById("registerButton");
+const locationButton = document.getElementById("locationButton");
+const locationResult = document.getElementById("locationResult");
 
-/* =========================================
-   STATE / DISTRICT
-========================================= */
+let libraryLocation = null;
 
-const stateSelect =
-  document.getElementById("state");
+stateSelect.addEventListener("change", async () => {
+  districtSelect.innerHTML = '<option value="">Loading districts...</option>';
+  districtSelect.disabled = true;
+  cityInput.disabled = true;
+  cityInput.value = "";
 
-const districtSelect =
-  document.getElementById("district");
+  try {
+    if (typeof loadDistrictData !== "function") {
+      throw new Error("District data could not be loaded. Please refresh and try again.");
+    }
 
-const cityInput =
-  document.getElementById("city");
-
-
-stateSelect.addEventListener(
-  "change",
-  async function () {
-
-    districtSelect.innerHTML =
-      '<option value="">Loading districts...</option>';
-
-    districtSelect.disabled = true;
-
-    cityInput.disabled = true;
-
-    cityInput.value = "";
-
-    const data =
-      await loadDistrictData();
-
-    const selectedState =
-      stateSelect.value;
-
-    let districts =
-      data[selectedState] || [];
-
-
+    const data = await loadDistrictData();
+    const selectedState = stateSelect.value;
     const aliases = {
-
-      "Andaman and Nicobar Islands":
-        "Andaman and Nicobar",
-
-      "Jammu and Kashmir":
-        "Jammu & Kashmir"
-
+      "Andaman and Nicobar Islands": "Andaman and Nicobar",
+      "Jammu and Kashmir": "Jammu & Kashmir"
     };
 
-
-    if (
-      districts.length === 0
-    ) {
-
-      const alternativeState =
-        aliases[selectedState];
-
-      if (
-        alternativeState &&
-        data[alternativeState]
-      ) {
-
-        districts =
-          data[alternativeState];
-
-      }
-
+    let districts = data?.[selectedState] || [];
+    if (!districts.length && aliases[selectedState]) {
+      districts = data?.[aliases[selectedState]] || [];
     }
 
+    districtSelect.innerHTML = '<option value="">Select District</option>';
 
-    districtSelect.innerHTML =
-      '<option value="">Select District</option>';
-
-
-    if (
-      districts.length === 0
-    ) {
-
-      districtSelect.innerHTML =
-        '<option value="">District data not found</option>';
-
+    if (!districts.length) {
+      districtSelect.innerHTML = '<option value="">District data not found</option>';
       return;
-
     }
 
+    districts.forEach(name => {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      districtSelect.appendChild(option);
+    });
 
-    districts.forEach(
-      function (district) {
-
-        const option =
-          document.createElement("option");
-
-        option.value =
-          district;
-
-        option.textContent =
-          district;
-
-        districtSelect.appendChild(
-          option
-        );
-
-      }
-    );
-
-
-    districtSelect.disabled =
-      false;
-
+    districtSelect.disabled = false;
+  } catch (err) {
+    districtSelect.innerHTML = '<option value="">Could not load districts</option>';
+    alert(err.message || "Could not load districts.");
   }
-);
+});
 
+districtSelect.addEventListener("change", () => {
+  cityInput.disabled = !districtSelect.value;
+  if (!districtSelect.value) cityInput.value = "";
+});
 
-districtSelect.addEventListener(
-  "change",
-  function () {
+photoInput.addEventListener("change", () => {
+  photoPreview.innerHTML = "";
+  const files = Array.from(photoInput.files || []);
 
-    if (
-      districtSelect.value
-    ) {
-
-      cityInput.disabled =
-        false;
-
-      cityInput.focus();
-
-    } else {
-
-      cityInput.disabled =
-        true;
-
-      cityInput.value =
-        "";
-
-    }
-
+  if (files.length > 15) {
+    alert("You can select a maximum of 15 photos.");
+    photoInput.value = "";
+    return;
   }
-);
 
-
-/* =========================================
-   PHOTO PREVIEW
-========================================= */
-
-const photoInput =
-  document.getElementById("photo");
-
-const photoPreviewContainer =
-  document.getElementById(
-    "photoPreviewContainer"
-  );
-
-
-photoInput.addEventListener(
-  "change",
-  function () {
-
-    photoPreviewContainer.innerHTML =
-      "";
-
-    const files =
-      Array.from(
-        photoInput.files
-      );
-
-
-    if (
-      files.length > 15
-    ) {
-
-      alert(
-        "You can select a maximum of 15 photos."
-      );
-
-    }
-
-
-    const selectedPhotos =
-      files.slice(0, 15);
-
-
-    selectedPhotos.forEach(
-      function (photo) {
-
-        if (
-          !photo.type.startsWith("image/")
-        ) {
-
-          return;
-
-        }
-
-
-        const reader =
-          new FileReader();
-
-
-        reader.onload =
-          function (event) {
-
-            const image =
-              document.createElement("img");
-
-            image.src =
-              event.target.result;
-
-            image.alt =
-              "Library Photo";
-
-            photoPreviewContainer.appendChild(
-              image
-            );
-
-          };
-
-
-        reader.readAsDataURL(
-          photo
-        );
-
-      }
-    );
-
-  }
-);
-
-
-/* =========================================
-   LOCATION
-========================================= */
-
-const locationButton =
-  document.getElementById(
-    "locationButton"
-  );
-
-const locationResult =
-  document.getElementById(
-    "locationResult"
-  );
-
-
-locationButton.addEventListener(
-  "click",
-  function () {
-
-    if (
-      !navigator.geolocation
-    ) {
-
-      locationResult.textContent =
-        "Location services are not supported by this browser.";
-
+  for (const file of files) {
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      alert("Please select only JPG, PNG or WebP images.");
+      photoInput.value = "";
+      photoPreview.innerHTML = "";
       return;
-
     }
+  }
 
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = event => {
+      const img = document.createElement("img");
+      img.src = event.target.result;
+      img.alt = "Library photo preview";
+      photoPreview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+locationButton.addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    locationResult.style.display = "block";
+    locationResult.textContent = "Location services are not supported by this browser.";
+    return;
+  }
+
+  locationButton.disabled = true;
+  locationButton.textContent = "Getting Location...";
+  locationResult.style.display = "block";
+  locationResult.textContent = "Please allow location permission when your browser asks.";
+
+  navigator.geolocation.getCurrentPosition(position => {
+    libraryLocation = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    };
 
     locationResult.textContent =
-      "Getting your library location...";
+      "Location captured successfully. Latitude: " +
+      libraryLocation.latitude.toFixed(6) +
+      ", Longitude: " +
+      libraryLocation.longitude.toFixed(6);
 
+    locationButton.textContent = "✅ Location Captured";
+    locationButton.disabled = false;
+  }, error => {
+    const messages = {
+      1: "Location permission was denied. Allow location access in your browser settings and try again.",
+      2: "Your location could not be determined. Please try again.",
+      3: "Location request timed out. Please try again."
+    };
 
-    navigator.geolocation.getCurrentPosition(
+    locationResult.textContent = messages[error.code] || "Unable to get location. Please try again.";
+    locationButton.textContent = "📍 Get My Library Location";
+    locationButton.disabled = false;
+  }, {
+    enableHighAccuracy: true,
+    timeout: 20000,
+    maximumAge: 0
+  });
+});
 
-      function (position) {
+document.getElementById("registrationForm").addEventListener("submit", async event => {
+  event.preventDefault();
 
-        const latitude =
-          position.coords.latitude;
+  const errorBox = document.getElementById("error");
+  const successBox = document.getElementById("success");
+  errorBox.style.display = "none";
+  successBox.style.display = "none";
 
-        const longitude =
-          position.coords.longitude;
+  const value = id => document.getElementById(id).value.trim();
 
+  const ownerName = value("ownerName");
+  const mobile = value("mobile");
+  const email = value("email");
+  const password = document.getElementById("password").value;
+  const libraryName = value("libraryName");
+  const state = value("state");
+  const district = value("district");
+  const city = value("city");
+  const address = value("address");
+  const price = value("price");
+  const seats = value("seats");
+  const maleSeats = value("maleSeats");
+  const femaleSeats = value("femaleSeats");
+  const dailyFee = value("dailyFee");
+  const weeklyFee = value("weeklyFee");
+  const opening = value("opening");
+  const closing = value("closing");
+  const openDays = value("openDays");
+  const open247 = value("open247");
+  const otherFacilities = value("otherFacilities");
+  const rules = value("rules");
+  const photos = Array.from(photoInput.files || []);
 
-        window.studySpotLibraryLocation = {
-
-          latitude:
-            latitude,
-
-          longitude:
-            longitude
-
-        };
-
-
-        locationResult.innerHTML =
-          "Location captured successfully.<br>" +
-          "Latitude: " +
-          latitude +
-          "<br>" +
-          "Longitude: " +
-          longitude;
-
-
-        locationButton.textContent =
-          "✅ Location Captured";
-
-      },
-
-
-      function () {
-
-        locationResult.textContent =
-          "Unable to get location. Please allow location permission and try again.";
-
-      },
-
-
-      {
-
-        enableHighAccuracy:
-          true,
-
-        timeout:
-          20000,
-
-        maximumAge:
-          0
-
-      }
-
-    );
-
+  if (!/^\d{10}$/.test(mobile)) {
+    errorBox.textContent = "Enter a valid 10-digit mobile number.";
+    errorBox.style.display = "block";
+    return;
   }
-);
 
-</script>
+  if (password.length < 6) {
+    errorBox.textContent = "Password must contain at least 6 characters.";
+    errorBox.style.display = "block";
+    return;
+  }
 
+  if (photos.length > 15) {
+    errorBox.textContent = "You can upload a maximum of 15 photos.";
+    errorBox.style.display = "block";
+    return;
+  }
 
-<script>
+  const total = Number(seats);
+  const male = maleSeats === "" ? 0 : Number(maleSeats);
+  const female = femaleSeats === "" ? 0 : Number(femaleSeats);
 
-document.addEventListener(
-  "DOMContentLoaded",
-  function () {
+  if (male < 0 || female < 0 || total < 1 || male + female > total) {
+    errorBox.textContent = "Check the seat numbers. Male and female seats together cannot exceed total seats.";
+    errorBox.style.display = "block";
+    return;
+  }
 
-    const registerButton =
-      document.getElementById(
-        "registerButton"
-      );
+  const facilities = Array.from(
+    document.querySelectorAll('.facility input[type="checkbox"]:checked')
+  ).map(input => input.value);
 
+  registerButton.disabled = true;
 
-    if (!registerButton) {
-      return;
+  try {
+    registerButton.textContent = "Creating Owner Account...";
+
+    const client = window.supabaseClient;
+    if (!client) {
+      throw new Error("Supabase client could not be loaded. Check supabase-config.js.");
     }
 
-
-    registerButton.addEventListener(
-      "click",
-      async function () {
-
-        const ownerName =
-          document.getElementById(
-            "ownerName"
-          )?.value.trim();
-
-
-        const mobile =
-          document.getElementById(
-            "mobile"
-          )?.value.trim();
-
-
-        const email =
-          document.getElementById(
-            "email"
-          )?.value.trim();
-
-
-        const password =
-          document.getElementById(
-            "password"
-          )?.value.trim();
-
-
-        const libraryName =
-          document.getElementById(
-            "libraryName"
-          )?.value.trim();
-
-
-        const state =
-          document.getElementById(
-            "state"
-          )?.value;
-
-
-        const district =
-          document.getElementById(
-            "district"
-          )?.value;
-
-
-        const city =
-          document.getElementById(
-            "city"
-          )?.value.trim();
-
-
-        const address =
-          document.getElementById(
-            "address"
-          )?.value.trim();
-
-
-        const price =
-          document.getElementById(
-            "price"
-          )?.value;
-
-
-        const seats =
-          document.getElementById(
-            "seats"
-          )?.value;
-
-
-        const opening =
-          document.getElementById(
-            "opening"
-          )?.value;
-
-
-        const closing =
-          document.getElementById(
-            "closing"
-          )?.value;
-
-
-        const open247 =
-          document.getElementById(
-            "open247"
-          )?.value;
-
-
-        const maleSeats =
-          document.getElementById(
-            "maleSeats"
-          )?.value;
-
-
-        const femaleSeats =
-          document.getElementById(
-            "femaleSeats"
-          )?.value;
-
-
-        const deposit =
-          document.getElementById(
-            "deposit"
-          )?.value;
-
-
-        const registrationFee =
-          document.getElementById(
-            "registrationFee"
-          )?.value;
-
-
-        const dailyFee =
-          document.getElementById(
-            "dailyFee"
-          )?.value;
-
-
-        const weeklyFee =
-          document.getElementById(
-            "weeklyFee"
-          )?.value;
-
-
-        const openDays =
-          document.getElementById(
-            "openDays"
-          )?.value.trim();
-
-
-        const otherFacilities =
-          document.getElementById(
-            "otherFacilities"
-          )?.value.trim() || "";
-
-
-        const extra =
-          document.getElementById(
-            "extra"
-          )?.value.trim() || "";
-
-
-        const rules =
-          document.getElementById(
-            "rules"
-          )?.value.trim() || "";
-
-
-        const selectedPhotoFiles =
-          Array.from(
-            photoInput.files || []
-          ).slice(0, 15);
-
-
-        const facilities =
-          Array.from(
-            document.querySelectorAll(
-              '.facility input[type="checkbox"]:checked'
-            )
-          ).map(
-            function (checkbox) {
-              return checkbox.value;
-            }
-          );
-
-
-        /* =========================================
-           VALIDATION
-        ========================================= */
-
-        if (
-          !ownerName ||
-          !mobile ||
-          !email ||
-          !password ||
-          !libraryName ||
-          !state ||
-          !district ||
-          !city ||
-          !address ||
-          !price ||
-          !seats
-        ) {
-
-          alert(
-            "Please complete all required details."
-          );
-
-          return;
-
+    const { data: authData, error: authError } = await client.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          owner_name: ownerName,
+          mobile: mobile
         }
-
-
-        if (
-          password.length < 6
-        ) {
-
-          alert(
-            "Password must contain at least 6 characters."
-          );
-
-          return;
-
-        }
-
-
-        if (
-          selectedPhotoFiles.length > 15
-        ) {
-
-          alert(
-            "You can upload a maximum of 15 photos."
-          );
-
-          return;
-
-        }
-
-
-        registerButton.disabled =
-          true;
-
-        registerButton.textContent =
-          "Creating Account...";
-
-
-        try {
-
-          /* =========================================
-             SUPABASE CLIENT
-          ========================================= */
-
-          const client =
-            window.supabaseClient;
-
-
-          if (!client) {
-
-            throw new Error(
-              "Supabase client could not be loaded."
-            );
-
-          }
-
-
-          /* =========================================
-             CREATE OWNER ACCOUNT
-          ========================================= */
-
-          const {
-            data: authData,
-            error: authError
-          } =
-            await client.auth.signUp({
-
-              email:
-                email,
-
-              password:
-                password,
-
-              options: {
-
-                data: {
-
-                  owner_name:
-                    ownerName,
-
-                  mobile:
-                    mobile
-
-                }
-
-              }
-
-            });
-
-
-          if (authError) {
-
-            throw authError;
-
-          }
-
-
-          if (
-            !authData ||
-            !authData.user
-          ) {
-
-            throw new Error(
-              "Owner account could not be created."
-            );
-
-          }
-
-
-          const ownerId =
-            authData.user.id;
-
-
-          /* =========================================
-             LOCATION DATA
-          ========================================= */
-
-          const latitude =
-            window.studySpotLibraryLocation?.latitude ||
-            null;
-
-
-          const longitude =
-            window.studySpotLibraryLocation?.longitude ||
-            null;
-
-
-          /* =========================================
-             CREATE LIBRARY
-          ========================================= */
-
-          const {
-            data: libraryData,
-            error: libraryError
-          } =
-            await client
-              .from("libraries")
-              .insert({
-
-                owner_id:
-                  ownerId,
-
-                owner_name:
-                  ownerName,
-
-                mobile:
-                  mobile,
-
-                library_name:
-                  libraryName,
-
-                state:
-                  state,
-
-                district:
-                  district,
-
-                city:
-                  city,
-
-                address:
-                  address,
-
-                monthly_fee:
-                  Number(price),
-
-                daily_fee:
-                  dailyFee
-                    ? Number(dailyFee)
-                    : null,
-
-                weekly_fee:
-                  weeklyFee
-                    ? Number(weeklyFee)
-                    : null,
-
-                seat_availability:
-                  Number(seats),
-
-                male_seats:
-                  maleSeats
-                    ? Number(maleSeats)
-                    : null,
-
-                female_seats:
-                  femaleSeats
-                    ? Number(femaleSeats)
-                    : null,
-
-                security_deposit:
-                  deposit
-                    ? Number(deposit)
-                    : null,
-
-                registration_fee:
-                  registrationFee
-                    ? Number(registrationFee)
-                    : null,
-
-                opening_time:
-                  opening || null,
-
-                closing_time:
-                  closing || null,
-
-                open_days:
-                  openDays || null,
-
-                open_24_hours:
-                  open247 === "Yes",
-
-                facilities:
-                  facilities,
-
-                other_facilities:
-                  otherFacilities || null,
-
-                rules:
-                  rules || null,
-
-                latitude:
-                  latitude,
-
-                longitude:
-                  longitude,
-
-                photos:
-                  []
-
-              })
-              .select("id")
-              .single();
-
-
-          if (libraryError) {
-
-            throw libraryError;
-
-          }
-
-
-          if (
-            !libraryData ||
-            !libraryData.id
-          ) {
-
-            throw new Error(
-              "Library record was not created."
-            );
-
-          }
-
-
-          const libraryId =
-            libraryData.id;
-
-
-          /* =========================================
-             UPLOAD REGISTRATION PHOTOS
-             
-             IMPORTANT:
-             Every owner's photos are stored
-             inside that owner's own folder.
-             
-             Example:
-             owner-id/photo.jpg
-             
-             Therefore different libraries
-             cannot mix their files.
-          ========================================= */
-
-          const uploadedPhotoUrls =
-            [];
-
-
-          if (
-            selectedPhotoFiles.length > 0
-          ) {
-
-            registerButton.textContent =
-              "Uploading Library Photos...";
-
-
-            for (
-              let i = 0;
-              i < selectedPhotoFiles.length;
-              i++
-            ) {
-
-              const file =
-                selectedPhotoFiles[i];
-
-
-              if (
-                !file.type.startsWith("image/")
-              ) {
-
-                continue;
-
-              }
-
-
-              const originalName =
-                file.name || "photo";
-
-
-              const parts =
-                originalName.split(".");
-
-
-              const extension =
-                parts.length > 1
-                  ? parts.pop().toLowerCase()
-                  : "jpg";
-
-
-              const uniqueId =
-                typeof crypto !== "undefined" &&
-                crypto.randomUUID
-                  ? crypto.randomUUID()
-                  : Date.now() +
-                    "-" +
-                    Math.random()
-                      .toString(36)
-                      .substring(2);
-
-
-              const fileName =
-                Date.now() +
-                "-" +
-                uniqueId +
-                "." +
-                extension;
-
-
-              /*
-                OWNER-SPECIFIC STORAGE PATH
-              */
-
-              const filePath =
-  ownerId +
-  "/" +
-  libraryId +
-  "/" +
-  fileName;
-
-
-              const {
-                error: uploadError
-              } =
-                await client.storage
-                  .from(
-                    "StudySpot library-photos"
-                  )
-                  .upload(
-                    filePath,
-                    file,
-                    {
-
-                      cacheControl:
-                        "3600",
-
-                      upsert:
-                        false,
-
-                      contentType:
-                        file.type
-
-                    }
-                  );
-
-
-              if (uploadError) {
-
-                throw new Error(
-                  "Photo upload failed: " +
-                  uploadError.message
-                );
-
-              }
-
-
-              const {
-                data: publicUrlData
-              } =
-                client.storage
-                  .from(
-                    "StudySpot library-photos"
-                  )
-                  .getPublicUrl(
-                    filePath
-                  );
-
-
-              if (
-                !publicUrlData ||
-                !publicUrlData.publicUrl
-              ) {
-
-                throw new Error(
-                  "Could not create photo URL."
-                );
-
-              }
-
-
-              uploadedPhotoUrls.push(
-                publicUrlData.publicUrl
-              );
-
-            }
-
-          }
-
-
-          /* =========================================
-             SAVE PHOTO URLS TO LIBRARIES TABLE
-          ========================================= */
-
-          if (
-            uploadedPhotoUrls.length > 0
-          ) {
-
-            registerButton.textContent =
-              "Saving Library Photos...";
-
-
-            const {
-              error: photoUpdateError
-            } =
-              await client
-                .from("libraries")
-                .update({
-
-                  photos:
-                    uploadedPhotoUrls
-
-                })
-                .eq(
-                  "id",
-                  libraryId
-                )
-                .eq(
-                  "owner_id",
-                  ownerId
-                );
-
-
-            if (
-              photoUpdateError
-            ) {
-
-              throw new Error(
-                "Photos were uploaded but could not be linked to the library: " +
-                photoUpdateError.message
-              );
-
-            }
-
-          }
-
-
-          /* =========================================
-             SUCCESS
-          ========================================= */
-
-          const success =
-            document.getElementById(
-              "success"
-            );
-
-
-          success.style.display =
-            "block";
-
-
-          success.textContent =
-            uploadedPhotoUrls.length > 0
-              ? "✅ Registration completed successfully. Your library and photos have been saved."
-              : "✅ Registration completed successfully. Your library details have been saved.";
-
-
-          alert(
-            uploadedPhotoUrls.length > 0
-              ? "Registration completed successfully. Your library and photos have been saved."
-              : "Registration completed successfully. Your library details have been saved."
-          );
-
-
-          window.location.href =
-            "owner-login.html";
-
-
-        } catch (error) {
-
-          console.error(
-            "Registration error:",
-            error
-          );
-
-
-          const errorBox =
-            document.getElementById(
-              "error"
-            );
-
-
-          errorBox.style.display =
-            "block";
-
-
-          errorBox.textContent =
-            "Registration error: " +
-            (
-              error.message ||
-              "Something went wrong."
-            );
-
-
-          alert(
-            "Registration error: " +
-            (
-              error.message ||
-              "Something went wrong."
-            )
-          );
-
-
-        } finally {
-
-          registerButton.disabled =
-            false;
-
-          registerButton.textContent =
-            "✅ Register My Library";
-
-        }
-
       }
-    );
+    });
 
+    if (authError) throw authError;
+    if (!authData?.user) throw new Error("Owner account could not be created.");
+
+    const ownerId = authData.user.id;
+
+    registerButton.textContent = "Saving Library Details...";
+
+    const { data: libraryData, error: libraryError } = await client
+      .from("libraries")
+      .insert({
+        owner_id: ownerId,
+        owner_name: ownerName,
+        mobile: mobile,
+        library_name: libraryName,
+        state: state,
+        district: district,
+        city: city,
+        address: address,
+        monthly_fee: Number(price),
+        daily_fee: dailyFee === "" ? null : Number(dailyFee),
+        weekly_fee: weeklyFee === "" ? null : Number(weeklyFee),
+        seat_availability: total,
+        male_seats: maleSeats === "" ? null : male,
+        female_seats: femaleSeats === "" ? null : female,
+        opening_time: opening || null,
+        closing_time: closing || null,
+        open_days: openDays || null,
+        open_24_hours: open247 === "Yes",
+        facilities: facilities,
+        other_facilities: otherFacilities || null,
+        rules: rules || null,
+        latitude: libraryLocation ? libraryLocation.latitude : null,
+        longitude: libraryLocation ? libraryLocation.longitude : null,
+        photos: []
+      })
+      .select("id")
+      .single();
+
+    if (libraryError) throw libraryError;
+    if (!libraryData?.id) throw new Error("Library record could not be created.");
+
+    const libraryId = libraryData.id;
+    const uploadedUrls = [];
+
+    for (let i = 0; i < photos.length; i++) {
+      registerButton.textContent = `Uploading Photos (${i + 1}/${photos.length})...`;
+
+      const file = photos[i];
+      const extension = file.name.includes(".") ? file.name.split(".").pop().toLowerCase() : "jpg";
+      const unique = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const filePath = `${ownerId}/${libraryId}/${Date.now()}-${unique}.${extension}`;
+
+      const { error: uploadError } = await client.storage
+        .from("StudySpot library-photos")
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.type
+        });
+
+      if (uploadError) throw new Error("Photo upload failed: " + uploadError.message);
+
+      const { data: urlData } = client.storage
+        .from("StudySpot library-photos")
+        .getPublicUrl(filePath);
+
+      if (!urlData?.publicUrl) throw new Error("Could not create a public URL for a photo.");
+      uploadedUrls.push(urlData.publicUrl);
+    }
+
+    if (uploadedUrls.length) {
+      registerButton.textContent = "Saving Photo Details...";
+
+      const { error: updateError } = await client
+        .from("libraries")
+        .update({ photos: uploadedUrls })
+        .eq("id", libraryId)
+        .eq("owner_id", ownerId);
+
+      if (updateError) {
+        throw new Error("Photos uploaded, but linking them to the library failed: " + updateError.message);
+      }
+    }
+
+    successBox.textContent = "Registration completed successfully. Redirecting to Owner Login...";
+    successBox.style.display = "block";
+    alert("Library registration completed successfully.");
+    window.location.href = "owner-login.html";
+  } catch (error) {
+    console.error("StudySpot registration error:", error);
+    errorBox.textContent = "Registration error: " + (error.message || "Something went wrong.");
+    errorBox.style.display = "block";
+    registerButton.disabled = false;
+    registerButton.textContent = "✅ Register My Library";
   }
-);
-
+});
 </script>
-
 </body>
 </html>
