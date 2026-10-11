@@ -44,14 +44,19 @@ button:disabled{opacity:.65;cursor:not-allowed}
 .success,.error{display:none;margin-top:15px;padding:13px;border-radius:10px;line-height:1.5;overflow-wrap:anywhere}
 .success{background:#dcfce7;color:#166534}
 .error{background:#fee2e2;color:#991b1b}
-@media(max-width:500px){.card{padding:17px}.facilities{grid-template-columns:1fr}.header h1{font-size:25px}.plan-card{padding:14px}}
+@media(max-width:500px){
+.card{padding:17px}
+.facilities{grid-template-columns:1fr}
+.header h1{font-size:25px}
+.plan-card{padding:14px}
+}
 </style>
 </head>
 
 <body>
 <header class="header">
-  <h1>📚 StudySpot</h1>
-  <p>Register Your Study Library</p>
+<h1>📚 StudySpot</h1>
+<p>Register Your Study Library</p>
 </header>
 
 <main class="container">
@@ -134,31 +139,41 @@ button:disabled{opacity:.65;cursor:not-allowed}
 <textarea id="address" placeholder="House/shop number, street, area, landmark" required></textarea>
 
 <h3>03 · Study Plans & Pricing</h3>
-<p class="help">Set the initial prices for your library. You can configure additional plans later from your Owner Dashboard.</p>
+<p class="help">Enter the fee for each membership plan you offer. A plan is automatically enabled when a fee is entered. Monthly pricing is required.</p>
 
 <div class="plan-card">
 <h4>Daily Plan</h4>
 <p>1 Day</p>
 <label for="dailyFee">Daily Plan Fee (₹)</label>
-<input id="dailyFee" type="number" min="0" step="0.01" placeholder="Enter daily fee">
+<input id="dailyFee" type="number" min="0.01" step="0.01" placeholder="Enter daily fee">
 </div>
 
 <div class="plan-card">
 <h4>Weekly Plan</h4>
 <p>7 Days</p>
 <label for="weeklyFee">Weekly Plan Fee (₹)</label>
-<input id="weeklyFee" type="number" min="0" step="0.01" placeholder="Enter weekly fee">
+<input id="weeklyFee" type="number" min="0.01" step="0.01" placeholder="Enter weekly fee">
 </div>
 
 <div class="plan-card">
 <h4>Monthly Plan</h4>
 <p>1 Month</p>
-<label for="price">Monthly Plan Fee (₹) *</label>
-<input id="price" type="number" min="1" step="0.01" placeholder="e.g. 500" required>
+<label for="monthlyFee">Monthly Plan Fee (₹) *</label>
+<input id="monthlyFee" type="number" min="0.01" step="0.01" placeholder="Enter monthly fee" required>
 </div>
 
-<div class="info">
-You can configure 3 Months and 6 Months plans later from your Owner Dashboard.
+<div class="plan-card">
+<h4>3 Months Plan</h4>
+<p>3 Months</p>
+<label for="threeMonthFee">3 Months Plan Fee (₹)</label>
+<input id="threeMonthFee" type="number" min="0.01" step="0.01" placeholder="Enter 3 months fee">
+</div>
+
+<div class="plan-card">
+<h4>6 Months Plan</h4>
+<p>6 Months</p>
+<label for="sixMonthFee">6 Months Plan Fee (₹)</label>
+<input id="sixMonthFee" type="number" min="0.01" step="0.01" placeholder="Enter 6 months fee">
 </div>
 
 <h3>04 · Seating Information</h3>
@@ -171,6 +186,30 @@ You can configure 3 Months and 6 Months plans later from your Owner Dashboard.
 
 <label for="femaleSeats">Female Seats</label>
 <input id="femaleSeats" type="number" min="0" step="1" placeholder="Enter female seats">
+
+<label for="separateFemaleSection">Separate Female Section?</label>
+<select id="separateFemaleSection">
+<option value="false">No</option>
+<option value="true">Yes</option>
+</select>
+
+<label for="seatNumberingMode">Seat Numbering</label>
+<select id="seatNumberingMode">
+<option value="automatic">Automatic</option>
+<option value="custom">Custom</option>
+</select>
+
+<div class="seat-grid">
+<label for="maleSeatPrefix">Male Seat Prefix
+<input id="maleSeatPrefix" type="text" maxlength="10" value="M" placeholder="M">
+</label>
+<label for="femaleSeatPrefix">Female Seat Prefix
+<input id="femaleSeatPrefix" type="text" maxlength="10" value="F" placeholder="F">
+</label>
+</div>
+
+<label for="seatAlertNumber">Seat Alert Number</label>
+<input id="seatAlertNumber" type="number" min="0" step="1" value="5">
 
 <h3>05 · Library Timing</h3>
 
@@ -193,26 +232,28 @@ You can configure 3 Months and 6 Months plans later from your Owner Dashboard.
 <h3>06 · Facilities</h3>
 
 <div class="facilities">
-<div class="facility"><label><input type="checkbox" value="Wi-Fi"> 📶 Wi-Fi</label></div>
-<div class="facility"><label><input type="checkbox" value="AC"> ❄️ AC</label></div>
-<div class="facility"><label><input type="checkbox" value="Cooler"> 🌀 Cooler</label></div>
-<div class="facility"><label><input type="checkbox" value="Fan"> 💨 Fan</label></div>
-<div class="facility"><label><input type="checkbox" value="CCTV"> 📹 CCTV</label></div>
-<div class="facility"><label><input type="checkbox" value="Power Backup"> ⚡ Power Backup</label></div>
-<div class="facility"><label><input type="checkbox" value="Drinking Water"> 💧 Drinking Water</label></div>
-<div class="facility"><label><input type="checkbox" value="RO Water"> 🚰 RO Water</label></div>
-<div class="facility"><label><input type="checkbox" value="Washroom"> 🚻 Washroom</label></div>
-<div class="facility"><label><input type="checkbox" value="Parking"> 🅿️ Parking</label></div>
-<div class="facility"><label><input type="checkbox" value="Charging Point"> 🔌 Charging Point</label></div>
-<div class="facility"><label><input type="checkbox" value="Silent Zone"> 🤫 Silent Zone</label></div>
-<div class="facility"><label><input type="checkbox" value="Personal Locker"> 🔐 Personal Locker</label></div>
-<div class="facility"><label><input type="checkbox" value="Comfortable Seats"> 🪑 Comfortable Seats</label></div>
-<div class="facility"><label><input type="checkbox" value="Good Lighting"> 💡 Good Lighting</label></div>
-<div class="facility"><label><input type="checkbox" value="Newspaper"> 📰 Newspaper</label></div>
-<div class="facility"><label><input type="checkbox" value="Refreshment"> ☕ Refreshment</label></div>
-<div class="facility"><label><input type="checkbox" value="Lift"> 🛗 Lift</label></div>
-<div class="facility"><label><input type="checkbox" value="Disabled Friendly"> ♿ Disabled Friendly</label></div>
-<div class="facility"><label><input type="checkbox" value="Reading Material"> 📚 Reading Material</label></div>
+<div class="facility"><label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label></div>
+<div class="facility"><label><input type="checkbox" value="Air Conditioning"> Air Conditioning</label></div>
+<div class="facility"><label><input type="checkbox" value="Cooler"> Cooler</label></div>
+<div class="facility"><label><input type="checkbox" value="Fan"> Fan</label></div>
+<div class="facility"><label><input type="checkbox" value="CCTV Security"> CCTV Security</label></div>
+<div class="facility"><label><input type="checkbox" value="Power Backup"> Power Backup</label></div>
+<div class="facility"><label><input type="checkbox" value="Drinking Water"> Drinking Water</label></div>
+<div class="facility"><label><input type="checkbox" value="RO Water"> RO Water</label></div>
+<div class="facility"><label><input type="checkbox" value="Washroom Facility"> Washroom Facility</label></div>
+<div class="facility"><label><input type="checkbox" value="Parking Facility"> Parking Facility</label></div>
+<div class="facility"><label><input type="checkbox" value="Charging Point"> Charging Point</label></div>
+<div class="facility"><label><input type="checkbox" value="Silent Study Zone"> Silent Study Zone</label></div>
+<div class="facility"><label><input type="checkbox" value="Locker Facility"> Locker Facility</label></div>
+<div class="facility"><label><input type="checkbox" value="Comfortable Seats"> Comfortable Seats</label></div>
+<div class="facility"><label><input type="checkbox" value="Proper Lighting"> Proper Lighting</label></div>
+<div class="facility"><label><input type="checkbox" value="Newspaper and Magazines"> Newspaper and Magazines</label></div>
+<div class="facility"><label><input type="checkbox" value="Refreshment"> Refreshment</label></div>
+<div class="facility"><label><input type="checkbox" value="Lift"> Lift</label></div>
+<div class="facility"><label><input type="checkbox" value="Disabled Friendly"> Disabled Friendly</label></div>
+<div class="facility"><label><input type="checkbox" value="Reading Material"> Reading Material</label></div>
+<div class="facility"><label><input type="checkbox" value="Personal Cabin"> Personal Cabin</label></div>
+<div class="facility"><label><input type="checkbox" value="Biometric Entry"> Biometric Entry</label></div>
 </div>
 
 <label for="otherFacilities">Other Facilities</label>
@@ -234,7 +275,6 @@ You can configure 3 Months and 6 Months plans later from your Owner Dashboard.
 <div id="locationResult" class="info" style="display:none"></div>
 
 <button type="submit" class="register" id="registerButton">✅ Register My Library</button>
-
 <div id="success" class="success"></div>
 <div id="error" class="error"></div>
 </form>
@@ -397,12 +437,22 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
   const district = value("district");
   const city = value("city");
   const address = value("address");
-  const price = value("price");
+
+  const dailyFee = value("dailyFee");
+  const weeklyFee = value("weeklyFee");
+  const monthlyFee = value("monthlyFee");
+  const threeMonthFee = value("threeMonthFee");
+  const sixMonthFee = value("sixMonthFee");
+
   const seats = value("seats");
   const maleSeats = value("maleSeats");
   const femaleSeats = value("femaleSeats");
-  const dailyFee = value("dailyFee");
-  const weeklyFee = value("weeklyFee");
+  const separateFemaleSection = value("separateFemaleSection") === "true";
+  const seatNumberingMode = value("seatNumberingMode");
+  const maleSeatPrefix = value("maleSeatPrefix") || "M";
+  const femaleSeatPrefix = value("femaleSeatPrefix") || "F";
+  const seatAlertNumber = value("seatAlertNumber");
+
   const opening = value("opening");
   const closing = value("closing");
   const openDays = value("openDays");
@@ -411,21 +461,43 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
   const rules = value("rules");
   const photos = Array.from(photoInput.files || []);
 
-  if (!/^\d{10}$/.test(mobile)) {
-    errorBox.textContent = "Enter a valid 10-digit mobile number.";
+  const showError = message => {
+    errorBox.textContent = message;
     errorBox.style.display = "block";
+  };
+
+  if (!/^\d{10}$/.test(mobile)) {
+    showError("Enter a valid 10-digit mobile number.");
     return;
   }
 
   if (password.length < 6) {
-    errorBox.textContent = "Password must contain at least 6 characters.";
-    errorBox.style.display = "block";
+    showError("Password must contain at least 6 characters.");
     return;
   }
 
+  const requiredMonthlyFee = Number(monthlyFee);
+  if (!monthlyFee || !Number.isFinite(requiredMonthlyFee) || requiredMonthlyFee <= 0) {
+    showError("Enter a valid monthly plan fee greater than zero.");
+    return;
+  }
+
+  const optionalFees = [
+    ["Daily", dailyFee],
+    ["Weekly", weeklyFee],
+    ["3 Months", threeMonthFee],
+    ["6 Months", sixMonthFee]
+  ];
+
+  for (const [name, fee] of optionalFees) {
+    if (fee !== "" && (!Number.isFinite(Number(fee)) || Number(fee) <= 0)) {
+      showError(`${name} plan fee must be greater than zero, or leave it blank.`);
+      return;
+    }
+  }
+
   if (photos.length > 15) {
-    errorBox.textContent = "You can upload a maximum of 15 photos.";
-    errorBox.style.display = "block";
+    showError("You can upload a maximum of 15 photos.");
     return;
   }
 
@@ -433,9 +505,22 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
   const male = maleSeats === "" ? 0 : Number(maleSeats);
   const female = femaleSeats === "" ? 0 : Number(femaleSeats);
 
-  if (male < 0 || female < 0 || total < 1 || male + female > total) {
-    errorBox.textContent = "Check the seat numbers. Male and female seats together cannot exceed total seats.";
-    errorBox.style.display = "block";
+  if (!Number.isInteger(total) || total < 1 ||
+      !Number.isInteger(male) || male < 0 ||
+      !Number.isInteger(female) || female < 0 ||
+      male + female > total) {
+    showError("Check the seat numbers. Male and female seats together cannot exceed total seats.");
+    return;
+  }
+
+  const alertNumber = seatAlertNumber === "" ? 5 : Number(seatAlertNumber);
+  if (!Number.isInteger(alertNumber) || alertNumber < 0) {
+    showError("Seat Alert Number must be zero or a positive whole number.");
+    return;
+  }
+
+  if (!district || !city) {
+    showError("Select a district and enter the city or town.");
     return;
   }
 
@@ -445,10 +530,12 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
 
   registerButton.disabled = true;
 
+  let client;
+
   try {
     registerButton.textContent = "Creating Owner Account...";
 
-    const client = window.supabaseClient;
+    client = window.supabaseClient;
     if (!client) {
       throw new Error("Supabase client could not be loaded. Check supabase-config.js.");
     }
@@ -482,19 +569,39 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
         district: district,
         city: city,
         address: address,
-        monthly_fee: Number(price),
+
+        monthly_fee: requiredMonthlyFee,
         daily_fee: dailyFee === "" ? null : Number(dailyFee),
         weekly_fee: weeklyFee === "" ? null : Number(weeklyFee),
+        three_month_fee: threeMonthFee === "" ? null : Number(threeMonthFee),
+        six_month_fee: sixMonthFee === "" ? null : Number(sixMonthFee),
+
+        daily_plan_enabled: dailyFee !== "",
+        weekly_plan_enabled: weeklyFee !== "",
+        monthly_plan_enabled: true,
+        three_month_plan_enabled: threeMonthFee !== "",
+        six_month_plan_enabled: sixMonthFee !== "",
+
+        total_seats: total,
         seat_availability: total,
         male_seats: maleSeats === "" ? null : male,
         female_seats: femaleSeats === "" ? null : female,
+
+        separate_female_section: separateFemaleSection,
+        seat_numbering_mode: seatNumberingMode,
+        male_seat_prefix: maleSeatPrefix,
+        female_seat_prefix: femaleSeatPrefix,
+        seat_alert_number: alertNumber,
+
         opening_time: opening || null,
         closing_time: closing || null,
         open_days: openDays || null,
         open_24_hours: open247 === "Yes",
+
         facilities: facilities,
         other_facilities: otherFacilities || null,
         rules: rules || null,
+
         latitude: libraryLocation ? libraryLocation.latitude : null,
         longitude: libraryLocation ? libraryLocation.longitude : null,
         photos: []
@@ -512,8 +619,14 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
       registerButton.textContent = `Uploading Photos (${i + 1}/${photos.length})...`;
 
       const file = photos[i];
-      const extension = file.name.includes(".") ? file.name.split(".").pop().toLowerCase() : "jpg";
-      const unique = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const extension = file.name.includes(".")
+        ? file.name.split(".").pop().toLowerCase()
+        : "jpg";
+
+      const unique = crypto.randomUUID
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
       const filePath = `${ownerId}/${libraryId}/${Date.now()}-${unique}.${extension}`;
 
       const { error: uploadError } = await client.storage
@@ -524,13 +637,18 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
           contentType: file.type
         });
 
-      if (uploadError) throw new Error("Photo upload failed: " + uploadError.message);
+      if (uploadError) {
+        throw new Error("Photo upload failed: " + uploadError.message);
+      }
 
       const { data: urlData } = client.storage
         .from("StudySpot library-photos")
         .getPublicUrl(filePath);
 
-      if (!urlData?.publicUrl) throw new Error("Could not create a public URL for a photo.");
+      if (!urlData?.publicUrl) {
+        throw new Error("Could not create a public URL for a photo.");
+      }
+
       uploadedUrls.push(urlData.publicUrl);
     }
 
@@ -550,12 +668,15 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
 
     successBox.textContent = "Registration completed successfully. Redirecting to Owner Login...";
     successBox.style.display = "block";
+
     alert("Library registration completed successfully.");
     window.location.href = "owner-login.html";
+
   } catch (error) {
     console.error("StudySpot registration error:", error);
-    errorBox.textContent = "Registration error: " + (error.message || "Something went wrong.");
-    errorBox.style.display = "block";
+
+    showError("Registration error: " + (error.message || "Something went wrong."));
+
     registerButton.disabled = false;
     registerButton.textContent = "✅ Register My Library";
   }
