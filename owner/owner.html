@@ -450,6 +450,14 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
   const maleSeats = value("maleSeats");
   const femaleSeats = value("femaleSeats");
 
+  const separateFemaleSection =
+  value("separateFemaleSection") === "true";
+
+const seatNumberingMode = value("seatNumberingMode");
+const maleSeatPrefix = value("maleSeatPrefix");
+const femaleSeatPrefix = value("femaleSeatPrefix");
+const seatAlertNumber = value("seatAlertNumber");
+
   const opening = value("opening");
   const closing = value("closing");
   const openDays = value("openDays");
@@ -601,6 +609,21 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
           seat_availability: total,
           male_seats: maleSeats === "" ? null : male,
           female_seats: femaleSeats === "" ? null : female,
+
+                    separate_female_section:
+            document.getElementById("separateFemaleSection").value === "true",
+
+          seat_numbering_mode:
+            document.getElementById("seatNumberingMode").value,
+
+          male_seat_prefix:
+            value("maleSeatPrefix") || "M",
+
+          female_seat_prefix:
+            value("femaleSeatPrefix") || "F",
+
+          seat_alert_number:
+            Number(value("seatAlertNumber") || 5),
 
           // Library timings
           opening_time: opening || null,
