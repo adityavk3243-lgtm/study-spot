@@ -423,6 +423,7 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
 
   const errorBox = document.getElementById("error");
   const successBox = document.getElementById("success");
+
   errorBox.style.display = "none";
   successBox.style.display = "none";
 
@@ -432,6 +433,7 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
   const mobile = value("mobile");
   const email = value("email");
   const password = document.getElementById("password").value;
+
   const libraryName = value("libraryName");
   const state = value("state");
   const district = value("district");
@@ -440,31 +442,27 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
 
   const dailyFee = value("dailyFee");
   const weeklyFee = value("weeklyFee");
-  const monthlyFee = value("monthlyFee");
+  const monthlyFee = value("price");
   const threeMonthFee = value("threeMonthFee");
   const sixMonthFee = value("sixMonthFee");
 
   const seats = value("seats");
   const maleSeats = value("maleSeats");
   const femaleSeats = value("femaleSeats");
-  const separateFemaleSection = value("separateFemaleSection") === "true";
-  const seatNumberingMode = value("seatNumberingMode");
-  const maleSeatPrefix = value("maleSeatPrefix") || "M";
-  const femaleSeatPrefix = value("femaleSeatPrefix") || "F";
-  const seatAlertNumber = value("seatAlertNumber");
 
   const opening = value("opening");
   const closing = value("closing");
   const openDays = value("openDays");
   const open247 = value("open247");
+
   const otherFacilities = value("otherFacilities");
   const rules = value("rules");
   const photos = Array.from(photoInput.files || []);
 
-  const showError = message => {
+  function showError(message) {
     errorBox.textContent = message;
     errorBox.style.display = "block";
-  };
+  }
 
   if (!/^\d{10}$/.test(mobile)) {
     showError("Enter a valid 10-digit mobile number.");
@@ -476,24 +474,29 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
     return;
   }
 
-  const requiredMonthlyFee = Number(monthlyFee);
-  if (!monthlyFee || !Number.isFinite(requiredMonthlyFee) || requiredMonthlyFee <= 0) {
-    showError("Enter a valid monthly plan fee greater than zero.");
+  if (!district || !city || !state) {
+    showError("Please select the State and District and enter the City.");
     return;
   }
 
-  const optionalFees = [
+  const feeValues = [
     ["Daily", dailyFee],
     ["Weekly", weeklyFee],
+    ["Monthly", monthlyFee],
     ["3 Months", threeMonthFee],
     ["6 Months", sixMonthFee]
   ];
 
-  for (const [name, fee] of optionalFees) {
+  for (const [name, fee] of feeValues) {
     if (fee !== "" && (!Number.isFinite(Number(fee)) || Number(fee) <= 0)) {
-      showError(`${name} plan fee must be greater than zero, or leave it blank.`);
+      showError(name + " plan fee must be greater than zero, or left blank.");
       return;
     }
+  }
+
+  if (monthlyFee === "" || Number(monthlyFee) <= 0) {
+    showError("Monthly plan fee is required.");
+    return;
   }
 
   if (photos.length > 15) {
@@ -505,120 +508,137 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
   const male = maleSeats === "" ? 0 : Number(maleSeats);
   const female = femaleSeats === "" ? 0 : Number(femaleSeats);
 
-  if (!Number.isInteger(total) || total < 1 ||
-      !Number.isInteger(male) || male < 0 ||
-      !Number.isInteger(female) || female < 0 ||
-      male + female > total) {
-    showError("Check the seat numbers. Male and female seats together cannot exceed total seats.");
-    return;
-  }
-
-  const alertNumber = seatAlertNumber === "" ? 5 : Number(seatAlertNumber);
-  if (!Number.isInteger(alertNumber) || alertNumber < 0) {
-    showError("Seat Alert Number must be zero or a positive whole number.");
-    return;
-  }
-
-  if (!district || !city) {
-    showError("Select a district and enter the city or town.");
+  if (
+    !Number.isInteger(total) ||
+    total < 1 ||
+    !Number.isInteger(male) ||
+    !Number.isInteger(female) ||
+    male < 0 ||
+    female < 0 ||
+    male + female > total
+  ) {
+    showError(
+      "Check the seat numbers. Male and female seats together cannot exceed total seats."
+    );
     return;
   }
 
   const facilities = Array.from(
-    document.querySelectorAll('.facility input[type="checkbox"]:checked')
+    document.querySelectorAll(
+      '.facility input[type="checkbox"]:checked'
+    )
   ).map(input => input.value);
+
+  const client = window.supabaseClient;
+
+  if (!client) {
+    showError("Supabase client could not be loaded. Check supabase-config.js.");
+    return;
+  }
 
   registerButton.disabled = true;
 
-  let client;
+  let ownerId = null;
+  let libraryId = null;
 
   try {
     registerButton.textContent = "Creating Owner Account...";
 
-    client = window.supabaseClient;
-    if (!client) {
-      throw new Error("Supabase client could not be loaded. Check supabase-config.js.");
-    }
-
-    const { data: authData, error: authError } = await client.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          owner_name: ownerName,
-          mobile: mobile
+    const { data: authData, error: authError } =
+      await client.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            owner_name: ownerName,
+            mobile: mobile
+          }
         }
-      }
-    });
+      });
 
     if (authError) throw authError;
-    if (!authData?.user) throw new Error("Owner account could not be created.");
 
-    const ownerId = authData.user.id;
+    if (!authData?.user) {
+      throw new Error("Owner account could not be created.");
+    }
+
+    ownerId = authData.user.id;
 
     registerButton.textContent = "Saving Library Details...";
 
-    const { data: libraryData, error: libraryError } = await client
-      .from("libraries")
-      .insert({
-        owner_id: ownerId,
-        owner_name: ownerName,
-        mobile: mobile,
-        library_name: libraryName,
-        state: state,
-        district: district,
-        city: city,
-        address: address,
+    const { data: libraryData, error: libraryError } =
+      await client
+        .from("libraries")
+        .insert({
+          owner_id: ownerId,
+          owner_name: ownerName,
+          mobile: mobile,
 
-        monthly_fee: requiredMonthlyFee,
-        daily_fee: dailyFee === "" ? null : Number(dailyFee),
-        weekly_fee: weeklyFee === "" ? null : Number(weeklyFee),
-        three_month_fee: threeMonthFee === "" ? null : Number(threeMonthFee),
-        six_month_fee: sixMonthFee === "" ? null : Number(sixMonthFee),
+          library_name: libraryName,
+          state: state,
+          district: district,
+          city: city,
+          address: address,
 
-        daily_plan_enabled: dailyFee !== "",
-        weekly_plan_enabled: weeklyFee !== "",
-        monthly_plan_enabled: true,
-        three_month_plan_enabled: threeMonthFee !== "",
-        six_month_plan_enabled: sixMonthFee !== "",
+          // Five membership plan fees
+          daily_fee: dailyFee === "" ? null : Number(dailyFee),
+          weekly_fee: weeklyFee === "" ? null : Number(weeklyFee),
+          monthly_fee: Number(monthlyFee),
+          three_month_fee: threeMonthFee === "" ? null : Number(threeMonthFee),
+          six_month_fee: sixMonthFee === "" ? null : Number(sixMonthFee),
 
-        total_seats: total,
-        seat_availability: total,
-        male_seats: maleSeats === "" ? null : male,
-        female_seats: femaleSeats === "" ? null : female,
+          // Automatically enable plans that have a fee
+          daily_plan_enabled: dailyFee !== "" && Number(dailyFee) > 0,
+          weekly_plan_enabled: weeklyFee !== "" && Number(weeklyFee) > 0,
+          monthly_plan_enabled: Number(monthlyFee) > 0,
+          three_month_plan_enabled:
+            threeMonthFee !== "" && Number(threeMonthFee) > 0,
+          six_month_plan_enabled:
+            sixMonthFee !== "" && Number(sixMonthFee) > 0,
 
-        separate_female_section: separateFemaleSection,
-        seat_numbering_mode: seatNumberingMode,
-        male_seat_prefix: maleSeatPrefix,
-        female_seat_prefix: femaleSeatPrefix,
-        seat_alert_number: alertNumber,
+          // Seat counts
+          total_seats: total,
+          seat_availability: total,
+          male_seats: maleSeats === "" ? null : male,
+          female_seats: femaleSeats === "" ? null : female,
 
-        opening_time: opening || null,
-        closing_time: closing || null,
-        open_days: openDays || null,
-        open_24_hours: open247 === "Yes",
+          // Library timings
+          opening_time: opening || null,
+          closing_time: closing || null,
+          open_days: openDays || null,
+          open_24_hours: open247 === "Yes",
 
-        facilities: facilities,
-        other_facilities: otherFacilities || null,
-        rules: rules || null,
+          // Facilities and rules
+          facilities: facilities,
+          other_facilities: otherFacilities || null,
+          rules: rules || null,
 
-        latitude: libraryLocation ? libraryLocation.latitude : null,
-        longitude: libraryLocation ? libraryLocation.longitude : null,
-        photos: []
-      })
-      .select("id")
-      .single();
+          // Location
+          latitude: libraryLocation ? libraryLocation.latitude : null,
+          longitude: libraryLocation ? libraryLocation.longitude : null,
+
+          // Photo URLs are added after upload
+          photos: []
+        })
+        .select("id")
+        .single();
 
     if (libraryError) throw libraryError;
-    if (!libraryData?.id) throw new Error("Library record could not be created.");
 
-    const libraryId = libraryData.id;
+    if (!libraryData?.id) {
+      throw new Error("Library record could not be created.");
+    }
+
+    libraryId = libraryData.id;
+
     const uploadedUrls = [];
 
     for (let i = 0; i < photos.length; i++) {
-      registerButton.textContent = `Uploading Photos (${i + 1}/${photos.length})...`;
+      registerButton.textContent =
+        `Uploading Photos (${i + 1}/${photos.length})...`;
 
       const file = photos[i];
+
       const extension = file.name.includes(".")
         ? file.name.split(".").pop().toLowerCase()
         : "jpg";
@@ -627,7 +647,8 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
         ? crypto.randomUUID()
         : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-      const filePath = `${ownerId}/${libraryId}/${Date.now()}-${unique}.${extension}`;
+      const filePath =
+        `${ownerId}/${libraryId}/${Date.now()}-${unique}.${extension}`;
 
       const { error: uploadError } = await client.storage
         .from("StudySpot library-photos")
@@ -652,7 +673,7 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
       uploadedUrls.push(urlData.publicUrl);
     }
 
-    if (uploadedUrls.length) {
+    if (uploadedUrls.length > 0) {
       registerButton.textContent = "Saving Photo Details...";
 
       const { error: updateError } = await client
@@ -662,25 +683,40 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
         .eq("owner_id", ownerId);
 
       if (updateError) {
-        throw new Error("Photos uploaded, but linking them to the library failed: " + updateError.message);
+        throw new Error(
+          "Photos uploaded, but saving their links failed: " +
+          updateError.message
+        );
       }
     }
 
-    successBox.textContent = "Registration completed successfully. Redirecting to Owner Login...";
+    successBox.textContent =
+      "Registration completed successfully. Redirecting to Owner Login.";
+
     successBox.style.display = "block";
 
     alert("Library registration completed successfully.");
+
     window.location.href = "owner-login.html";
 
   } catch (error) {
     console.error("StudySpot registration error:", error);
 
-    showError("Registration error: " + (error.message || "Something went wrong."));
+    showError(
+      "Registration error: " +
+      (error.message || "Something went wrong.")
+    );
 
     registerButton.disabled = false;
     registerButton.textContent = "✅ Register My Library";
+
+    if (ownerId && !libraryId) {
+      errorBox.textContent +=
+        " An owner account may already have been created. Check before trying again.";
+    }
   }
 });
+
 </script>
 </body>
 </html>
