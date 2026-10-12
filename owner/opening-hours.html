@@ -269,8 +269,42 @@ function fillForm(schedule){
  DAYS.forEach(([key])=>{
   const day=schedule[key]||DEFAULT_DAY;
   document.getElementById("enabled-"+key).checked=day.enabled!==false;
-  document.getElementById("opening-"+key).value=validTime(day.opening)?day.opening:DEFAULT_DAY.opening;
-  document.getElementById("closing-"+key).value=validTime(day.closing)?day.closing:DEFAULT_DAY.closing;
+  const openingSelect = document.getElementById("opening-" + key);
+const closingSelect = document.getElementById("closing-" + key);
+
+const openingValue = validTime(day.opening) ? day.opening : DEFAULT_DAY.opening;
+const closingValue = validTime(day.closing) ? day.closing : DEFAULT_DAY.closing;
+
+openingSelect.value = openingValue;
+closingSelect.value = closingValue;
+
+if (openingSelect.value !== openingValue) {
+  openingSelect.add(new Option(format12(openingValue), openingValue));
+  openingSelect.value = openingValue;
+}
+
+if (closingSelect.value !== closingValue) {
+  closingSelect.add(new Option(format12(closingValue), closingValue));
+  closingSelect.value = closingValue;
+}
+  const openingSelect = document.getElementById("opening-" + key);
+const closingSelect = document.getElementById("closing-" + key);
+
+const openingValue = validTime(day.opening) ? day.opening : DEFAULT_DAY.opening;
+const closingValue = validTime(day.closing) ? day.closing : DEFAULT_DAY.closing;
+
+openingSelect.value = openingValue;
+closingSelect.value = closingValue;
+
+if (openingSelect.value !== openingValue) {
+  openingSelect.add(new Option(format12(openingValue), openingValue));
+  openingSelect.value = openingValue;
+}
+
+if (closingSelect.value !== closingValue) {
+  closingSelect.add(new Option(format12(closingValue), closingValue));
+  closingSelect.value = closingValue;
+}
  });
  updateAllDayUIs();
  isLoading=false;
