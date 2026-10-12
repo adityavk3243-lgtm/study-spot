@@ -367,44 +367,7 @@ function normalizeSchedule(rawSchedule, library) {
   return schedule;
 }
 
-    // Otherwise, use the timings entered during registration.
-    let enabled = true;
-
-    if (openDaysText) {
-      if (
-        openDaysText.includes("everyday") ||
-        openDaysText.includes("every day") ||
-        openDaysText.includes("monday - sunday") ||
-        openDaysText.includes("monday-sunday") ||
-        openDaysText.includes("monday to sunday") ||
-        openDaysText.includes("all days") ||
-        openDaysText.includes("daily")
-      ) {
-        enabled = true;
-      } else {
-        const dayNames = openDaysText
-          .split(/[,;|]/)
-          .map(day => day.trim());
-
-        enabled = dayNames.some(day =>
-          day === key ||
-          day === label.toLowerCase() ||
-          day === label.toLowerCase().slice(0, 3)
-        );
-      }
-    }
-
-    schedule[key] = {
-      enabled: library.open_24_hours === true
-        ? true
-        : enabled,
-      opening: registrationOpening,
-      closing: registrationClosing
-    };
-  });
-
-  return schedule;
-}
+    
 
 function fillForm(schedule) {
   isLoading = true;
