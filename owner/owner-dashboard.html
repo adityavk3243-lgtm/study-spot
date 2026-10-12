@@ -756,6 +756,35 @@ document.addEventListener("DOMContentLoaded", async function () {
         : "Location not available");
   }
 
+/* ================= LIBRARY TIMING ================= */
+
+const libraryTiming =
+  document.getElementById("libraryTiming");
+
+if (libraryTiming) {
+  const openingTime = library.opening_time;
+  const closingTime = library.closing_time;
+
+  if (openingTime && closingTime) {
+    const formatTime = (time) => {
+      const parts = time.split(":");
+      const hours = Number(parts[0]);
+      const minutes = Number(parts[1]);
+
+      const period = hours >= 12 ? "PM" : "AM";
+      const displayHours = hours % 12 || 12;
+
+      return `${displayHours}:${String(minutes).padStart(2, "0")} ${period}`;
+    };
+
+    libraryTiming.textContent =
+      `🕐 ${formatTime(openingTime)} – ${formatTime(closingTime)}`;
+  } else {
+    libraryTiming.textContent =
+      "🕐 Opening hours not set";
+  }
+}
+  
   /* Available seats */
   const statNumbers =
     document.querySelectorAll(".stat-number");
