@@ -281,57 +281,87 @@ function readScheduleFromForm() {
   return schedule;
 }
 
+/* Load registration timings into all days when no weekly
+   schedule has been saved yet. Existing weekly timings stay unchanged. */
 function normalizeSchedule(rawSchedule, library) {
   const hasSavedSchedule =
     rawSchedule &&
     typeof rawSchedule === "object" &&
     !Array.isArray(rawSchedule) &&
     DAYS.some(([key]) =>
-      rawSchedule[key] && typeof rawSchedule[key] === "object"
+      rawSchedule[key] &&
+      typeof rawSchedule[key] === "object"
     );
 
-  const oldOpenDays = String(library.open_days || "")
-    .toLowerCase()
-    .split(/[,;|]/)
-    .map(day => day.trim());
+  const registrationOpening = validTime(
+    String(library.opening_time || "").slice(0, 5)
+  )
+    ? String(library.opening_time).slice(0, 5)
+    : DEFAULT_DAY.opening;
 
-  const rawOpening = String(library.opening_time || "").slice(0, 5);
-  const rawClosing = String(library.closing_time || "").slice(0, 5);
+  const registrationClosing = validTime(
+    String(library.closing_time || "").slice(0, 5)
+  )
+    ? String(library.closing_time).slice(0, 5)
+    : DEFAULT_DAY.closing;
 
-  const registrationOpening = validTime(rawOpening)
-    ? rawOpening : DEFAULT_DAY.opening;
-
-  const registrationClosing = validTime(rawClosing)
-    ? rawClosing : DEFAULT_DAY.closing;
+  const openDaysText = String(library.open_days || "")
+    .trim()
+    .toLowerCase();
 
   const schedule = {};
 
   DAYS.forEach(([key, label]) => {
-    const existing = hasSavedSchedule ? rawSchedule[key] : null;
+    const existing = hasSavedSchedule
+      ? rawSchedule[key]
+      : null;
 
+    // If a weekly schedule already exists, preserve its timings.
     if (existing && typeof existing === "object") {
       schedule[key] = {
         enabled: existing.enabled !== false,
         opening: validTime(existing.opening)
-          ? existing.opening : registrationOpening,
+          ? existing.opening
+          : registrationOpening,
         closing: validTime(existing.closing)
-          ? existing.closing : registrationClosing
+          ? existing.closing
+          : registrationClosing
       };
+
       return;
     }
 
+    // Otherwise, use the timings entered during registration.
     let enabled = true;
 
-    if (oldOpenDays.length && oldOpenDays[0] !== "") {
-      enabled = oldOpenDays.some(day =>
-        day === key ||
-        day === label.toLowerCase() ||
-        day.startsWith(label.toLowerCase().slice(0, 3))
-      );
+    if (openDaysText) {
+      if (
+        openDaysText.includes("everyday") ||
+        openDaysText.includes("every day") ||
+        openDaysText.includes("monday - sunday") ||
+        openDaysText.includes("monday-sunday") ||
+        openDaysText.includes("monday to sunday") ||
+        openDaysText.includes("all days") ||
+        openDaysText.includes("daily")
+      ) {
+        enabled = true;
+      } else {
+        const dayNames = openDaysText
+          .split(/[,;|]/)
+          .map(day => day.trim());
+
+        enabled = dayNames.some(day =>
+          day === key ||
+          day === label.toLowerCase() ||
+          day === label.toLowerCase().slice(0, 3)
+        );
+      }
     }
 
     schedule[key] = {
-      enabled: library.open_24_hours === true ? true : enabled,
+      enabled: library.open_24_hours === true
+        ? true
+        : enabled,
       opening: registrationOpening,
       closing: registrationClosing
     };
