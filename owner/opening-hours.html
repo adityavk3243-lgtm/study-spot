@@ -42,7 +42,7 @@ body{margin:0;font-family:Arial,sans-serif;background:#f3f6fc;color:#172033;padd
 button{cursor:pointer}
 .secondary-button{width:100%;border:1px solid #bfdbfe;border-radius:9px;padding:12px 8px;background:white;color:#1d4ed8;font-size:13px;font-weight:bold}
 .save-button{width:100%;padding:15px;border:0;border-radius:11px;background:#2563eb;color:white;font-size:16px;font-weight:bold}
-.save-button:disabled{opacity:.65}
+.save-button:disabled{opacity:.65;cursor:not-allowed}
 .message{display:none;margin-top:13px;padding:13px;border-radius:10px;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
 .message.success{display:block;background:#dcfce7;color:#166534}
 .message.error{display:block;background:#fee2e2;color:#991b1b}
@@ -75,10 +75,13 @@ button{cursor:pointer}
   <section class="card">
     <h2>⚡ Quick Options</h2>
     <p class="description">Copy timings to another day or apply the same schedule to all days.</p>
+
     <div class="quick-option">
       <p><strong>📋 Apply one day's timing to other days</strong><br>Select a source day and copy its status and timings.</p>
+
       <label class="select-label" for="sourceDay">Copy timing from</label>
       <select id="sourceDay"></select>
+
       <div class="apply-row">
         <div>
           <label class="select-label" for="targetDay">Copy to day</label>
@@ -89,6 +92,7 @@ button{cursor:pointer}
         </div>
       </div>
     </div>
+
     <button class="secondary-button" id="applyAllButton" type="button">Apply Selected Day's Timing to All Days</button>
   </section>
 
@@ -103,370 +107,472 @@ button{cursor:pointer}
 </main>
 
 <script>
-const DAYS=[
- ["monday","Monday"],["tuesday","Tuesday"],["wednesday","Wednesday"],
- ["thursday","Thursday"],["friday","Friday"],["saturday","Saturday"],["sunday","Sunday"]
+"use strict";
+
+const DAYS = [
+  ["monday","Monday"],
+  ["tuesday","Tuesday"],
+  ["wednesday","Wednesday"],
+  ["thursday","Thursday"],
+  ["friday","Friday"],
+  ["saturday","Saturday"],
+  ["sunday","Sunday"]
 ];
 
-const DEFAULT_DAY={enabled:true,opening:"08:00",closing:"22:00"};
-let currentLibrary=null;
-let isLoading=false;
+const DEFAULT_DAY = {
+  enabled: true,
+  opening: "08:00",
+  closing: "22:00"
+};
 
-const daysContainer=document.getElementById("daysContainer");
-const sourceDay=document.getElementById("sourceDay");
-const targetDay=document.getElementById("targetDay");
-const saveButton=document.getElementById("saveButton");
-const message=document.getElementById("message");
+let currentLibrary = null;
+let isLoading = false;
 
-function showMessage(text,type){
- message.textContent=text;
- message.className="message "+type;
- message.style.display="block";
-}
-function hideMessage(){
- message.textContent="";
- message.className="message";
- message.style.display="none";
-}
-function validTime(value){
- return typeof value==="string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+const daysContainer = document.getElementById("daysContainer");
+const sourceDay = document.getElementById("sourceDay");
+const targetDay = document.getElementById("targetDay");
+const saveButton = document.getElementById("saveButton");
+const message = document.getElementById("message");
+
+function showMessage(text, type) {
+  message.textContent = text;
+  message.className = "message " + type;
+  message.style.display = "block";
 }
 
-/* Convert 24-hour database values into readable 12-hour labels. */
-function format12(time){
- if(!validTime(time)) return time;
- const [h,m]=time.split(":").map(Number);
- const suffix=h>=12?"PM":"AM";
- const hour=h%12||12;
- return `${hour}:${String(m).padStart(2,"0")} ${suffix}`;
+function hideMessage() {
+  message.textContent = "";
+  message.className = "message";
+  message.style.display = "none";
 }
 
-/* Store times as HH:mm, while showing AM/PM choices to the owner. */
-function makeTimeSelect(id,value){
- const select=document.createElement("select");
- select.id=id;
- const options=[];
- for(let h=0;h<24;h++){
-  for(let m=0;m<60;m+=15){
-   const time=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
-   options.push(new Option(format12(time),time));
+function validTime(value) {
+  return typeof value === "string" &&
+    /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+}
+
+function format12(time) {
+  if (!validTime(time)) return time;
+
+  const [h, m] = time.split(":").map(Number);
+  const suffix = h >= 12 ? "PM" : "AM";
+  const hour = h % 12 || 12;
+
+  return `${hour}:${String(m).padStart(2, "0")} ${suffix}`;
+}
+
+function makeTimeSelect(id, value) {
+  const select = document.createElement("select");
+  select.id = id;
+
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += 15) {
+      const time =
+        String(h).padStart(2, "0") + ":" +
+        String(m).padStart(2, "0");
+
+      select.add(new Option(format12(time), time));
+    }
   }
- }
- options.push(new Option("11:59 PM","23:59"));
- select.add(...options);
- select.value=validTime(value)?value:"08:00";
- select.addEventListener("change",()=>{if(!isLoading)hideMessage()});
- return select;
-}
 
-function buildPage(){
- daysContainer.innerHTML="";
- DAYS.forEach(([key,label])=>{
-  const row=document.createElement("div");
-  row.className="day-row";
-  row.id="row-"+key;
-  row.innerHTML=`
-   <div class="day-header">
-    <span class="day-name">${label}</span>
-    <div class="switch-wrap">
-     <span class="day-status" id="status-${key}">Open</span>
-     <label class="switch">
-      <input type="checkbox" id="enabled-${key}" checked>
-      <span class="slider"></span>
-     </label>
-    </div>
-   </div>
-   <div class="time-grid">
-    <div class="time-field"><label for="opening-${key}">Opening Time</label><div id="openingSlot-${key}"></div></div>
-    <div class="time-field"><label for="closing-${key}">Closing Time</label><div id="closingSlot-${key}"></div></div>
-   </div>
-   <div class="closed-label">🔴 Closed on this day</div>`;
-  daysContainer.appendChild(row);
+  // Exact end-of-day option for 24-hour opening.
+  select.add(new Option("11:59 PM", "23:59"));
 
-  document.getElementById("openingSlot-"+key).appendChild(makeTimeSelect("opening-"+key,DEFAULT_DAY.opening));
-  document.getElementById("closingSlot-"+key).appendChild(makeTimeSelect("closing-"+key,DEFAULT_DAY.closing));
+  const initialValue = validTime(value) ? value : DEFAULT_DAY.opening;
 
-  document.getElementById("enabled-"+key).addEventListener("change",()=>{
-   updateDayUI(key);
-   if(!isLoading)hideMessage();
+  if (![...select.options].some(option => option.value === initialValue)) {
+    select.add(new Option(format12(initialValue), initialValue));
+  }
+
+  select.value = initialValue;
+
+  select.addEventListener("change", () => {
+    if (!isLoading) hideMessage();
   });
- });
 
- DAYS.forEach(([key,label])=>{
-  sourceDay.add(new Option(label,key));
-  targetDay.add(new Option(label,key));
- });
- sourceDay.value="monday";
- targetDay.value="tuesday";
- updateAllDayUIs();
+  return select;
 }
 
-function updateDayUI(key){
- const enabled=document.getElementById("enabled-"+key).checked;
- document.getElementById("row-"+key).classList.toggle("closed",!enabled);
- document.getElementById("status-"+key).textContent=enabled?"Open":"Closed";
+function buildPage() {
+  daysContainer.innerHTML = "";
+  sourceDay.innerHTML = "";
+  targetDay.innerHTML = "";
+
+  DAYS.forEach(([key, label]) => {
+    const row = document.createElement("div");
+    row.className = "day-row";
+    row.id = "row-" + key;
+
+    row.innerHTML = `
+      <div class="day-header">
+        <span class="day-name">${label}</span>
+        <div class="switch-wrap">
+          <span class="day-status" id="status-${key}">Open</span>
+          <label class="switch">
+            <input type="checkbox" id="enabled-${key}" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="time-grid">
+        <div class="time-field">
+          <label for="opening-${key}">Opening Time</label>
+          <div id="openingSlot-${key}"></div>
+        </div>
+        <div class="time-field">
+          <label for="closing-${key}">Closing Time</label>
+          <div id="closingSlot-${key}"></div>
+        </div>
+      </div>
+      <div class="closed-label">🔴 Closed on this day</div>
+    `;
+
+    daysContainer.appendChild(row);
+
+    document.getElementById("openingSlot-" + key)
+      .appendChild(makeTimeSelect("opening-" + key, DEFAULT_DAY.opening));
+
+    document.getElementById("closingSlot-" + key)
+      .appendChild(makeTimeSelect("closing-" + key, DEFAULT_DAY.closing));
+
+    document.getElementById("enabled-" + key)
+      .addEventListener("change", () => {
+        updateDayUI(key);
+        if (!isLoading) hideMessage();
+      });
+  });
+
+  DAYS.forEach(([key, label]) => {
+    sourceDay.add(new Option(label, key));
+    targetDay.add(new Option(label, key));
+  });
+
+  sourceDay.value = "monday";
+  targetDay.value = "tuesday";
+
+  updateAllDayUIs();
 }
-function updateAllDayUIs(){DAYS.forEach(([key])=>updateDayUI(key))}
 
-function readScheduleFromForm(){
- const schedule={};
- DAYS.forEach(([key])=>{
-  schedule[key]={
-   enabled:document.getElementById("enabled-"+key).checked,
-   opening:document.getElementById("opening-"+key).value,
-   closing:document.getElementById("closing-"+key).value
-  };
- });
- return schedule;
+function updateDayUI(key) {
+  const enabled = document.getElementById("enabled-" + key).checked;
+
+  document.getElementById("row-" + key)
+    .classList.toggle("closed", !enabled);
+
+  document.getElementById("status-" + key).textContent =
+    enabled ? "Open" : "Closed";
 }
 
-/* Existing weekly schedule takes priority.
-   When no weekly schedule exists, use registration's common timings for all days. */
-function normalizeSchedule(rawSchedule,library){
- const hasSavedSchedule=rawSchedule &&
-  typeof rawSchedule==="object" && !Array.isArray(rawSchedule) &&
-  DAYS.some(([key])=>rawSchedule[key] && typeof rawSchedule[key]==="object");
+function updateAllDayUIs() {
+  DAYS.forEach(([key]) => updateDayUI(key));
+}
 
- const oldOpenDays=String(library.open_days||"")
-  .toLowerCase().split(/[,;|]/).map(day=>day.trim());
+function readScheduleFromForm() {
+  const schedule = {};
 
- const registrationOpening=validTime(String(library.opening_time||"").slice(0,5))
-  ?String(library.opening_time).slice(0,5):DEFAULT_DAY.opening;
- const registrationClosing=validTime(String(library.closing_time||"").slice(0,5))
-  ?String(library.closing_time).slice(0,5):DEFAULT_DAY.closing;
+  DAYS.forEach(([key]) => {
+    schedule[key] = {
+      enabled: document.getElementById("enabled-" + key).checked,
+      opening: document.getElementById("opening-" + key).value,
+      closing: document.getElementById("closing-" + key).value
+    };
+  });
 
- const schedule={};
+  return schedule;
+}
 
- DAYS.forEach(([key,label])=>{
-  const existing=hasSavedSchedule?rawSchedule[key]:null;
-
-  if(existing && typeof existing==="object"){
-   schedule[key]={
-    enabled:existing.enabled!==false,
-    opening:validTime(existing.opening)?existing.opening:registrationOpening,
-    closing:validTime(existing.closing)?existing.closing:registrationClosing
-   };
-  }else{
-   let enabled=true;
-   if(oldOpenDays.length && oldOpenDays[0]!==""){
-    enabled=oldOpenDays.some(day=>
-     day===key || day===label.toLowerCase() ||
-     day.startsWith(label.toLowerCase().slice(0,3))
+function normalizeSchedule(rawSchedule, library) {
+  const hasSavedSchedule =
+    rawSchedule &&
+    typeof rawSchedule === "object" &&
+    !Array.isArray(rawSchedule) &&
+    DAYS.some(([key]) =>
+      rawSchedule[key] && typeof rawSchedule[key] === "object"
     );
-   }
-   schedule[key]={
-    enabled:library.open_24_hours===true?true:enabled,
-    opening:registrationOpening,
-    closing:registrationClosing
-   };
+
+  const oldOpenDays = String(library.open_days || "")
+    .toLowerCase()
+    .split(/[,;|]/)
+    .map(day => day.trim());
+
+  const rawOpening = String(library.opening_time || "").slice(0, 5);
+  const rawClosing = String(library.closing_time || "").slice(0, 5);
+
+  const registrationOpening = validTime(rawOpening)
+    ? rawOpening : DEFAULT_DAY.opening;
+
+  const registrationClosing = validTime(rawClosing)
+    ? rawClosing : DEFAULT_DAY.closing;
+
+  const schedule = {};
+
+  DAYS.forEach(([key, label]) => {
+    const existing = hasSavedSchedule ? rawSchedule[key] : null;
+
+    if (existing && typeof existing === "object") {
+      schedule[key] = {
+        enabled: existing.enabled !== false,
+        opening: validTime(existing.opening)
+          ? existing.opening : registrationOpening,
+        closing: validTime(existing.closing)
+          ? existing.closing : registrationClosing
+      };
+      return;
+    }
+
+    let enabled = true;
+
+    if (oldOpenDays.length && oldOpenDays[0] !== "") {
+      enabled = oldOpenDays.some(day =>
+        day === key ||
+        day === label.toLowerCase() ||
+        day.startsWith(label.toLowerCase().slice(0, 3))
+      );
+    }
+
+    schedule[key] = {
+      enabled: library.open_24_hours === true ? true : enabled,
+      opening: registrationOpening,
+      closing: registrationClosing
+    };
+  });
+
+  return schedule;
+}
+
+function fillForm(schedule) {
+  isLoading = true;
+
+  DAYS.forEach(([key]) => {
+    const day = schedule[key] || DEFAULT_DAY;
+
+    document.getElementById("enabled-" + key).checked =
+      day.enabled !== false;
+
+    const openingSelect = document.getElementById("opening-" + key);
+    const closingSelect = document.getElementById("closing-" + key);
+
+    const openingValue = validTime(day.opening)
+      ? day.opening : DEFAULT_DAY.opening;
+
+    const closingValue = validTime(day.closing)
+      ? day.closing : DEFAULT_DAY.closing;
+
+    if (![...openingSelect.options].some(option => option.value === openingValue)) {
+      openingSelect.add(new Option(format12(openingValue), openingValue));
+    }
+
+    if (![...closingSelect.options].some(option => option.value === closingValue)) {
+      closingSelect.add(new Option(format12(closingValue), closingValue));
+    }
+
+    openingSelect.value = openingValue;
+    closingSelect.value = closingValue;
+  });
+
+  updateAllDayUIs();
+  isLoading = false;
+}
+
+async function loadLibrary() {
+  const client = window.supabaseClient;
+
+  if (!client) {
+    showMessage(
+      "Supabase connection could not be loaded. Check supabase-config.js.",
+      "error"
+    );
+    return;
   }
- });
- return schedule;
+
+  const { data: sessionData, error: sessionError } =
+    await client.auth.getSession();
+
+  if (sessionError || !sessionData.session) {
+    location.href = "owner-login.html";
+    return;
+  }
+
+  const user = sessionData.session.user;
+
+  const { data: library, error: libraryError } = await client
+    .from("libraries")
+    .select("id, owner_id, opening_time, closing_time, open_24_hours, open_days, opening_schedule")
+    .eq("owner_id", user.id)
+    .maybeSingle();
+
+  if (libraryError) {
+    showMessage("Unable to load your library: " + libraryError.message, "error");
+    return;
+  }
+
+  if (!library) {
+    showMessage("No library was found for this owner account.", "error");
+    return;
+  }
+
+  currentLibrary = library;
+
+  fillForm(normalizeSchedule(library.opening_schedule, library));
+
+  showMessage("Your saved opening hours have been loaded.", "info");
 }
 
-function fillForm(schedule){
- isLoading=true;
- DAYS.forEach(([key])=>{
-  const day=schedule[key]||DEFAULT_DAY;
-  document.getElementById("enabled-"+key).checked=day.enabled!==false;
-  const openingSelect = document.getElementById("opening-" + key);
-const closingSelect = document.getElementById("closing-" + key);
+function copyDay(sourceKey, targetKey) {
+  if (sourceKey === targetKey) {
+    showMessage("Choose two different days to copy timings.", "error");
+    return;
+  }
 
-const openingValue = validTime(day.opening) ? day.opening : DEFAULT_DAY.opening;
-const closingValue = validTime(day.closing) ? day.closing : DEFAULT_DAY.closing;
+  const source = {
+    enabled: document.getElementById("enabled-" + sourceKey).checked,
+    opening: document.getElementById("opening-" + sourceKey).value,
+    closing: document.getElementById("closing-" + sourceKey).value
+  };
 
-openingSelect.value = openingValue;
-closingSelect.value = closingValue;
+  document.getElementById("enabled-" + targetKey).checked = source.enabled;
+  document.getElementById("opening-" + targetKey).value = source.opening;
+  document.getElementById("closing-" + targetKey).value = source.closing;
 
-if (openingSelect.value !== openingValue) {
-  openingSelect.add(new Option(format12(openingValue), openingValue));
-  openingSelect.value = openingValue;
+  updateDayUI(targetKey);
+  hideMessage();
 }
 
-if (closingSelect.value !== closingValue) {
-  closingSelect.add(new Option(format12(closingValue), closingValue));
-  closingSelect.value = closingValue;
-}
-  const openingSelect = document.getElementById("opening-" + key);
-const closingSelect = document.getElementById("closing-" + key);
-
-const openingValue = validTime(day.opening) ? day.opening : DEFAULT_DAY.opening;
-const closingValue = validTime(day.closing) ? day.closing : DEFAULT_DAY.closing;
-
-openingSelect.value = openingValue;
-closingSelect.value = closingValue;
-
-if (openingSelect.value !== openingValue) {
-  openingSelect.add(new Option(format12(openingValue), openingValue));
-  openingSelect.value = openingValue;
-}
-
-if (closingSelect.value !== closingValue) {
-  closingSelect.add(new Option(format12(closingValue), closingValue));
-  closingSelect.value = closingValue;
-}
- });
- updateAllDayUIs();
- isLoading=false;
-}
-
-async function loadLibrary(){
- const client=window.supabaseClient;
- if(!client){
-  showMessage("Supabase connection could not be loaded. Check supabase-config.js.","error");
-  return;
- }
- const {data:sessionData,error:sessionError}=await client.auth.getSession();
- if(sessionError||!sessionData.session){
-  location.href="owner-login.html";
-  return;
- }
- const user=sessionData.session.user;
-
- const {data:library,error:libraryError}=await client
-  .from("libraries")
-  .select("id, owner_id, opening_time, closing_time, open_24_hours, open_days, opening_schedule")
-  .eq("owner_id",user.id)
-  .maybeSingle();
-
- if(libraryError){
-  showMessage("Unable to load your library: "+libraryError.message,"error");
-  return;
- }
- if(!library){
-  showMessage("No library was found for this owner account.","error");
-  return;
- }
- currentLibrary=library;
- fillForm(normalizeSchedule(library.opening_schedule,library));
- showMessage("Your saved opening hours have been loaded.","info");
-}
-
-function copyDay(sourceKey,targetKey){
- if(sourceKey===targetKey){
-  showMessage("Choose two different days to copy timings.","error");
-  return;
- }
- const source={
-  enabled:document.getElementById("enabled-"+sourceKey).checked,
-  opening:document.getElementById("opening-"+sourceKey).value,
-  closing:document.getElementById("closing-"+sourceKey).value
- };
- document.getElementById("enabled-"+targetKey).checked=source.enabled;
- document.getElementById("opening-"+targetKey).value=source.opening;
- document.getElementById("closing-"+targetKey).value=source.closing;
- updateDayUI(targetKey);
- hideMessage();
-}
-
-document.getElementById("copyButton").addEventListener("click",()=>{
- copyDay(sourceDay.value,targetDay.value);
+document.getElementById("copyButton").addEventListener("click", () => {
+  copyDay(sourceDay.value, targetDay.value);
 });
 
-document.getElementById("applyAllButton").addEventListener("click",()=>{
- const key=sourceDay.value;
- const source={
-  enabled:document.getElementById("enabled-"+key).checked,
-  opening:document.getElementById("opening-"+key).value,
-  closing:document.getElementById("closing-"+key).value
- };
- DAYS.forEach(([dayKey])=>{
-  document.getElementById("enabled-"+dayKey).checked=source.enabled;
-  document.getElementById("opening-"+dayKey).value=source.opening;
-  document.getElementById("closing-"+dayKey).value=source.closing;
-  updateDayUI(dayKey);
- });
- showMessage("Timing applied to all seven days. Press Save Opening Hours to save.","info");
+document.getElementById("applyAllButton").addEventListener("click", () => {
+  const key = sourceDay.value;
+
+  const source = {
+    enabled: document.getElementById("enabled-" + key).checked,
+    opening: document.getElementById("opening-" + key).value,
+    closing: document.getElementById("closing-" + key).value
+  };
+
+  DAYS.forEach(([dayKey]) => {
+    document.getElementById("enabled-" + dayKey).checked = source.enabled;
+    document.getElementById("opening-" + dayKey).value = source.opening;
+    document.getElementById("closing-" + dayKey).value = source.closing;
+    updateDayUI(dayKey);
+  });
+
+  showMessage(
+    "Timing applied to all seven days. Press Save Opening Hours to save.",
+    "info"
+  );
 });
 
-saveButton.addEventListener("click",async()=>{
- if(!currentLibrary){
-  showMessage("Library data is not ready. Refresh the page and try again.","error");
-  return;
- }
- const client=window.supabaseClient;
- const schedule=readScheduleFromForm();
-
- for(const [key,label] of DAYS){
-  const day=schedule[key];
-  if(day.enabled && (!validTime(day.opening)||!validTime(day.closing))){
-   showMessage("Please set valid opening and closing times for "+label+".","error");
-   return;
-  }
-  if(day.enabled && day.opening===day.closing){
-   showMessage(label+": opening and closing times cannot be the same.","error");
-   return;
-  }
- }
-
- const enabledDays=DAYS.filter(([key])=>schedule[key].enabled);
- const allEnabled=enabledDays.length===7;
- const is24Hours=allEnabled && DAYS.every(([key])=>
-  schedule[key].opening==="00:00" && schedule[key].closing==="23:59"
- );
- const allSameTimes=allEnabled && DAYS.every(([key])=>
-  schedule[key].opening===schedule.monday.opening &&
-  schedule[key].closing===schedule.monday.closing
- );
- const openDaysText=enabledDays.map(([,label])=>label).join(", ");
- const firstEnabled=DAYS.find(([key])=>schedule[key].enabled);
- const commonOpening=firstEnabled?schedule[firstEnabled[0]].opening:null;
- const commonClosing=firstEnabled?schedule[firstEnabled[0]].closing:null;
-
- saveButton.disabled=true;
- saveButton.textContent="Saving...";
- hideMessage();
-
- try{
-  const {data:sessionData,error:sessionError}=await client.auth.getSession();
-  if(sessionError||!sessionData.session){
-   location.href="owner-login.html";
-   return;
-  }
-  const user=sessionData.session.user;
-
-  const {data:updatedRows,error}=await client
-   .from("libraries")
-   .update({
-    opening_schedule:schedule,
-    opening_time:commonOpening,
-    closing_time:commonClosing,
-    open_24_hours:is24Hours,
-    open_days:openDaysText
-   })
-   .eq("id",currentLibrary.id)
-   .eq("owner_id",user.id)
-   .select("id");
-
-  if(error){
-   showMessage("Could not save opening hours: "+error.message,"error");
-   return;
-  }
-  if(!updatedRows||updatedRows.length===0){
-   showMessage("No library row was updated. Check the owner account and Supabase permissions.","error");
-   return;
+saveButton.addEventListener("click", async () => {
+  if (!currentLibrary) {
+    showMessage("Library data is not ready. Refresh the page and try again.", "error");
+    return;
   }
 
-  currentLibrary.opening_schedule=schedule;
-  currentLibrary.opening_time=commonOpening;
-  currentLibrary.closing_time=commonClosing;
-  currentLibrary.open_24_hours=is24Hours;
-  currentLibrary.open_days=openDaysText;
+  const client = window.supabaseClient;
+  const schedule = readScheduleFromForm();
 
-  showMessage("Opening hours saved successfully. Your weekly schedule has been saved.","success");
- }catch(error){
-  console.error("Opening Hours save error:",error);
-  showMessage("Unexpected error: "+(error.message||"Please try again."),"error");
- }finally{
-  saveButton.disabled=false;
-  saveButton.textContent="Save Opening Hours";
- }
+  for (const [key, label] of DAYS) {
+    const day = schedule[key];
+
+    if (day.enabled && (!validTime(day.opening) || !validTime(day.closing))) {
+      showMessage("Please set valid opening and closing times for " + label + ".", "error");
+      return;
+    }
+
+    if (day.enabled && day.opening === day.closing) {
+      showMessage(label + ": opening and closing times cannot be the same.", "error");
+      return;
+    }
+  }
+
+  const enabledDays = DAYS.filter(([key]) => schedule[key].enabled);
+  const allEnabled = enabledDays.length === 7;
+
+  const is24Hours = allEnabled && DAYS.every(([key]) =>
+    schedule[key].opening === "00:00" &&
+    schedule[key].closing === "23:59"
+  );
+
+  const openDaysText = enabledDays.map(([, label]) => label).join(", ");
+  const firstEnabled = DAYS.find(([key]) => schedule[key].enabled);
+
+  const commonOpening = firstEnabled
+    ? schedule[firstEnabled[0]].opening : null;
+
+  const commonClosing = firstEnabled
+    ? schedule[firstEnabled[0]].closing : null;
+
+  saveButton.disabled = true;
+  saveButton.textContent = "Saving...";
+  hideMessage();
+
+  try {
+    const { data: sessionData, error: sessionError } =
+      await client.auth.getSession();
+
+    if (sessionError || !sessionData.session) {
+      location.href = "owner-login.html";
+      return;
+    }
+
+    const user = sessionData.session.user;
+
+    const { data: updatedRows, error } = await client
+      .from("libraries")
+      .update({
+        opening_schedule: schedule,
+        opening_time: commonOpening,
+        closing_time: commonClosing,
+        open_24_hours: is24Hours,
+        open_days: openDaysText
+      })
+      .eq("id", currentLibrary.id)
+      .eq("owner_id", user.id)
+      .select("id");
+
+    if (error) {
+      showMessage("Could not save opening hours: " + error.message, "error");
+      return;
+    }
+
+    if (!updatedRows || updatedRows.length === 0) {
+      showMessage(
+        "No library row was updated. Check the owner account and Supabase permissions.",
+        "error"
+      );
+      return;
+    }
+
+    currentLibrary.opening_schedule = schedule;
+    currentLibrary.opening_time = commonOpening;
+    currentLibrary.closing_time = commonClosing;
+    currentLibrary.open_24_hours = is24Hours;
+    currentLibrary.open_days = openDaysText;
+
+    showMessage("Opening hours saved successfully.", "success");
+
+  } catch (error) {
+    console.error("Opening Hours save error:", error);
+    showMessage(
+      "Unexpected error: " + (error.message || "Please try again."),
+      "error"
+    );
+  } finally {
+    saveButton.disabled = false;
+    saveButton.textContent = "Save Opening Hours";
+  }
 });
 
 buildPage();
-loadLibrary().catch(error=>{
- console.error("Opening Hours error:",error);
- showMessage("Unexpected error: "+(error.message||"Please try again."),"error");
+
+loadLibrary().catch(error => {
+  console.error("Opening Hours error:", error);
+  showMessage(
+    "Unexpected error: " + (error.message || "Please try again."),
+    "error"
+  );
 });
 </script>
 </body>
