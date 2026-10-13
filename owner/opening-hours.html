@@ -297,15 +297,28 @@ function normalizeSchedule(rawSchedule, library) {
     : DEFAULT_DAY.closing;
 
   const hasSavedSchedule =
-    rawSchedule &&
-    typeof rawSchedule === "object" &&
-    !Array.isArray(rawSchedule) &&
-    DAYS.some(([key]) =>
+  rawSchedule &&
+  typeof rawSchedule === "object" &&
+  !Array.isArray(rawSchedule) &&
+  DAYS.some(([key]) =>
+    rawSchedule[key] &&
+    typeof rawSchedule[key] === "object" &&
+    validTime(rawSchedule[key].opening) &&
+    validTime(rawSchedule[key].closing)
+  ) &&
+  !(
+    library.opening_time &&
+    library.closing_time &&
+    DAYS.every(([key]) =>
       rawSchedule[key] &&
-      typeof rawSchedule[key] === "object" &&
-      validTime(rawSchedule[key].opening) &&
-      validTime(rawSchedule[key].closing)
-    );
+      rawSchedule[key].opening === "08:00" &&
+      rawSchedule[key].closing === "22:00"
+    ) &&
+    (
+      library.opening_time.slice(0, 5) !== "08:00" ||
+      library.closing_time.slice(0, 5) !== "22:00"
+    )
+  );
 
   const openDaysText = String(library.open_days || "")
     .trim()
