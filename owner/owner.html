@@ -684,7 +684,7 @@ opening_schedule: (() => {
           // Facilities and rules
           facilities: facilities,
           other_facilities: otherFacilities || null,
-          rules: rules || null,
+          library_rules: rules ? [{ id: crypto.randomUUID(), text: rules }] : [],
 
           // Location
           latitude: libraryLocation ? libraryLocation.latitude : null,
