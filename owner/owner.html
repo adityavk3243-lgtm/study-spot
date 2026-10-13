@@ -626,10 +626,50 @@ const seatAlertNumber = value("seatAlertNumber");
             Number(value("seatAlertNumber") || 5),
 
           // Library timings
-          opening_time: opening || null,
-          closing_time: closing || null,
-          open_days: openDays || null,
-          open_24_hours: open247 === "Yes",
+          // Library timings
+opening_time: opening || null,
+closing_time: closing || null,
+open_days: openDays || null,
+open_24_hours: open247 === "Yes",
+
+opening_schedule: (() => {
+  const days = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday"
+  ];
+
+  const isOpen247 = open247 === "Yes";
+  const dayText = (openDays || "").toLowerCase();
+
+  const closedDays = dayText.includes("closed")
+    ? dayText.replace(/open/gi, "").split(/[,;&]+/).map(d => d.trim())
+    : [];
+
+  const isAllDays = !openDays ||
+    dayText.includes("monday - sunday") ||
+    dayText.includes("monday to sunday") ||
+    dayText.includes("daily") ||
+    dayText.includes("all days");
+
+  const schedule = {};
+
+  days.forEach(day => {
+    const isClosed = closedDays.some(d => d === day);
+
+    schedule[day] = {
+      enabled: !isClosed && (isAllDays || dayText.includes(day)),
+      opening: isOpen247 ? "00:00" : (opening || "08:00"),
+      closing: isOpen247 ? "23:59" : (closing || "22:00")
+    };
+  });
+
+  return schedule;
+})(),
 
           // Facilities and rules
           facilities: facilities,
