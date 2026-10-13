@@ -644,27 +644,37 @@ opening_schedule: (() => {
   ];
 
   const isOpen247 = open247 === "Yes";
-  const dayText = (openDays || "").toLowerCase();
+  const dayText = (openDays || "").trim().toLowerCase();
 
-  const closedDays = dayText.includes("closed")
-    ? dayText.replace(/open/gi, "").split(/[,;&]+/).map(d => d.trim())
-    : [];
+  const allDaysPatterns = [
+    "monday - sunday",
+    "monday-sunday",
+    "monday to sunday",
+    "everyday",
+    "every day",
+    "daily",
+    "all days"
+  ];
 
-  const isAllDays = !openDays ||
-    dayText.includes("monday - sunday") ||
-    dayText.includes("monday to sunday") ||
-    dayText.includes("daily") ||
-    dayText.includes("all days");
+  const isAllDays =
+    !dayText ||
+    allDaysPatterns.some(pattern => dayText.includes(pattern));
 
   const schedule = {};
 
   days.forEach(day => {
-    const isClosed = closedDays.some(d => d === day);
+    let enabled = isAllDays;
+
+    if (!isAllDays) {
+      enabled =
+        dayText.includes(day) ||
+        dayText.includes(day.slice(0, 3));
+    }
 
     schedule[day] = {
-      enabled: !isClosed && (isAllDays || dayText.includes(day)),
-      opening: isOpen247 ? "00:00" : (opening || "08:00"),
-      closing: isOpen247 ? "23:59" : (closing || "22:00")
+      enabled: isOpen247 ? true : enabled,
+      opening: isOpen247 ? "00:00" : (opening || null),
+      closing: isOpen247 ? "23:59" : (closing || null)
     };
   });
 
