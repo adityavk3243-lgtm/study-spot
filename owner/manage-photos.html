@@ -1,1216 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Photos - StudySpot</title>
 
-  <title>Manage Photos - StudySpot</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033;padding-bottom:78px}
+header{height:62px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;position:sticky;top:0;z-index:20}
+.back-btn{width:55px;height:62px;border:0;background:transparent;color:#2563eb;font-size:34px;cursor:pointer}
+.header-title{flex:1;text-align:center;font-size:19px;font-weight:700;margin-right:55px}
+.container{max-width:650px;margin:0 auto;padding:20px 14px}
+.card{background:#fff;border-radius:18px;padding:18px;box-shadow:0 4px 16px rgba(15,23,42,.07)}
+.title-row{margin-bottom:16px}
+.title-row h2{margin:0;font-size:20px}
+#photoCount{color:#64748b;font-size:15px;font-weight:600}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.photo-card,.add-tile{position:relative;width:100%;aspect-ratio:1;border-radius:9px;overflow:hidden}
+.photo-card{background:#e2e8f0}
+.photo-card img{width:100%;height:100%;object-fit:cover;display:block}
+.delete-btn{position:absolute;top:5px;right:5px;width:27px;height:27px;border:0;border-radius:50%;background:#ef4444;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;z-index:3}
+.add-tile{border:2px dashed #60a5fa;background:#eff6ff;color:#2563eb;display:flex;justify-content:center;align-items:center;text-align:center;cursor:pointer}
+.add-plus{display:block;font-size:34px}
+.add-text{font-size:14px;font-weight:700;margin-top:4px}
+.info{margin-top:14px;color:#64748b;font-size:12px;line-height:1.5}
+.button{width:100%;border:0;border-radius:10px;padding:14px;margin-top:15px;font-size:16px;font-weight:700;cursor:pointer}
+.camera-button{background:#0f766e;color:#fff}
+.save-button{background:#2563eb;color:#fff}
+.save-button:disabled{background:#94a3b8;cursor:not-allowed}
+input[type=file]{display:none}
+.message{display:none;margin-top:14px;padding:12px;border-radius:9px;text-align:center;font-size:14px;line-height:1.5}
+.loading{grid-column:1/-1;text-align:center;color:#64748b;padding:35px 10px}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;height:72px;background:#fff;border-top:1px solid #e5e7eb;display:flex;justify-content:space-around;align-items:center;z-index:50}
+.nav-item{text-decoration:none;color:#64748b;text-align:center;font-size:11px;font-weight:600;min-width:60px}
+.nav-icon{display:block;font-size:22px;margin-bottom:3px}
+.nav-item.active{color:#2563eb}
+@media(max-width:420px){.container{padding:15px 12px}.card{padding:16px}.photo-grid{gap:6px}}
+</style>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #172033;
-      padding-bottom: 78px;
-    }
-
-    header {
-      height: 62px;
-      background: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 20;
-    }
-
-    .back-btn {
-      width: 55px;
-      height: 62px;
-      border: 0;
-      background: transparent;
-      color: #2563eb;
-      font-size: 34px;
-      cursor: pointer;
-    }
-
-    .header-title {
-      flex: 1;
-      text-align: center;
-      font-size: 19px;
-      font-weight: 700;
-      margin-right: 55px;
-    }
-
-    .container {
-      max-width: 650px;
-      margin: 0 auto;
-      padding: 20px 14px;
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.07);
-    }
-
-    .title-row {
-      display: flex;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .title-row h2 {
-      margin: 0;
-      font-size: 20px;
-      color: #172033;
-    }
-
-    #photoCount {
-      color: #64748b;
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .photo-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 7px;
-    }
-
-    .photo-card,
-    .add-tile {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      border-radius: 9px;
-      overflow: hidden;
-    }
-
-    .photo-card {
-      background: #e2e8f0;
-    }
-
-    .photo-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .delete-btn {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      width: 27px;
-      height: 27px;
-      border: 0;
-      border-radius: 50%;
-      background: #ef4444;
-      color: #ffffff;
-      font-size: 20px;
-      font-weight: bold;
-      line-height: 25px;
-      padding: 0;
-      cursor: pointer;
-      z-index: 3;
-    }
-
-    .add-tile {
-      border: 2px dashed #60a5fa;
-      background: #eff6ff;
-      color: #2563eb;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .add-plus {
-      display: block;
-      font-size: 34px;
-      line-height: 34px;
-    }
-
-    .add-text {
-      font-size: 14px;
-      font-weight: 700;
-      margin-top: 4px;
-    }
-
-    .info {
-      margin-top: 14px;
-      color: #64748b;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .button {
-      width: 100%;
-      border: 0;
-      border-radius: 10px;
-      padding: 14px;
-      margin-top: 15px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .camera-button {
-      background: #0f766e;
-      color: white;
-    }
-
-    .save-button {
-      background: #2563eb;
-      color: white;
-    }
-
-    .save-button:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    .message {
-      display: none;
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 9px;
-      text-align: center;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .loading {
-      grid-column: 1 / -1;
-      text-align: center;
-      color: #64748b;
-      padding: 35px 10px;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 72px;
-      background: #ffffff;
-      border-top: 1px solid #e5e7eb;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 50;
-      box-shadow: 0 -3px 12px rgba(15, 23, 42, 0.08);
-    }
-
-    .nav-item {
-      text-decoration: none;
-      color: #64748b;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 600;
-      min-width: 60px;
-    }
-
-    .nav-icon {
-      display: block;
-      font-size: 22px;
-      margin-bottom: 3px;
-    }
-
-    .nav-item.active {
-      color: #2563eb;
-    }
-
-    @media (max-width: 420px) {
-      .container {
-        padding: 15px 12px;
-      }
-
-      .card {
-        padding: 16px;
-      }
-
-      .photo-grid {
-        gap: 6px;
-      }
-
-      .delete-btn {
-        width: 24px;
-        height: 24px;
-        font-size: 18px;
-        line-height: 23px;
-      }
-    }
-  </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../supabase-config.js"></script>
-
-  <script>
-    const client = supabaseClient;
-  </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../supabase-config.js"></script>
 </head>
 
 <body>
 
 <header>
-  <button
-    class="back-btn"
-    type="button"
-    onclick="history.back()"
-  >
-    ‹
-  </button>
-
-  <div class="header-title">
-    Manage Photos
-  </div>
+  <button class="back-btn" type="button"
+    onclick="window.location.href='owner-dashboard.html'">‹</button>
+  <div class="header-title">Manage Photos</div>
 </header>
 
 <main class="container">
+<section class="card">
 
-  <section class="card">
+  <div class="title-row">
+    <h2>Library Photos <span id="photoCount">(0/15)</span></h2>
+  </div>
 
-    <div class="title-row">
-      <h2>
-        Library Photos
-        <span id="photoCount">(0/15)</span>
-      </h2>
-    </div>
+  <input type="file" id="galleryInput"
+    accept="image/jpeg,image/png,image/webp" multiple>
 
-    <input
-      type="file"
-      id="galleryInput"
-      accept="image/jpeg,image/png,image/webp"
-      multiple
-    >
+  <input type="file" id="cameraInput"
+    accept="image/*" capture="environment">
 
-    <input
-      type="file"
-      id="cameraInput"
-      accept="image/*"
-      capture="environment"
-    >
+  <div class="photo-grid" id="photoGrid">
+    <div class="loading">Loading library photos...</div>
+  </div>
 
-    <div
-      class="photo-grid"
-      id="photoGrid"
-    >
-      <div class="loading">
-        Loading library photos...
-      </div>
-    </div>
+  <div class="info">
+    You can upload up to 15 photos. Supported formats: JPG, PNG and WEBP.
+    Each new photo is stored in a folder belonging to its library.
+  </div>
 
-    <div class="info">
-      You can upload up to 15 photos. Supported formats:
-      JPG, PNG and WEBP. Each photo should be clear and
-      related to your library.
-    </div>
+  <button type="button" class="button camera-button" id="cameraButton">
+    📷 Take Photo
+  </button>
 
-    <button
-      type="button"
-      class="button camera-button"
-      id="cameraButton"
-    >
-      📷 Take Photo
-    </button>
+  <button type="button" class="button save-button" id="saveButton" disabled>
+    Save Changes
+  </button>
 
-    <button
-      type="button"
-      class="button save-button"
-      id="saveButton"
-      disabled
-    >
-      Save Changes
-    </button>
+  <div class="message" id="message"></div>
 
-    <div
-      class="message"
-      id="message"
-    ></div>
-
-  </section>
-
+</section>
 </main>
 
 <nav class="bottom-nav">
-
-  <a
-    class="nav-item"
-    href="owner-dashboard.html"
-  >
-    <span class="nav-icon">⌂</span>
-    Home
+  <a class="nav-item" href="owner-dashboard.html">
+    <span class="nav-icon">⌂</span>Home
   </a>
-
-  <a
-    class="nav-item"
-    href="owner-dashboard.html"
-  >
-    <span class="nav-icon">♟</span>
-    Students
+  <a class="nav-item" href="owner-dashboard.html">
+    <span class="nav-icon">♟</span>Students
   </a>
-
-  <a
-    class="nav-item active"
-    href="edit-library.html"
-  >
-    <span class="nav-icon">▣</span>
-    Library
+  <a class="nav-item active" href="edit-library.html">
+    <span class="nav-icon">▣</span>Library
   </a>
-
-  <a
-    class="nav-item"
-    href="owner-dashboard.html"
-  >
-    <span class="nav-icon">♙</span>
-    Profile
+  <a class="nav-item" href="owner-dashboard.html">
+    <span class="nav-icon">♙</span>Profile
   </a>
-
 </nav>
 
 <script>
+"use strict";
 
-const galleryInput =
-  document.getElementById("galleryInput");
+/* =========================
+   SETTINGS
+========================= */
 
-const cameraInput =
-  document.getElementById("cameraInput");
-
-const cameraButton =
-  document.getElementById("cameraButton");
-
-const photoGrid =
-  document.getElementById("photoGrid");
-
-const photoCount =
-  document.getElementById("photoCount");
-
-const saveButton =
-  document.getElementById("saveButton");
-
-const message =
-  document.getElementById("message");
-
-
-const PHOTO_BUCKET =
-  "StudySpot library-photos";
-
+const client = window.supabaseClient;
+const PHOTO_BUCKET = "StudySpot library-photos";
 const MAX_PHOTOS = 15;
 
+const galleryInput = document.getElementById("galleryInput");
+const cameraInput = document.getElementById("cameraInput");
+const cameraButton = document.getElementById("cameraButton");
+const photoGrid = document.getElementById("photoGrid");
+const photoCount = document.getElementById("photoCount");
+const saveButton = document.getElementById("saveButton");
+const message = document.getElementById("message");
 
 let ownerId = null;
 let libraryId = null;
 
 let savedPhotos = [];
+let originalPhotoUrls = [];
 let newFiles = [];
-
 let photosChanged = false;
 
 
 /* =========================
-   MESSAGE
+   MESSAGES
 ========================= */
 
 function showMessage(text, success = true) {
-
   message.style.display = "block";
   message.textContent = text;
-
-  if (success) {
-    message.style.background = "#dcfce7";
-    message.style.color = "#166534";
-  } else {
-    message.style.background = "#fee2e2";
-    message.style.color = "#991b1b";
-  }
+  message.style.background = success ? "#dcfce7" : "#fee2e2";
+  message.style.color = success ? "#166534" : "#991b1b";
 }
-
 
 function hideMessage() {
   message.style.display = "none";
 }
 
-
-/* =========================
-   COUNT
-========================= */
-
 function updateCount() {
+  const total = savedPhotos.length + newFiles.length;
 
-  const total =
-    savedPhotos.length +
-    newFiles.length;
-
-  photoCount.textContent =
-    `(${total}/${MAX_PHOTOS})`;
-
-  saveButton.disabled =
-    !photosChanged;
+  photoCount.textContent = `(${total}/${MAX_PHOTOS})`;
+  saveButton.disabled = !photosChanged;
 }
 
 
 /* =========================
-   RENDER
+   PUBLIC URL TO STORAGE PATH
+========================= */
+
+function storagePathFromPublicUrl(url) {
+  try {
+    const parsed = new URL(url);
+    const marker =
+      "/storage/v1/object/public/" + PHOTO_BUCKET + "/";
+
+    let pathname = parsed.pathname;
+    let index = pathname.indexOf(marker);
+
+    if (index < 0) {
+      pathname = decodeURIComponent(pathname);
+      index = pathname.indexOf(marker);
+    }
+
+    if (index < 0) {
+      return null;
+    }
+
+    const path = decodeURIComponent(
+      pathname.slice(index + marker.length)
+    );
+
+    if (!path || path.includes("..")) {
+      return null;
+    }
+
+    return path;
+  } catch (error) {
+    return null;
+  }
+}
+
+
+/* =========================
+   RENDER PHOTOS
 ========================= */
 
 function renderPhotos() {
-
   photoGrid.innerHTML = "";
 
-  const total =
-    savedPhotos.length +
-    newFiles.length;
+  savedPhotos.forEach((photo, index) => {
+    const card = document.createElement("div");
+    card.className = "photo-card";
 
+    const image = document.createElement("img");
+    image.src = photo.url;
+    image.alt = "Library photo";
 
-  savedPhotos.forEach(
-    function(photo, index) {
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "delete-btn";
+    deleteButton.textContent = "×";
+    deleteButton.setAttribute("aria-label", "Remove photo");
 
-      const card =
-        document.createElement("div");
+    deleteButton.addEventListener("click", () => {
+      savedPhotos.splice(index, 1);
+      photosChanged = true;
+      renderPhotos();
+    });
 
-      card.className =
-        "photo-card";
+    card.appendChild(image);
+    card.appendChild(deleteButton);
+    photoGrid.appendChild(card);
+  });
 
+  newFiles.forEach((file, index) => {
+    const card = document.createElement("div");
+    card.className = "photo-card";
 
-      const image =
-        document.createElement("img");
+    const image = document.createElement("img");
+    image.alt = "New library photo";
 
-      image.src =
-        photo.url;
+    const reader = new FileReader();
+    reader.onload = event => {
+      image.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
 
-      image.alt =
-        "Library photo";
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "delete-btn";
+    deleteButton.textContent = "×";
 
+    deleteButton.addEventListener("click", () => {
+      newFiles.splice(index, 1);
+      photosChanged = true;
+      renderPhotos();
+    });
 
-      image.onerror =
-        function() {
-          card.style.background = "#e2e8f0";
-        };
+    card.appendChild(image);
+    card.appendChild(deleteButton);
+    photoGrid.appendChild(card);
+  });
 
-
-      const deleteButton =
-        document.createElement("button");
-
-      deleteButton.type =
-        "button";
-
-      deleteButton.className =
-        "delete-btn";
-
-      deleteButton.textContent =
-        "×";
-
-
-      deleteButton.addEventListener(
-        "click",
-        function() {
-
-          savedPhotos.splice(index, 1);
-
-          photosChanged = true;
-
-          renderPhotos();
-
-        }
-      );
-
-
-      card.appendChild(image);
-      card.appendChild(deleteButton);
-
-      photoGrid.appendChild(card);
-
-    }
-  );
-
-
-  newFiles.forEach(
-    function(file, index) {
-
-      const card =
-        document.createElement("div");
-
-      card.className =
-        "photo-card";
-
-
-      const image =
-        document.createElement("img");
-
-      image.alt =
-        "New library photo";
-
-
-      const reader =
-        new FileReader();
-
-
-      reader.onload =
-        function(event) {
-
-          image.src =
-            event.target.result;
-
-        };
-
-
-      reader.readAsDataURL(file);
-
-
-      const deleteButton =
-        document.createElement("button");
-
-      deleteButton.type =
-        "button";
-
-      deleteButton.className =
-        "delete-btn";
-
-      deleteButton.textContent =
-        "×";
-
-
-      deleteButton.addEventListener(
-        "click",
-        function() {
-
-          newFiles.splice(index, 1);
-
-          photosChanged = true;
-
-          renderPhotos();
-
-        }
-      );
-
-
-      card.appendChild(image);
-      card.appendChild(deleteButton);
-
-      photoGrid.appendChild(card);
-
-    }
-  );
-
-
-  if (total < MAX_PHOTOS) {
-
-    const addTile =
-      document.createElement("label");
-
-    addTile.className =
-      "add-tile";
-
-    addTile.setAttribute(
-      "for",
-      "galleryInput"
-    );
+  if (savedPhotos.length + newFiles.length < MAX_PHOTOS) {
+    const addTile = document.createElement("label");
+    addTile.className = "add-tile";
+    addTile.htmlFor = "galleryInput";
 
     addTile.innerHTML = `
       <div>
         <span class="add-plus">＋</span>
-        <div class="add-text">
-          Add Photos
-        </div>
+        <div class="add-text">Add Photos</div>
       </div>
     `;
 
     photoGrid.appendChild(addTile);
   }
 
-
   updateCount();
 }
 
 
 /* =========================
-   GET PUBLIC URL
-========================= */
-
-function getPublicUrl(path) {
-
-  const {
-    data
-  } =
-    client.storage
-      .from(PHOTO_BUCKET)
-      .getPublicUrl(path);
-
-  return data.publicUrl;
-}
-
-
-/* =========================
-   LOAD DATABASE PHOTOS
-========================= */
-
-function loadDatabasePhotos(photoArray) {
-
-  if (!Array.isArray(photoArray)) {
-    return [];
-  }
-
-
-  return photoArray
-    .filter(
-      function(url) {
-
-        return (
-          typeof url === "string" &&
-          url.trim() !== ""
-        );
-
-      }
-    )
-    .map(
-      function(url) {
-
-        return {
-          url: url,
-          source: "database"
-        };
-
-      }
-    );
-}
-
-
-/* =========================
-   RECOVER OLD STORAGE PHOTOS
-========================= */
-
-async function recoverOldStoragePhotos() {
-
-  /*
-    Old system stored photos inside:
-
-    ownerId/fileName
-
-    We temporarily read that folder only
-    to recover existing photos.
-
-    New uploads will NOT use this folder.
-  */
-
-  const {
-    data: files,
-    error
-  } =
-    await client.storage
-      .from(PHOTO_BUCKET)
-      .list(
-        ownerId,
-        {
-          limit: 100,
-          offset: 0,
-          sortBy: {
-            column: "name",
-            order: "asc"
-          }
-        }
-      );
-
-
-  if (error) {
-    console.error(
-      "Old photo recovery error:",
-      error
-    );
-
-    return [];
-  }
-
-
-  if (!Array.isArray(files)) {
-    return [];
-  }
-
-
-  return files
-    .filter(
-      function(file) {
-
-        return (
-          file &&
-          file.name &&
-          file.name !== ".emptyFolderPlaceholder"
-        );
-
-      }
-    )
-    .map(
-      function(file) {
-
-        const path =
-          `${ownerId}/${file.name}`;
-
-        return {
-          url: getPublicUrl(path),
-          path: path,
-          source: "legacy-storage"
-        };
-
-      }
-    );
-}
-
-
-/* =========================
-   REMOVE DUPLICATES
-========================= */
-
-function mergePhotos(
-  databasePhotos,
-  storagePhotos
-) {
-
-  const result = [];
-  const seen = new Set();
-
-
-  function addPhoto(photo) {
-
-    if (
-      !photo ||
-      !photo.url
-    ) {
-      return;
-    }
-
-
-    const key =
-      photo.url.trim();
-
-
-    if (
-      !key ||
-      seen.has(key)
-    ) {
-      return;
-    }
-
-
-    seen.add(key);
-
-    result.push(photo);
-  }
-
-
-  /*
-    Database photos get priority.
-  */
-
-  databasePhotos.forEach(
-    addPhoto
-  );
-
-
-  /*
-    Then recover old Storage photos
-    only until 15 photos are reached.
-  */
-
-  for (
-    const photo of storagePhotos
-  ) {
-
-    if (
-      result.length >= MAX_PHOTOS
-    ) {
-      break;
-    }
-
-    addPhoto(photo);
-
-  }
-
-
-  return result.slice(
-    0,
-    MAX_PHOTOS
-  );
-}
-
-
-/* =========================
-   LOAD LIBRARY
+   LOAD LIBRARY PHOTOS
+   IMPORTANT:
+   Do not recover old Storage files automatically.
+   That was causing deleted photos to return.
 ========================= */
 
 async function loadLibrary() {
-
   try {
-
-    const {
-      data: {
-        user
-      },
-      error: userError
-    } =
-      await client.auth.getUser();
-
-
-    if (
-      userError ||
-      !user
-    ) {
-
-      window.location.href =
-        "owner-login.html";
-
-      return;
-
+    if (!client) {
+      throw new Error("Supabase client is not configured.");
     }
 
+    const {
+      data: { user },
+      error: userError
+    } = await client.auth.getUser();
 
-    ownerId =
-      user.id;
+    if (userError || !user) {
+      window.location.href = "owner-login.html";
+      return;
+    }
 
+    ownerId = user.id;
 
     const {
       data: library,
       error: libraryError
-    } =
-      await client
-        .from("libraries")
-        .select("id,photos")
-        .eq("owner_id", ownerId)
-        .maybeSingle();
-
+    } = await client
+      .from("libraries")
+      .select("id, photos")
+      .eq("owner_id", ownerId)
+      .maybeSingle();
 
     if (libraryError) {
       throw libraryError;
     }
 
-
     if (!library) {
-
-      throw new Error(
-        "Your library could not be found."
-      );
-
+      throw new Error("Your library could not be found.");
     }
 
+    libraryId = library.id;
 
-    libraryId =
-      library.id;
+    const urls = Array.isArray(library.photos)
+      ? library.photos.filter(
+          url => typeof url === "string" && url.trim() !== ""
+        )
+      : [];
 
+    originalPhotoUrls = [...urls];
 
-    /*
-      Step 1:
-      Load photos already saved in database.
-    */
+    savedPhotos = urls.slice(0, MAX_PHOTOS).map(url => ({
+      url: url,
+      path: storagePathFromPublicUrl(url)
+    }));
 
-    const databasePhotos =
-      loadDatabasePhotos(
-        library.photos
-      );
-
-
-    /*
-      Step 2:
-      Look at the old owner folder.
-
-      This is ONLY for recovery of existing
-      registration/legacy photos.
-    */
-
-    const oldStoragePhotos =
-      await recoverOldStoragePhotos();
-
-
-    /*
-      Step 3:
-      Combine them without duplicates.
-    */
-
-    const mergedPhotos =
-      mergePhotos(
-        databasePhotos,
-        oldStoragePhotos
-      );
-
-
-    savedPhotos =
-      mergedPhotos;
-
-
-    /*
-      If Storage contained old photos that
-      were missing from libraries.photos,
-      save the recovered list into database.
-    */
-
-    const oldCount =
-      databasePhotos.length;
-
-    const newCount =
-      mergedPhotos.length;
-
-
-    if (
-      newCount > oldCount
-    ) {
-
-      const recoveredUrls =
-        mergedPhotos.map(
-          function(photo) {
-            return photo.url;
-          }
-        );
-
-
-      const {
-        error: recoveryUpdateError
-      } =
-        await client
-          .from("libraries")
-          .update({
-            photos: recoveredUrls
-          })
-          .eq("id", libraryId)
-          .eq("owner_id", ownerId);
-
-
-      if (recoveryUpdateError) {
-
-        console.error(
-          "Photo recovery database update error:",
-          recoveryUpdateError
-        );
-
-      }
-
-    }
-
+    newFiles = [];
+    photosChanged = false;
 
     renderPhotos();
-
     hideMessage();
 
+    if (urls.length > MAX_PHOTOS) {
+      showMessage(
+        "More than 15 photo links exist in the database. Only the first 15 are shown. Please review before saving.",
+        false
+      );
+    }
 
   } catch (error) {
-
-    console.error(
-      "Manage Photos loading error:",
-      error
-    );
-
-
+    console.error("Manage Photos loading error:", error);
     photoGrid.innerHTML = "";
-
-
     updateCount();
 
-
     showMessage(
-      "Something went wrong while loading photos: " +
-      (
-        error.message ||
-        "Unknown error"
-      ),
+      "Could not load library photos: " +
+      (error.message || "Unknown error"),
       false
     );
-
   }
-
 }
 
 
 /* =========================
-   ADD NEW PHOTOS
+   SELECT PHOTOS
 ========================= */
 
-function addPhotos(files) {
-
-  const incoming =
-    Array.from(files || []);
-
-
-  const currentTotal =
-    savedPhotos.length +
-    newFiles.length;
-
-
+function addPhotos(fileList) {
+  const incoming = Array.from(fileList || []);
   const remaining =
-    MAX_PHOTOS -
-    currentTotal;
-
+    MAX_PHOTOS - savedPhotos.length - newFiles.length;
 
   if (remaining <= 0) {
-
-    showMessage(
-      "You can upload a maximum of 15 photos.",
-      false
-    );
-
+    showMessage("You can upload a maximum of 15 photos.", false);
     return;
-
   }
 
+  const valid = incoming.filter(file =>
+    ["image/jpeg", "image/png", "image/webp"].includes(file.type)
+  );
 
-  const selected =
-    incoming
-      .filter(
-        function(file) {
+  const selected = valid.slice(0, remaining);
 
-          return (
-            file.type === "image/jpeg" ||
-            file.type === "image/png" ||
-            file.type === "image/webp"
-          );
+  if (selected.length === 0 && incoming.length > 0) {
+    showMessage("Choose JPG, PNG or WEBP image files.", false);
+    return;
+  }
 
-        }
-      )
-      .slice(
-        0,
-        remaining
-      );
-
-
-  newFiles =
-    newFiles.concat(
-      selected
-    );
-
-
-  photosChanged =
-    true;
-
+  newFiles = newFiles.concat(selected);
+  photosChanged = true;
 
   hideMessage();
-
   renderPhotos();
 
+  if (valid.length > remaining) {
+    showMessage(
+      `Only ${remaining} photo(s) were added because the limit is 15.`,
+      false
+    );
+  }
 }
 
+galleryInput.addEventListener("change", () => {
+  addPhotos(galleryInput.files);
+  galleryInput.value = "";
+});
 
-/* =========================
-   GALLERY
-========================= */
+cameraButton.addEventListener("click", () => {
+  cameraInput.click();
+});
 
-galleryInput.addEventListener(
-  "change",
-  function() {
-
-    addPhotos(
-      galleryInput.files
-    );
-
-    galleryInput.value = "";
-
-  }
-);
-
-
-/* =========================
-   CAMERA
-========================= */
-
-cameraButton.addEventListener(
-  "click",
-  function() {
-
-    cameraInput.click();
-
-  }
-);
-
-
-cameraInput.addEventListener(
-  "change",
-  function() {
-
-    addPhotos(
-      cameraInput.files
-    );
-
-    cameraInput.value = "";
-
-  }
-);
+cameraInput.addEventListener("change", () => {
+  addPhotos(cameraInput.files);
+  cameraInput.value = "";
+});
 
 
 /* =========================
    UPLOAD NEW PHOTO
+   Each library gets its own folder:
+   ownerId/libraryId/fileName
 ========================= */
 
 async function uploadPhoto(file) {
-
   const extension =
-    file.name
-      .split(".")
-      .pop()
-      .toLowerCase();
-
+    (file.name.split(".").pop() || "jpg")
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "") || "jpg";
 
   const fileName =
     `${Date.now()}-${crypto.randomUUID()}.${extension}`;
 
-
-  /*
-    NEW SYSTEM:
-
-    libraryId/fileName
-
-    This keeps every library separate.
-  */
-
   const filePath =
-  `${ownerId}/${libraryId}/${fileName}`;
+    `${ownerId}/${libraryId}/${fileName}`;
 
-
-  const {
-    error
-  } =
-    await client.storage
-      .from(PHOTO_BUCKET)
-      .upload(
-        filePath,
-        file,
-        {
-          cacheControl: "3600",
-          upsert: false,
-          contentType: file.type
-        }
-      );
-
+  const { error } = await client.storage
+    .from(PHOTO_BUCKET)
+    .upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: file.type
+    });
 
   if (error) {
     throw error;
   }
 
-
-  const {
-    data
-  } =
-    client.storage
-      .from(PHOTO_BUCKET)
-      .getPublicUrl(
-        filePath
-      );
-
+  const { data } = client.storage
+    .from(PHOTO_BUCKET)
+    .getPublicUrl(filePath);
 
   return {
     url: data.publicUrl,
-    path: filePath,
-    name: fileName,
-    source: "library-storage"
+    path: filePath
   };
+}
 
+
+/* =========================
+   SAFE STORAGE CLEANUP
+   Never delete files referenced
+   by any library row.
+========================= */
+
+async function removeUnreferencedStorageFiles(removedUrls) {
+  const candidatePaths = [
+    ...new Set(
+      removedUrls
+        .map(storagePathFromPublicUrl)
+        .filter(Boolean)
+    )
+  ];
+
+  if (candidatePaths.length === 0) {
+    return;
+  }
+
+  const {
+    data: allLibraries,
+    error: readError
+  } = await client
+    .from("libraries")
+    .select("photos");
+
+  if (readError) {
+    console.warn(
+      "Could not verify photo references. Storage cleanup skipped.",
+      readError
+    );
+    return;
+  }
+
+  const usedPaths = new Set();
+
+  (allLibraries || []).forEach(library => {
+    const urls = Array.isArray(library.photos)
+      ? library.photos
+      : [];
+
+    urls.forEach(url => {
+      if (typeof url !== "string") return;
+
+      const path = storagePathFromPublicUrl(url);
+
+      if (path) {
+        usedPaths.add(path);
+      }
+    });
+  });
+
+  const safePaths = candidatePaths.filter(
+    path => !usedPaths.has(path)
+  );
+
+  if (safePaths.length === 0) {
+    return;
+  }
+
+  const { error: removeError } = await client.storage
+    .from(PHOTO_BUCKET)
+    .remove(safePaths);
+
+  if (removeError) {
+    console.error(
+      "Database updated, but Storage deletion failed:",
+      removeError
+    );
+
+    showMessage(
+      "The photo list was saved, but some Storage files could not be deleted. Please check Supabase Storage permissions.",
+      false
+    );
+  }
 }
 
 
@@ -1218,144 +530,80 @@ async function uploadPhoto(file) {
    SAVE CHANGES
 ========================= */
 
-saveButton.addEventListener(
-  "click",
-  async function() {
+saveButton.addEventListener("click", async () => {
+  const total = savedPhotos.length + newFiles.length;
 
-    const total =
-      savedPhotos.length +
-      newFiles.length;
-
-
-    if (
-      total > MAX_PHOTOS
-    ) {
-
-      showMessage(
-        "You can save a maximum of 15 photos.",
-        false
-      );
-
-      return;
-
-    }
-
-
-    saveButton.disabled =
-      true;
-
-    saveButton.textContent =
-      "Saving Photos...";
-
-
-    try {
-
-      const uploadedPhotos = [];
-
-
-      /*
-        Upload new photos one by one.
-      */
-
-      for (
-        const file of newFiles
-      ) {
-
-        const uploaded =
-          await uploadPhoto(file);
-
-
-        uploadedPhotos.push(
-          uploaded
-        );
-
-      }
-
-
-      /*
-        Final photo list.
-      */
-
-      const finalPhotos =
-        savedPhotos.concat(
-          uploadedPhotos
-        );
-
-
-      const photoUrls =
-        finalPhotos.map(
-          function(photo) {
-            return photo.url;
-          }
-        );
-
-
-      /*
-        Save URLs to the exact library.
-      */
-
-      const {
-        error: updateError
-      } =
-        await client
-          .from("libraries")
-          .update({
-            photos: photoUrls
-          })
-          .eq("id", libraryId)
-          .eq("owner_id", ownerId);
-
-
-      if (updateError) {
-        throw updateError;
-      }
-
-
-      savedPhotos =
-        finalPhotos;
-
-      newFiles = [];
-
-      photosChanged =
-        false;
-
-
-      renderPhotos();
-
-
-      showMessage(
-        "Library photos saved successfully."
-      );
-
-
-    } catch (error) {
-
-      console.error(
-        "Photo save error:",
-        error
-      );
-
-
-      showMessage(
-        "Photos could not be saved: " +
-        (
-          error.message ||
-          "Unknown error"
-        ),
-        false
-      );
-
-    } finally {
-
-      saveButton.textContent =
-        "Save Changes";
-
-      updateCount();
-
-    }
-
+  if (total > MAX_PHOTOS) {
+    showMessage("You can save a maximum of 15 photos.", false);
+    return;
   }
-);
+
+  saveButton.disabled = true;
+  saveButton.textContent = "Saving Photos...";
+
+  try {
+    const uploadedPhotos = [];
+
+    for (const file of newFiles) {
+      const uploaded = await uploadPhoto(file);
+      uploadedPhotos.push(uploaded);
+    }
+
+    const finalPhotos = savedPhotos.concat(uploadedPhotos);
+    const finalUrls = finalPhotos.map(photo => photo.url);
+
+    const {
+      data: updatedRows,
+      error: updateError
+    } = await client
+      .from("libraries")
+      .update({ photos: finalUrls })
+      .eq("id", libraryId)
+      .eq("owner_id", ownerId)
+      .select("id");
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    if (!updatedRows || updatedRows.length !== 1) {
+      throw new Error(
+        "The database did not confirm the update. Reload and check before retrying."
+      );
+    }
+
+    const finalUrlSet = new Set(finalUrls);
+
+    const removedUrls = originalPhotoUrls.filter(
+      url => !finalUrlSet.has(url)
+    );
+
+    originalPhotoUrls = [...finalUrls];
+    savedPhotos = finalPhotos;
+    newFiles = [];
+    photosChanged = false;
+
+    renderPhotos();
+
+    showMessage("Library photos saved successfully.");
+
+    await removeUnreferencedStorageFiles(removedUrls);
+
+  } catch (error) {
+    console.error("Photo save error:", error);
+
+    showMessage(
+      "Photos could not be fully saved: " +
+      (error.message || "Unknown error") +
+      ". Please check the photo list before retrying.",
+      false
+    );
+
+  } finally {
+    saveButton.textContent = "Save Changes";
+    updateCount();
+  }
+});
 
 
 /* =========================
@@ -1365,6 +613,5 @@ saveButton.addEventListener(
 loadLibrary();
 
 </script>
-
 </body>
 </html>
