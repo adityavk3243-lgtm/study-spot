@@ -478,12 +478,16 @@ async function removeUnreferencedStorageFiles(removedUrls) {
   );
 
   if (safePaths.length === 0) {
-    return {
-      removed: 0,
-      failed: 0,
-      skipped: candidatePaths.length
-    };
-  }
+  console.log("Storage deletion skipped.");
+  console.log("Candidate paths:", candidatePaths);
+  console.log("Still referenced paths:", [...usedPaths]);
+
+  return {
+    removed: 0,
+    failed: 0,
+    skipped: candidatePaths.length
+  };
+}
 
 const { data, error: removeError } = await client.storage
   .from(PHOTO_BUCKET)
