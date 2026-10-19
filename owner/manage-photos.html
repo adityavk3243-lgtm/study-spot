@@ -485,9 +485,18 @@ async function removeUnreferencedStorageFiles(removedUrls) {
     };
   }
 
-  const { data, error: removeError } = await client.storage
-    .from(PHOTO_BUCKET)
-    .remove(safePaths);
+const { data, error: removeError } = await client.storage
+  .from(PHOTO_BUCKET)
+  .remove(safePaths);
+
+console.log("Storage paths requested for deletion:", safePaths);
+console.log("Storage deletion response:", data);
+console.log("Storage deletion error:", removeError);
+
+if (!removeError && Array.isArray(data)) {
+  const returnedPaths = data.map(file => file.name);
+  console.log("Storage files returned:", returnedPaths);
+}
 
   if (removeError) {
     console.error("Storage deletion failed:", removeError);
