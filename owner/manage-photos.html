@@ -491,6 +491,10 @@ async function removeUnreferencedStorageFiles(removedUrls) {
 
   if (removeError) {
     console.error("Storage deletion failed:", removeError);
+showMessage(
+  "Storage error: " + (removeError.message || JSON.stringify(removeError)),
+  false
+);
 
     return {
       removed: 0,
