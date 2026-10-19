@@ -592,20 +592,22 @@ saveButton.addEventListener("click", async () => {
 
     const cleanup = await removeUnreferencedStorageFiles(removedUrls);
 
-    if (cleanup.failed > 0) {
-      showMessage(
-        "Photo list saved, but Storage could not delete " +
-        cleanup.failed +
-        " file(s). Check the DELETE policy and browser console.",
-        false
-      );
-    } else if (cleanup.skipped > 0) {
-      showMessage(
-        "Photo list saved. Some files were kept because they are still referenced by a library."
-      );
-    } else {
-      showMessage("Library photos saved successfully.");
-    }
+console.log("Photo cleanup result:", cleanup);
+
+if (cleanup.failed > 0) {
+  showMessage(
+    "Database saved, but Storage deletion failed. Failed files: " +
+    cleanup.failed + ". Check the Storage DELETE policy.",
+    false
+  );
+} else if (cleanup.skipped > 0) {
+  showMessage(
+    "Database saved, but Storage files were skipped because they may still be referenced.",
+    false
+  );
+} else {
+  showMessage("Library photos saved successfully.");
+}
 
   } catch (error) {
     console.error("Photo save error:", error);
