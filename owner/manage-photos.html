@@ -30,7 +30,7 @@ header{height:62px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;
 .save-button{background:#2563eb;color:#fff}
 .save-button:disabled{background:#94a3b8;cursor:not-allowed}
 input[type=file]{display:none}
-.message{display:none;margin-top:14px;padding:12px;border-radius:9px;text-align:center;font-size:14px;line-height:1.5}
+.message{display:none;margin-top:14px;padding:12px;border-radius:9px;text-align:center;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
 .loading{grid-column:1/-1;text-align:center;color:#64748b;padding:35px 10px}
 .bottom-nav{position:fixed;left:0;right:0;bottom:0;height:72px;background:#fff;border-top:1px solid #e5e7eb;display:flex;justify-content:space-around;align-items:center;z-index:50}
 .nav-item{text-decoration:none;color:#64748b;text-align:center;font-size:11px;font-weight:600;min-width:60px}
@@ -62,15 +62,15 @@ input[type=file]{display:none}
     accept="image/jpeg,image/png,image/webp" multiple>
 
   <input type="file" id="cameraInput"
-    accept="image/*" capture="environment">
+    accept="image/jpeg,image/png,image/webp" capture="environment">
 
   <div class="photo-grid" id="photoGrid">
     <div class="loading">Loading library photos...</div>
   </div>
 
   <div class="info">
-    You can upload up to 15 photos. Supported formats: JPG, PNG and WEBP.
-    Each new photo is stored in a folder belonging to its library.
+    Upload up to 15 photos. Supported formats: JPG, PNG and WEBP.
+    Each library's new photos are stored in its own folder.
   </div>
 
   <button type="button" class="button camera-button" id="cameraButton">
@@ -81,7 +81,7 @@ input[type=file]{display:none}
     Save Changes
   </button>
 
-  <div class="message" id="message"></div>
+  <div class="message" id="message" role="status"></div>
 
 </section>
 </main>
@@ -104,11 +104,9 @@ input[type=file]{display:none}
 <script>
 "use strict";
 
-/* =========================
-   SETTINGS
-========================= */
+/* SETTINGS */
 
-const client = window.supabaseClient;
+const client = supabaseClient;
 const PHOTO_BUCKET = "StudySpot library-photos";
 const MAX_PHOTOS = 15;
 
@@ -122,16 +120,14 @@ const message = document.getElementById("message");
 
 let ownerId = null;
 let libraryId = null;
-
 let savedPhotos = [];
 let originalPhotoUrls = [];
 let newFiles = [];
 let photosChanged = false;
+let isSaving = false;
 
 
-/* =========================
-   MESSAGES
-========================= */
+/* MESSAGES */
 
 function showMessage(text, success = true) {
   message.style.display = "block";
@@ -144,17 +140,8 @@ function hideMessage() {
   message.style.display = "none";
 }
 
-function updateCount() {
-  const total = savedPhotos.length + newFiles.length;
 
-  photoCount.textContent = `(${total}/${MAX_PHOTOS})`;
-  saveButton.disabled = !photosChanged;
-}
-
-
-/* =========================
-   PUBLIC URL TO STORAGE PATH
-========================= */
+/* URL TO STORAGE PATH */
 
 function storagePathFromPublicUrl(url) {
   try {
@@ -162,23 +149,14 @@ function storagePathFromPublicUrl(url) {
     const marker =
       "/storage/v1/object/public/" + PHOTO_BUCKET + "/";
 
-    let pathname = parsed.pathname;
-    let index = pathname.indexOf(marker);
+    let index = parsed.pathname.indexOf(marker);
 
-    if (index < 0) {
-      pathname = decodeURIComponent(pathname);
-      index = pathname.indexOf(marker);
-    }
+    if (index < 0) return null;
 
-    if (index < 0) {
-      return null;
-    }
+    const encodedPath = parsed.pathname.slice(index + marker.length);
+    const path = decodeURIComponent(encodedPath);
 
-    const path = decodeURIComponent(
-      pathname.slice(index + marker.length)
-    );
-
-    if (!path || path.includes("..")) {
+    if (!path || path.split("/").some(part => part === "..")) {
       return null;
     }
 
@@ -189,9 +167,17 @@ function storagePathFromPublicUrl(url) {
 }
 
 
-/* =========================
-   RENDER PHOTOS
-========================= */
+/* COUNT */
+
+function updateCount() {
+  const total = savedPhotos.length + newFiles.length;
+
+  photoCount.textContent = `(${total}/${MAX_PHOTOS})`;
+  saveButton.disabled = !photosChanged || isSaving;
+}
+
+
+/* RENDER */
 
 function renderPhotos() {
   photoGrid.innerHTML = "";
@@ -211,8 +197,11 @@ function renderPhotos() {
     deleteButton.setAttribute("aria-label", "Remove photo");
 
     deleteButton.addEventListener("click", () => {
+      if (isSaving) return;
+
       savedPhotos.splice(index, 1);
       photosChanged = true;
+      hideMessage();
       renderPhotos();
     });
 
@@ -240,6 +229,8 @@ function renderPhotos() {
     deleteButton.textContent = "×";
 
     deleteButton.addEventListener("click", () => {
+      if (isSaving) return;
+
       newFiles.splice(index, 1);
       photosChanged = true;
       renderPhotos();
@@ -269,12 +260,7 @@ function renderPhotos() {
 }
 
 
-/* =========================
-   LOAD LIBRARY PHOTOS
-   IMPORTANT:
-   Do not recover old Storage files automatically.
-   That was causing deleted photos to return.
-========================= */
+/* LOAD LIBRARY */
 
 async function loadLibrary() {
   try {
@@ -303,9 +289,7 @@ async function loadLibrary() {
       .eq("owner_id", ownerId)
       .maybeSingle();
 
-    if (libraryError) {
-      throw libraryError;
-    }
+    if (libraryError) throw libraryError;
 
     if (!library) {
       throw new Error("Your library could not be found.");
@@ -319,10 +303,16 @@ async function loadLibrary() {
         )
       : [];
 
+    if (urls.length > MAX_PHOTOS) {
+      throw new Error(
+        "More than 15 photo links are saved in the database. No changes were made. Please review these records first."
+      );
+    }
+
     originalPhotoUrls = [...urls];
 
-    savedPhotos = urls.slice(0, MAX_PHOTOS).map(url => ({
-      url: url,
+    savedPhotos = urls.map(url => ({
+      url,
       path: storagePathFromPublicUrl(url)
     }));
 
@@ -331,13 +321,6 @@ async function loadLibrary() {
 
     renderPhotos();
     hideMessage();
-
-    if (urls.length > MAX_PHOTOS) {
-      showMessage(
-        "More than 15 photo links exist in the database. Only the first 15 are shown. Please review before saving.",
-        false
-      );
-    }
 
   } catch (error) {
     console.error("Manage Photos loading error:", error);
@@ -353,11 +336,11 @@ async function loadLibrary() {
 }
 
 
-/* =========================
-   SELECT PHOTOS
-========================= */
+/* ADD PHOTOS */
 
 function addPhotos(fileList) {
+  if (isSaving) return;
+
   const incoming = Array.from(fileList || []);
   const remaining =
     MAX_PHOTOS - savedPhotos.length - newFiles.length;
@@ -371,14 +354,12 @@ function addPhotos(fileList) {
     ["image/jpeg", "image/png", "image/webp"].includes(file.type)
   );
 
-  const selected = valid.slice(0, remaining);
-
-  if (selected.length === 0 && incoming.length > 0) {
+  if (valid.length === 0 && incoming.length > 0) {
     showMessage("Choose JPG, PNG or WEBP image files.", false);
     return;
   }
 
-  newFiles = newFiles.concat(selected);
+  newFiles = newFiles.concat(valid.slice(0, remaining));
   photosChanged = true;
 
   hideMessage();
@@ -407,11 +388,7 @@ cameraInput.addEventListener("change", () => {
 });
 
 
-/* =========================
-   UPLOAD NEW PHOTO
-   Each library gets its own folder:
-   ownerId/libraryId/fileName
-========================= */
+/* UPLOAD NEW PHOTO */
 
 async function uploadPhoto(file) {
   const extension =
@@ -422,8 +399,7 @@ async function uploadPhoto(file) {
   const fileName =
     `${Date.now()}-${crypto.randomUUID()}.${extension}`;
 
-  const filePath =
-    `${ownerId}/${libraryId}/${fileName}`;
+  const filePath = `${ownerId}/${libraryId}/${fileName}`;
 
   const { error } = await client.storage
     .from(PHOTO_BUCKET)
@@ -433,9 +409,7 @@ async function uploadPhoto(file) {
       contentType: file.type
     });
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   const { data } = client.storage
     .from(PHOTO_BUCKET)
@@ -448,11 +422,7 @@ async function uploadPhoto(file) {
 }
 
 
-/* =========================
-   SAFE STORAGE CLEANUP
-   Never delete files referenced
-   by any library row.
-========================= */
+/* SAFE STORAGE CLEANUP */
 
 async function removeUnreferencedStorageFiles(removedUrls) {
   const candidatePaths = [
@@ -464,8 +434,13 @@ async function removeUnreferencedStorageFiles(removedUrls) {
   ];
 
   if (candidatePaths.length === 0) {
-    return;
+    return { removed: 0, failed: 0, skipped: 0 };
   }
+
+  /*
+    Read every library's current photo URLs before removing anything.
+    This protects files that are still used by another library.
+  */
 
   const {
     data: allLibraries,
@@ -475,11 +450,12 @@ async function removeUnreferencedStorageFiles(removedUrls) {
     .select("photos");
 
   if (readError) {
-    console.warn(
-      "Could not verify photo references. Storage cleanup skipped.",
-      readError
-    );
-    return;
+    console.error("Could not verify photo references:", readError);
+    return {
+      removed: 0,
+      failed: candidatePaths.length,
+      skipped: 0
+    };
   }
 
   const usedPaths = new Set();
@@ -493,10 +469,7 @@ async function removeUnreferencedStorageFiles(removedUrls) {
       if (typeof url !== "string") return;
 
       const path = storagePathFromPublicUrl(url);
-
-      if (path) {
-        usedPaths.add(path);
-      }
+      if (path) usedPaths.add(path);
     });
   });
 
@@ -505,32 +478,40 @@ async function removeUnreferencedStorageFiles(removedUrls) {
   );
 
   if (safePaths.length === 0) {
-    return;
+    return {
+      removed: 0,
+      failed: 0,
+      skipped: candidatePaths.length
+    };
   }
 
-  const { error: removeError } = await client.storage
+  const { data, error: removeError } = await client.storage
     .from(PHOTO_BUCKET)
     .remove(safePaths);
 
   if (removeError) {
-    console.error(
-      "Database updated, but Storage deletion failed:",
-      removeError
-    );
+    console.error("Storage deletion failed:", removeError);
 
-    showMessage(
-      "The photo list was saved, but some Storage files could not be deleted. Please check Supabase Storage permissions.",
-      false
-    );
+    return {
+      removed: 0,
+      failed: safePaths.length,
+      skipped: candidatePaths.length - safePaths.length
+    };
   }
+
+  return {
+    removed: Array.isArray(data) ? data.length : safePaths.length,
+    failed: 0,
+    skipped: candidatePaths.length - safePaths.length
+  };
 }
 
 
-/* =========================
-   SAVE CHANGES
-========================= */
+/* SAVE CHANGES */
 
 saveButton.addEventListener("click", async () => {
+  if (isSaving) return;
+
   const total = savedPhotos.length + newFiles.length;
 
   if (total > MAX_PHOTOS) {
@@ -538,19 +519,24 @@ saveButton.addEventListener("click", async () => {
     return;
   }
 
-  saveButton.disabled = true;
+  isSaving = true;
   saveButton.textContent = "Saving Photos...";
+  updateCount();
+
+  let uploadedPhotos = [];
 
   try {
-    const uploadedPhotos = [];
-
     for (const file of newFiles) {
-      const uploaded = await uploadPhoto(file);
-      uploadedPhotos.push(uploaded);
+      uploadedPhotos.push(await uploadPhoto(file));
     }
 
     const finalPhotos = savedPhotos.concat(uploadedPhotos);
     const finalUrls = finalPhotos.map(photo => photo.url);
+
+    /*
+      Save the new photo list first.
+      Do not delete Storage files before this succeeds.
+    */
 
     const {
       data: updatedRows,
@@ -562,13 +548,11 @@ saveButton.addEventListener("click", async () => {
       .eq("owner_id", ownerId)
       .select("id");
 
-    if (updateError) {
-      throw updateError;
-    }
+    if (updateError) throw updateError;
 
     if (!updatedRows || updatedRows.length !== 1) {
       throw new Error(
-        "The database did not confirm the update. Reload and check before retrying."
+        "Database update was not confirmed. Reload and check before retrying."
       );
     }
 
@@ -585,33 +569,54 @@ saveButton.addEventListener("click", async () => {
 
     renderPhotos();
 
-    showMessage("Library photos saved successfully.");
+    /*
+      Cleanup happens only after the database update succeeds.
+    */
 
-    await removeUnreferencedStorageFiles(removedUrls);
+    const cleanup = await removeUnreferencedStorageFiles(removedUrls);
+
+    if (cleanup.failed > 0) {
+      showMessage(
+        "Photo list saved, but Storage could not delete " +
+        cleanup.failed +
+        " file(s). Check the DELETE policy and browser console.",
+        false
+      );
+    } else if (cleanup.skipped > 0) {
+      showMessage(
+        "Photo list saved. Some files were kept because they are still referenced by a library."
+      );
+    } else {
+      showMessage("Library photos saved successfully.");
+    }
 
   } catch (error) {
     console.error("Photo save error:", error);
 
+    /*
+      If upload succeeded but the database update failed,
+      uploaded files may remain in Storage. Do not delete
+      them automatically because the result may be uncertain.
+    */
+
     showMessage(
       "Photos could not be fully saved: " +
       (error.message || "Unknown error") +
-      ". Please check the photo list before retrying.",
+      ". Check the photo list before retrying.",
       false
     );
 
   } finally {
+    isSaving = false;
     saveButton.textContent = "Save Changes";
     updateCount();
   }
 });
 
 
-/* =========================
-   START
-========================= */
+/* START */
 
 loadLibrary();
-
 </script>
 </body>
 </html>
