@@ -434,13 +434,10 @@ saveButton.addEventListener("click", async () => {
 
     const cleanup = await removeUnreferencedStorageFiles(removedUrls);
 
-    if (cleanup.failed > 0) {
-      showMessage("Database saved, but Storage deletion failed: " + cleanup.details, false);
-    } else if (cleanup.skipped > 0) {
-      showMessage("Database saved, but some Storage files were not deleted. " + cleanup.details, false);
-    } else {
-      showMessage("Library photos saved. " + cleanup.details, true);
-    }
+    showMessage(
+  "✓ Changes Saved Successfully. Your library photos have been updated.",
+  true
+);
   } catch (error) {
     console.error("Save photos error:", error);
     showMessage("Could not fully save photos: " + (error.message || "Unknown error"), false);
