@@ -120,14 +120,27 @@ function hideMessage() {
 function storagePathFromPublicUrl(url) {
   try {
     const parsed = new URL(url);
-    const marker = "/storage/v1/object/public/" + PHOTO_BUCKET + "/";
+    const marker = "/storage/v1/object/public/";
     const index = parsed.pathname.indexOf(marker);
-    if (index < 0) return null;
 
-    const path = decodeURIComponent(parsed.pathname.slice(index + marker.length));
-    if (!path || path.split("/").some(part => part === "..")) return null;
-    return path;
-  } catch {
+    if (index === -1) return null;
+
+    const afterMarker = parsed.pathname.slice(index + marker.length);
+    const slashIndex = afterMarker.indexOf("/");
+
+    if (slashIndex === -1) return null;
+
+    const bucket = decodeURIComponent(
+      afterMarker.slice(0, slashIndex)
+    );
+
+    if (bucket !== PHOTO_BUCKET) return null;
+
+    return decodeURIComponent(
+      afterMarker.slice(slashIndex + 1)
+    );
+  } catch (error) {
+    console.error("Storage path error:", error);
     return null;
   }
 }
