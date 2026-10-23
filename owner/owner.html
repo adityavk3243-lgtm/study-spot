@@ -754,25 +754,17 @@ const seatAlertNumber = value("seatAlertNumber");
   try {
     registerButton.textContent = "Creating Owner Account...";
 
-    const { data: authData, error: authError } =
-      await client.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            owner_name: ownerName,
-            mobile: mobile
-          }
-        }
-      });
+    if (
+  !verifiedOwnerId ||
+  !verifiedEmail ||
+  verifiedEmail !== email.toLowerCase()
+) {
+  throw new Error(
+    "Please verify your email address before registering your library."
+  );
+}
 
-    if (authError) throw authError;
-
-    if (!authData?.user) {
-      throw new Error("Owner account could not be created.");
-    }
-
-    ownerId = authData.user.id;
+ownerId = verifiedOwnerId;
 
     registerButton.textContent = "Saving Library Details...";
 
