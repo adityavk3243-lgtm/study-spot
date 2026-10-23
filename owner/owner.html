@@ -375,6 +375,38 @@ sendOtpButton.addEventListener("click", async () => {
   const password = document.getElementById("password").value;
   const client = window.supabaseClient;
 
+  // Check all required form fields before sending OTP
+  const form = document.getElementById("registrationForm");
+
+  if (!form.reportValidity()) {
+    return;
+  }
+
+  // Check that mobile number contains exactly 10 digits
+  if (!/^\d{10}$/.test(mobile)) {
+    showOtpMessage("Please enter a valid 10-digit mobile number.");
+    document.getElementById("mobile").focus();
+    return;
+  }
+
+  // Check that the library location was successfully captured
+  if (
+    !libraryLocation ||
+    typeof libraryLocation.latitude !== "number" ||
+    typeof libraryLocation.longitude !== "number"
+  ) {
+    showOtpMessage(
+      "Please capture your library location before requesting the email OTP."
+    );
+
+    locationButton.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    return;
+  }
+  
   if (!ownerName || !mobile || !email || !password) {
     showOtpMessage("Please enter your name, mobile number, email and password first.");
     return;
