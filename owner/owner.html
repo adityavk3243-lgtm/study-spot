@@ -80,6 +80,54 @@ button:disabled{opacity:.65;cursor:not-allowed}
 <label for="password">Create Password *</label>
 <input id="password" type="password" minlength="6" placeholder="Minimum 6 characters" required>
 
+<!-- Email OTP Verification -->
+<div id="emailOtpSection" style="margin-top:20px;padding:16px;border:1px solid #dbe3ef;border-radius:12px;background:#f8fafc;">
+
+  <h3 style="margin-top:0;">📧 Email Verification</h3>
+
+  <p style="font-size:14px;color:#475569;line-height:1.5;">
+    Verify your email address using the 6-digit verification code sent to your inbox.
+  </p>
+
+  <button
+    type="button"
+    id="sendOtpButton"
+    class="button primary">
+    Send Email OTP
+  </button>
+
+  <div id="otpInputSection" style="display:none;margin-top:16px;">
+
+    <label for="emailOtp">Enter 6-Digit OTP *</label>
+
+    <input
+      type="text"
+      id="emailOtp"
+      inputmode="numeric"
+      autocomplete="one-time-code"
+      maxlength="6"
+      pattern="[0-9]{6}"
+      placeholder="Enter your 6-digit OTP">
+
+    <button
+      type="button"
+      id="verifyOtpButton"
+      class="button primary">
+      Verify OTP
+    </button>
+
+  </div>
+
+  <p
+    id="otpMessage"
+    role="status"
+    aria-live="polite"
+    style="display:none;margin-top:12px;font-size:14px;line-height:1.5;">
+  </p>
+
+</div>
+<!-- End Email OTP Verification -->
+  
 <h3>02 · Library Details</h3>
 
 <label for="libraryName">Library Name *</label>
