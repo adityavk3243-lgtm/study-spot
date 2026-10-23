@@ -344,6 +344,149 @@ const locationResult = document.getElementById("locationResult");
 let libraryLocation = null;
 let verifiedOwnerId = null;
 let verifiedEmail = null;
+
+// StudySpot Email OTP Verification
+const sendOtpButton = document.getElementById("sendOtpButton");
+const verifyOtpButton = document.getElementById("verifyOtpButton");
+const otpInputSection = document.getElementById("otpInputSection");
+const emailOtpInput = document.getElementById("emailOtp");
+const otpMessage = document.getElementById("otpMessage");
+
+let otpRequestedEmail = null;
+
+function showOtpMessage(message, success = false) {
+  otpMessage.textContent = message;
+  otpMessage.style.display = "block";
+  otpMessage.style.color = success ? "#166534" : "#991b1b";
+  otpMessage.style.background = success ? "#dcfce7" : "#fee2e2";
+  otpMessage.style.padding = "12px";
+  otpMessage.style.borderRadius = "8px";
+}
+
+sendOtpButton.addEventListener("click", async () => {
+  const ownerName = document.getElementById("ownerName").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const password = document.getElementById("password").value;
+  const client = window.supabaseClient;
+
+  if (!ownerName || !mobile || !email || !password) {
+    showOtpMessage("Please enter your name, mobile number, email and password first.");
+    return;
+  }
+
+  if (!/^\d{10}$/.test(mobile)) {
+    showOtpMessage("Please enter a valid 10-digit mobile number.");
+    return;
+  }
+
+  if (password.length < 6) {
+    showOtpMessage("Password must contain at least 6 characters.");
+    return;
+  }
+
+  if (!client) {
+    showOtpMessage("Supabase connection is unavailable. Please try again.");
+    return;
+  }
+
+  sendOtpButton.disabled = true;
+  sendOtpButton.textContent = "Sending OTP...";
+
+  try {
+    const { data, error } = await client.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          owner_name: ownerName,
+          mobile: mobile
+        }
+      }
+    });
+
+    if (error) throw error;
+
+    if (!data?.user) {
+      throw new Error("Could not create the owner account.");
+    }
+
+    otpRequestedEmail = email;
+    otpInputSection.style.display = "block";
+
+    document.getElementById("email").readOnly = true;
+    document.getElementById("password").readOnly = true;
+
+    showOtpMessage(
+      "If this email can be registered, a verification code will be sent. Please check your inbox and spam folder.",
+      true
+    );
+
+  } catch (error) {
+    console.error("Send OTP error:", error);
+    showOtpMessage(error.message || "Could not send the verification code.");
+  } finally {
+    sendOtpButton.disabled = false;
+    sendOtpButton.textContent = "Send Email OTP";
+  }
+});
+
+verifyOtpButton.addEventListener("click", async () => {
+  const token = emailOtpInput.value.trim();
+  const client = window.supabaseClient;
+
+  if (!otpRequestedEmail) {
+    showOtpMessage("Please request an OTP first.");
+    return;
+  }
+
+  if (!/^\d{6}$/.test(token)) {
+    showOtpMessage("Please enter the complete 6-digit verification code.");
+    return;
+  }
+
+  if (!client) {
+    showOtpMessage("Supabase connection is unavailable. Please try again.");
+    return;
+  }
+
+  verifyOtpButton.disabled = true;
+  verifyOtpButton.textContent = "Verifying...";
+
+  try {
+    const { data, error } = await client.auth.verifyOtp({
+      email: otpRequestedEmail,
+      token: token,
+      type: "signup"
+    });
+
+    if (error) throw error;
+
+    if (!data?.user?.id || !data?.session) {
+      throw new Error("Verification did not create a valid session. Please try again.");
+    }
+
+    verifiedOwnerId = data.user.id;
+    verifiedEmail = otpRequestedEmail;
+
+    showOtpMessage(
+      "Email verified successfully! You can now register your library.",
+      true
+    );
+
+    emailOtpInput.disabled = true;
+    verifyOtpButton.textContent = "Email Verified";
+    verifyOtpButton.disabled = true;
+    sendOtpButton.disabled = true;
+
+  } catch (error) {
+    console.error("Verify OTP error:", error);
+    showOtpMessage(error.message || "Invalid or expired code. Please try again.");
+    verifyOtpButton.disabled = false;
+    verifyOtpButton.textContent = "Verify OTP";
+  }
+});
+// End StudySpot Email OTP Verification
   
 stateSelect.addEventListener("change", async () => {
   districtSelect.innerHTML = '<option value="">Loading districts...</option>';
