@@ -356,7 +356,9 @@ const emailOtpInput = document.getElementById("emailOtp");
 const otpMessage = document.getElementById("otpMessage");
 
 let otpRequestedEmail = null;
-
+let otpVerified = false;
+let otpSending = false;
+  
 function showOtpMessage(message, success = false) {
   otpMessage.textContent = message;
   otpMessage.style.display = "block";
