@@ -616,6 +616,26 @@ locationButton.addEventListener("click", () => {
 document.getElementById("registrationForm").addEventListener("submit", async event => {
   event.preventDefault();
 
+if (
+  !verifiedOwnerId ||
+  !verifiedEmail ||
+  verifiedEmail !== document.getElementById("email").value.trim().toLowerCase()
+) {
+  event.preventDefault();
+
+  const errorBox = document.getElementById("error");
+  errorBox.textContent =
+    "Please verify your email address using the OTP before registering your library.";
+  errorBox.style.display = "block";
+
+  document.getElementById("emailOtpSection").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+  return;
+}
+  
   const errorBox = document.getElementById("error");
   const successBox = document.getElementById("success");
 
