@@ -342,7 +342,9 @@ const locationButton = document.getElementById("locationButton");
 const locationResult = document.getElementById("locationResult");
 
 let libraryLocation = null;
-
+let verifiedOwnerId = null;
+let verifiedEmail = null;
+  
 stateSelect.addEventListener("change", async () => {
   districtSelect.innerHTML = '<option value="">Loading districts...</option>';
   districtSelect.disabled = true;
@@ -482,6 +484,15 @@ document.getElementById("registrationForm").addEventListener("submit", async eve
   const email = value("email");
   const password = document.getElementById("password").value;
 
+if (
+  !verifiedOwnerId ||
+  !verifiedEmail ||
+  verifiedEmail !== email.toLowerCase()
+) {
+  showError("Please verify your email address using the OTP before registering your library.");
+  return;
+}
+  
   const libraryName = value("libraryName");
   const state = value("state");
   const district = value("district");
