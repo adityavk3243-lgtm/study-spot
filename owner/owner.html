@@ -363,6 +363,8 @@ function showOtpMessage(message, success = false) {
   otpMessage.style.borderRadius = "8px";
 }
 
+// OTP sending begins here
+  
 sendOtpButton.addEventListener("click", async () => {
   const ownerName = document.getElementById("ownerName").value.trim();
   const mobile = document.getElementById("mobile").value.trim();
