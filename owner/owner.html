@@ -766,6 +766,19 @@ const seatAlertNumber = value("seatAlertNumber");
 
 ownerId = verifiedOwnerId;
 
+    const {
+  data: { user: currentUser },
+  error: sessionError
+} = await client.auth.getUser();
+
+if (sessionError) throw sessionError;
+
+if (!currentUser || currentUser.id !== verifiedOwnerId) {
+  throw new Error(
+    "Your verified session could not be confirmed. Please verify your email again."
+  );
+}
+
     registerButton.textContent = "Saving Library Details...";
 
     const { data: libraryData, error: libraryError } =
