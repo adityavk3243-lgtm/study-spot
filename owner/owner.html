@@ -705,14 +705,7 @@ if (
   const email = value("email");
   const password = document.getElementById("password").value;
 
-if (
-  !verifiedOwnerId ||
-  !verifiedEmail ||
-  verifiedEmail !== email.toLowerCase()
-) {
-  showError("Please verify your email address using the OTP before registering your library.");
-  return;
-}
+
   
   const libraryName = value("libraryName");
   const state = value("state");
