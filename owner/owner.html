@@ -382,6 +382,27 @@ sendOtpButton.addEventListener("click", async () => {
     return;
   }
 
+// Make sure State, District and City are selected
+if (
+!stateSelect.value ||
+!districtSelect.value ||
+!cityInput.value.trim()
+) {
+showOtpMessage(
+"Please select your state and district, and enter your city before requesting the email OTP."
+);
+
+if (!stateSelect.value) {
+stateSelect.focus();
+} else if (!districtSelect.value) {
+districtSelect.focus();
+} else {
+cityInput.focus();
+}
+
+return;
+}
+  
   // Check that mobile number contains exactly 10 digits
   if (!/^\d{10}$/.test(mobile)) {
     showOtpMessage("Please enter a valid 10-digit mobile number.");
