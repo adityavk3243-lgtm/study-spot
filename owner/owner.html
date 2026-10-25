@@ -375,8 +375,6 @@ sendOtpButton.addEventListener("click", async () => {
   if (otpSending || otpVerified) {
     return;
   }
-
-  otpSending = true;
   
   const ownerName = document.getElementById("ownerName").value.trim();
   const mobile = document.getElementById("mobile").value.trim();
@@ -457,6 +455,7 @@ return;
     return;
   }
 
+  otpSending = true;
   sendOtpButton.disabled = true;
   sendOtpButton.textContent = "Sending OTP...";
 
