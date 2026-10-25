@@ -371,6 +371,13 @@ function showOtpMessage(message, success = false) {
 // OTP sending begins here
   
 sendOtpButton.addEventListener("click", async () => {
+
+  if (otpSending || otpVerified) {
+    return;
+  }
+
+  otpSending = true;
+  
   const ownerName = document.getElementById("ownerName").value.trim();
   const mobile = document.getElementById("mobile").value.trim();
   const email = document.getElementById("email").value.trim().toLowerCase();
