@@ -704,6 +704,26 @@ if (
 
   return;
 }
+
+if (
+  !libraryLocation ||
+  typeof libraryLocation.latitude !== "number" ||
+  typeof libraryLocation.longitude !== "number"
+) {
+  const errorBox = document.getElementById("error");
+
+  errorBox.textContent =
+    "Please capture your library location before registering your library.";
+
+  errorBox.style.display = "block";
+
+  locationButton.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+  return;
+}
   
   const errorBox = document.getElementById("error");
   const successBox = document.getElementById("success");
