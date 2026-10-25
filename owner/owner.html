@@ -492,11 +492,15 @@ return;
   } catch (error) {
     console.error("Send OTP error:", error);
     showOtpMessage(error.message || "Could not send the verification code.");
-  } finally {
+ } finally {
+  otpSending = false;
+
+  if (!otpVerified) {
     sendOtpButton.disabled = false;
     sendOtpButton.textContent = "Send Email OTP";
   }
-});
+}
+}); 
 
 verifyOtpButton.addEventListener("click", async () => {
   const token = emailOtpInput.value.trim();
