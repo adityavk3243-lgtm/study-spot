@@ -539,6 +539,7 @@ verifyOtpButton.addEventListener("click", async () => {
 
     verifiedOwnerId = data.user.id;
     verifiedEmail = otpRequestedEmail;
+    otpVerified = true;
 
     showOtpMessage(
       "Email verified successfully! You can now register your library.",
