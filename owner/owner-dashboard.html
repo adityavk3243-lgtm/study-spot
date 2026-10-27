@@ -935,17 +935,14 @@ if (recentStudentsBox) {
     
     /* ================= SEATS ================= */
 
-    const totalSeats =
-      Number(library.seat_availability || 0);
+const totalSeats = Number(library.total_seats || 0);
 
-    const occupiedSeats =
-      activeStudents;
+const occupiedSeats = activeStudents;
 
-    const availableSeats =
-      Math.max(
-        totalSeats - occupiedSeats,
-        0
-      );
+const availableSeats = Math.max(
+  totalSeats - occupiedSeats,
+  0
+);
 
     /* ================= DASHBOARD CARDS ================= */
 
