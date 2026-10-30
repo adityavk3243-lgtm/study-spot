@@ -716,6 +716,42 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
+/* ================= NOTIFICATION BADGE ================= */
+
+try {
+
+  const notificationBadge =
+    document.querySelector(".notification-badge");
+
+  const {
+    count: unreadCount,
+    error: notificationError
+  } = await client
+    .from("owner_notifications")
+    .select("id", { count: "exact", head: true })
+    .eq("owner_id", user.id)
+    .eq("is_read", false);
+
+  if (notificationBadge && !notificationError) {
+
+    if (unreadCount > 0) {
+      notificationBadge.textContent = unreadCount;
+      notificationBadge.style.display = "flex";
+    } else {
+      notificationBadge.style.display = "none";
+    }
+
+  }
+
+} catch (notificationError) {
+
+  console.error(
+    "Notification badge error:",
+    notificationError
+  );
+
+}
+    
     /* ================= OWNER LIBRARY ================= */
 
     const {
