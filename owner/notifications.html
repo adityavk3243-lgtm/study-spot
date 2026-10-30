@@ -452,7 +452,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   if (error) {
     console.error("Notification loading error:", error);
-    showEmpty("Unable to load notifications. Please try again.");
+    showEmpty("Database Error: " + error.message);
     return;
   }
 
