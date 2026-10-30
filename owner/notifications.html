@@ -322,6 +322,158 @@ filterButtons.forEach(button => {
 });
 </script>
 
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+
+  const client = window.supabaseClient;
+  const list = document.getElementById("notificationList");
+  const filters = document.querySelectorAll(".filter-button");
+  const summary = document.querySelector(".summary-info strong");
+
+  if (!client) {
+    list.textContent = "Unable to connect to the database.";
+    return;
+  }
+
+  const {
+    data: { user },
+    error: authError
+  } = await client.auth.getUser();
+
+  if (authError || !user) {
+    window.location.href = "owner-login.html";
+    return;
+  }
+
+  let notifications = [];
+  let currentCategory = "all";
+
+  function showEmpty(message) {
+    list.innerHTML = `
+      <div class="empty-card">
+        <div class="empty-icon">🔔</div>
+        <div class="empty-title">No Notifications Yet</div>
+        <div class="empty-description">${message}</div>
+      </div>
+    `;
+  }
+
+  function renderNotifications() {
+
+    const filtered = notifications.filter(item =>
+      currentCategory === "all" ||
+      item.category === currentCategory
+    );
+
+    const unread = notifications.filter(
+      item => !item.is_read
+    ).length;
+
+    summary.textContent =
+      unread + " Unread Notifications";
+
+    if (!filtered.length) {
+      showEmpty("Your library updates will appear here.");
+      return;
+    }
+
+    list.replaceChildren();
+
+    filtered.forEach(item => {
+
+      const card = document.createElement("article");
+      card.style.cssText =
+        "background:white;border-radius:16px;padding:16px;" +
+        "box-shadow:0 4px 15px rgba(0,0,0,.05);";
+
+      const title = document.createElement("strong");
+      title.textContent = item.title;
+
+      const message = document.createElement("p");
+      message.textContent = item.message;
+      message.style.cssText =
+        "color:#64748b;font-size:13px;line-height:1.5;";
+
+      const date = document.createElement("small");
+      date.textContent =
+        new Date(item.created_at).toLocaleString("en-IN");
+      date.style.color = "#64748b";
+
+      const status = document.createElement("div");
+      status.textContent = item.is_read ? "Read" : "● Unread";
+      status.style.cssText =
+        "font-size:12px;margin-top:10px;color:" +
+        (item.is_read ? "#64748b" : "#2563eb");
+
+      card.append(title, message, date, status);
+
+      if (!item.is_read) {
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = "Mark as read";
+        button.style.cssText =
+          "margin-top:12px;padding:9px 13px;border:0;" +
+          "border-radius:9px;background:#2563eb;color:white;";
+
+        button.addEventListener("click", async function () {
+
+          button.disabled = true;
+
+          const { error } = await client
+            .from("owner_notifications")
+            .update({ is_read: true })
+            .eq("id", item.id)
+            .eq("owner_id", user.id);
+
+          if (error) {
+            button.disabled = false;
+            alert("Unable to update notification.");
+            return;
+          }
+
+          item.is_read = true;
+          renderNotifications();
+        });
+
+        card.appendChild(button);
+      }
+
+      list.appendChild(card);
+    });
+  }
+
+  const { data, error } = await client
+    .from("owner_notifications")
+    .select("id,title,message,category,is_read,created_at")
+    .eq("owner_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Notification loading error:", error);
+    showEmpty("Unable to load notifications. Please try again.");
+    return;
+  }
+
+  notifications = data || [];
+  renderNotifications();
+
+  filters.forEach(button => {
+
+    button.addEventListener("click", function () {
+
+      currentCategory = this.dataset.category;
+      renderNotifications();
+
+    });
+
+  });
+
+});
+</script>
+
+  
 </body>
 </html>
 
