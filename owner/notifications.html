@@ -1,1 +1,323 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudySpot - Notifications</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f7fb;
+  color: #172033;
+  padding-bottom: 30px;
+}
+
+.header {
+  background: linear-gradient(135deg, #1769e0, #315bea);
+  color: white;
+  padding: 18px 16px 25px;
+  border-radius: 0 0 25px 25px;
+}
+
+.top-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.back-button {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.18);
+  color: white;
+  font-size: 25px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.header h1 {
+  margin: 24px 0 5px;
+  font-size: 25px;
+}
+
+.header p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.container {
+  max-width: 650px;
+  margin: auto;
+  padding: 18px 14px;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 17px;
+  padding: 17px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.summary-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #e8f1ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.summary-info {
+  flex: 1;
+}
+
+.summary-info strong {
+  display: block;
+  font-size: 17px;
+}
+
+.summary-info span {
+  display: block;
+  margin-top: 4px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.section-title {
+  margin: 24px 2px 13px;
+  font-size: 18px;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 12px;
+  scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-button {
+  flex-shrink: 0;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #475569;
+  border-radius: 25px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-button.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-card {
+  background: white;
+  border-radius: 18px;
+  padding: 35px 18px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.empty-icon {
+  font-size: 42px;
+  margin-bottom: 12px;
+}
+
+.empty-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.empty-description {
+  margin: 8px auto 0;
+  max-width: 280px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.notice {
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 13px;
+  padding: 13px;
+  margin-top: 16px;
+  color: #1e40af;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (min-width: 700px) {
+  .container {
+    padding-top: 25px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="top-row">
+    <a class="back-button"
+       href="owner-dashboard.html"
+       aria-label="Back to dashboard">‹</a>
+
+    <div class="brand">📚 StudySpot</div>
+  </div>
+
+  <h1>🔔 Notifications</h1>
+  <p>Stay updated about your library.</p>
+</header>
+
+<main class="container">
+
+  <section class="summary-card">
+    <div class="summary-icon">🔔</div>
+
+    <div class="summary-info">
+      <strong>Your Notifications</strong>
+      <span id="categoryDescription">
+        All your important updates in one place.
+      </span>
+    </div>
+  </section>
+
+  <h2 class="section-title">Notification Categories</h2>
+
+  <div class="filters" role="group"
+       aria-label="Notification categories">
+
+    <button class="filter-button active"
+            type="button"
+            data-category="all"
+            aria-pressed="true">All</button>
+
+    <button class="filter-button"
+            type="button"
+            data-category="students"
+            aria-pressed="false">👥 Students</button>
+
+    <button class="filter-button"
+            type="button"
+            data-category="payments"
+            aria-pressed="false">₹ Payments</button>
+
+    <button class="filter-button"
+            type="button"
+            data-category="library"
+            aria-pressed="false">🪑 Library</button>
+
+    <button class="filter-button"
+            type="button"
+            data-category="system"
+            aria-pressed="false">⚙️ System</button>
+
+  </div>
+
+  <h2 class="section-title">Recent Notifications</h2>
+
+  <section class="notification-list"
+           id="notificationList"
+           aria-live="polite">
+
+    <div class="empty-card">
+      <div class="empty-icon">🔔</div>
+
+      <div class="empty-title">
+        No Notifications Yet
+      </div>
+
+      <div class="empty-description">
+        Your library updates and important notifications
+        will appear here when they are available.
+      </div>
+    </div>
+
+  </section>
+
+  <div class="notice">
+    ℹ️ Notifications will be stored securely.
+    Notifications older than 7 days will be
+    automatically deleted after the cleanup
+    system is configured.
+  </div>
+
+</main>
+
+<script>
+const filterButtons =
+  document.querySelectorAll(".filter-button");
+
+const categoryDescription =
+  document.getElementById("categoryDescription");
+
+const descriptions = {
+  all: "All your important updates in one place.",
+  students: "Student-related notifications.",
+  payments: "Payment and membership updates.",
+  library: "Library and seat-related updates.",
+  system: "Account and system notifications."
+};
+
+filterButtons.forEach(button => {
+
+  button.addEventListener("click", function () {
+
+    filterButtons.forEach(item => {
+      item.classList.remove("active");
+      item.setAttribute("aria-pressed", "false");
+    });
+
+    this.classList.add("active");
+    this.setAttribute("aria-pressed", "true");
+
+    const category = this.dataset.category;
+
+    categoryDescription.textContent =
+      descriptions[category];
+
+  });
+
+});
+</script>
+
+</body>
+</html>
+
